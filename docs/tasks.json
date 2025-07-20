@@ -1,0 +1,1056 @@
+{
+  "master": {
+    "tasks": [
+      {
+        "id": 1,
+        "title": "Project Setup and Configuration",
+        "description": "Initialize the project repository with Phaser 3, TypeScript, and build tools as specified in the technical requirements.",
+        "status": "pending",
+        "dependencies": [],
+        "priority": "high",
+        "details": "1. Create a new project repository\n2. Initialize with npm/yarn: `npm init -y`\n3. Install Phaser 3.60.0: `npm install phaser@3.60.0`\n4. Setup TypeScript: `npm install typescript@5.1.6 --save-dev`\n5. Configure tsconfig.json with appropriate settings for Phaser\n6. Setup Vite as build tool (faster than Webpack): `npm install vite@4.4.9 --save-dev`\n7. Create project structure:\n   - src/\n     - assets/       # Game assets (images, audio)\n     - objects/      # Game object classes\n     - scenes/       # Game scenes\n     - utils/        # Utility functions and managers\n     - config.ts     # Game configuration\n     - main.ts       # Entry point\n   - public/\n8. Configure vite.config.js for development and production builds\n9. Setup basic index.html and entry point\n10. Add npm scripts for development and build\n11. Setup ESLint and Prettier for code quality\n12. Configure game with responsive scaling (320px-1920px width support)\n13. Set up Arcade Physics for collision detection\n14. Implement proper asset loading structure\n15. Configure build optimization for performance targets",
+        "testStrategy": "1. Verify project builds without errors: `npm run build`\n2. Confirm development server starts: `npm run dev`\n3. Validate TypeScript compilation\n4. Test basic Phaser scene loads in browser\n5. Verify hot module reloading works in development\n6. Check build output size and optimization\n7. Test responsive scaling across different screen sizes (320px-1920px)\n8. Verify Arcade Physics system initialization\n9. Validate performance meets target requirements:\n   - 60 FPS minimum performance\n   - Load time under 3 seconds on 3G connection\n   - Memory usage under 100MB\n10. Test cross-browser compatibility (Chrome 80+, Firefox 75+, Safari 13+)",
+        "subtasks": [
+          {
+            "id": 1,
+            "title": "Repository and Dependency Setup",
+            "description": "Create the project repository and install all required dependencies including Phaser, TypeScript, and Vite.",
+            "dependencies": [],
+            "details": "Create a new GitHub repository, initialize with npm/yarn using 'npm init -y', install Phaser 3.60.0 with 'npm install phaser@3.60.0', install TypeScript 5.1.6 with 'npm install typescript@5.1.6 --save-dev', and set up Vite 4.4.9 as the build tool with 'npm install vite@4.4.9 --save-dev'.",
+            "status": "pending",
+            "testStrategy": "Verify repository creation, confirm all dependencies are installed correctly by checking package.json and node_modules, ensure correct versions are installed."
+          },
+          {
+            "id": 2,
+            "title": "TypeScript Configuration",
+            "description": "Configure TypeScript with appropriate settings for Phaser development.",
+            "dependencies": [],
+            "details": "Create tsconfig.json with proper configuration for Phaser development, including target ES2016 or later, module settings for modern browsers, strict type checking, and proper path resolution for game assets. Include necessary type definitions for Phaser.",
+            "status": "pending",
+            "testStrategy": "Validate TypeScript configuration by running 'tsc --noEmit' to check for configuration errors, ensure Phaser types are properly recognized."
+          },
+          {
+            "id": 3,
+            "title": "Project Structure Creation",
+            "description": "Set up the recommended folder structure for the game project.",
+            "dependencies": [],
+            "details": "Create the project directory structure including src/ folder with subfolders for assets/, objects/, scenes/, utils/, config.ts, and main.ts. Also create the public/ folder for static assets. Set up initial placeholder files in each directory to establish the structure.",
+            "status": "pending",
+            "testStrategy": "Verify all directories and placeholder files exist in the correct structure, ensure the structure follows best practices for Phaser game organization."
+          },
+          {
+            "id": 4,
+            "title": "Build Configuration",
+            "description": "Configure Vite, ESLint, and Prettier for development and production builds.",
+            "dependencies": [],
+            "details": "Create vite.config.js with appropriate settings for development and production builds, set up ESLint and Prettier with 'npm install eslint prettier --save-dev', configure npm scripts in package.json for development ('npm run dev') and production builds ('npm run build'), and set up basic index.html entry point.",
+            "status": "pending",
+            "testStrategy": "Test development server startup with 'npm run dev', verify production build with 'npm run build', confirm ESLint and Prettier are working correctly with sample code."
+          },
+          {
+            "id": 5,
+            "title": "Game Configuration Setup",
+            "description": "Implement initial game configuration with responsive scaling and physics.",
+            "dependencies": [],
+            "details": "Create config.ts with Phaser game configuration, implement responsive scaling to support screen widths from 320px to 1920px, set up Arcade Physics for collision detection, configure asset loading structure, and implement performance optimizations for the target platforms.",
+            "status": "pending",
+            "testStrategy": "Test game initialization in browser, verify responsive scaling works across different screen sizes, confirm Arcade Physics is properly initialized, check that the game renders correctly in development mode."
+          }
+        ]
+      },
+      {
+        "id": 2,
+        "title": "Asset Preloading System",
+        "description": "Implement the PreloadScene for loading game assets with a progress bar as specified in the scene architecture.",
+        "status": "pending",
+        "dependencies": [
+          1
+        ],
+        "priority": "high",
+        "details": "1. Create PreloadScene class extending Phaser.Scene\n2. Implement asset preloading for all required game assets:\n   - Player character sprites (4-directional)\n   - Stroller sprites with animation frames\n   - 3 hazard type sprites (lawnmowers, crates, etc.)\n   - VIP and assassin character sprites\n   - Projectile sprites\n   - Background tilemap for staircase\n   - UI elements (buttons, icons, hearts)\n   - Audio files (background music, sound effects)\n3. Create a progress bar UI that shows loading progress in real-time\n4. Implement error handling for failed asset loads with fallback options\n5. Add loading text and game title\n6. Transition to MainMenuScene after loading completes\n7. Implement asset caching strategy to optimize performance\n8. Add asset compression to meet the <3 second load time requirement\n9. Use Vite's asset optimization features for faster loading\n10. Support both development and production asset paths\n11. Handle large asset files efficiently",
+        "testStrategy": "1. Verify all assets load correctly\n2. Test progress bar updates properly in real-time\n3. Confirm error handling works for missing assets with fallback loading\n4. Measure load time on various connection speeds\n5. Verify transition to MainMenuScene\n6. Test memory usage during and after loading\n7. Validate asset caching is working correctly\n8. Test asset loading with both development and production paths\n9. Verify performance with large asset files\n10. Test asset compression effectiveness",
+        "subtasks": [
+          {
+            "id": 1,
+            "title": "Create PreloadScene Class Structure",
+            "description": "Set up the basic PreloadScene class extending Phaser.Scene with initialization and lifecycle methods.",
+            "dependencies": [],
+            "details": "Create a new file for PreloadScene class that extends Phaser.Scene. Implement the constructor with a scene key 'PreloadScene'. Add init(), preload(), create(), and update() methods. Set up the scene configuration with proper loading callbacks. Implement scene transition to MainMenuScene after loading completes.",
+            "status": "pending",
+            "testStrategy": "Verify the PreloadScene initializes correctly. Test scene lifecycle methods are called in proper sequence. Confirm scene transition to MainMenuScene works after loading completes."
+          },
+          {
+            "id": 2,
+            "title": "Implement Asset Loading System",
+            "description": "Create comprehensive asset loading for all game sprites, audio, and UI elements with proper organization.",
+            "dependencies": [
+              "2.1"
+            ],
+            "details": "Organize assets into categories (sprites, audio, UI). Load player character sprites with 4-directional variants. Load stroller sprites with animation frames. Add 3 hazard type sprites (lawnmowers, crates, etc.). Include VIP and assassin character sprites. Add projectile sprites. Load background tilemap for staircase. Import UI elements (buttons, icons, hearts). Load audio files (background music, sound effects). Implement proper file path handling for both development and production environments.",
+            "status": "pending",
+            "testStrategy": "Verify all assets load correctly. Test asset loading works in both development and production environments. Confirm all sprite sheets are properly configured. Check that audio files load in supported formats."
+          },
+          {
+            "id": 3,
+            "title": "Create Progress Bar UI",
+            "description": "Implement a visual progress bar with loading text and game title that updates in real-time.",
+            "dependencies": [
+              "2.1"
+            ],
+            "details": "Design a progress bar UI component with background and fill elements. Add loading percentage text that updates in real-time. Display the game title above the progress bar. Implement smooth progress bar animation. Create loading text with dynamic status messages. Position UI elements responsively for different screen sizes. Update progress bar based on Phaser's load progress events.",
+            "status": "pending",
+            "testStrategy": "Test progress bar updates properly in real-time. Verify loading percentage text matches actual load progress. Confirm UI elements are positioned correctly on different screen sizes. Test smooth animation of the progress bar."
+          },
+          {
+            "id": 4,
+            "title": "Implement Error Handling and Fallbacks",
+            "description": "Create robust error handling for failed asset loads with fallback options and user feedback.",
+            "dependencies": [
+              "2.2"
+            ],
+            "details": "Add event listeners for file load errors. Implement fallback assets for critical game elements. Create user-friendly error messages for failed loads. Add retry mechanism for failed asset loads. Implement graceful degradation for non-critical assets. Log detailed error information for debugging. Create a system to continue game loading even if some non-essential assets fail.",
+            "status": "pending",
+            "testStrategy": "Test error handling by intentionally using invalid asset paths. Verify fallback assets load correctly when primary assets fail. Confirm error messages are displayed to the user. Test retry mechanism successfully loads assets on second attempt."
+          },
+          {
+            "id": 5,
+            "title": "Optimize Asset Loading Performance",
+            "description": "Implement asset caching, compression, and optimization strategies to meet the <3 second load time requirement.",
+            "dependencies": [
+              "2.2",
+              "2.3",
+              "2.4"
+            ],
+            "details": "Implement asset caching strategy using Phaser's cache system. Apply appropriate compression to image assets (PNG/WebP). Optimize audio files with proper formats and compression. Use sprite sheets for related images to reduce HTTP requests. Implement asset loading prioritization for critical game elements. Utilize Vite's asset optimization features. Add support for asynchronous loading of non-critical assets. Implement texture atlas for UI elements. Measure and optimize load times to meet the <3 second requirement.",
+            "status": "pending",
+            "testStrategy": "Measure load time on various connection speeds. Test memory usage during and after loading. Verify compressed assets maintain acceptable visual quality. Compare load times before and after optimization. Test cache effectiveness on subsequent game loads."
+          }
+        ]
+      },
+      {
+        "id": 3,
+        "title": "Main Menu Implementation",
+        "description": "Create the MainMenuScene with all required UI elements and navigation options as specified in the menu system requirements.",
+        "status": "pending",
+        "dependencies": [
+          2
+        ],
+        "priority": "high",
+        "details": "1. Create MainMenuScene class extending Phaser.Scene\n2. Design and implement the main menu layout with:\n   - Game title and logo\n   - Play button\n   - Settings button\n   - Credits button\n   - High scores display\n3. Implement button interactions with hover/click effects\n4. Add background music playback\n5. Create UI sound effects for button interactions\n6. Implement responsive design for different screen sizes (320px-1920px)\n7. Add keyboard navigation support (Tab, Enter, Arrow keys)\n8. Implement settings menu with:\n   - Volume controls\n   - Difficulty selection\n   - Control options\n   - Accessibility options\n9. Create credits screen with attribution\n10. Implement high score display using localStorage\n11. Add animations for menu transitions\n12. Implement pause menu with:\n    - Resume, Restart, Settings, Quit options\n13. Create game over screen with:\n    - Final score display\n    - High score comparison\n    - Play again option\n14. Support both desktop and mobile interactions\n15. Use CSS Grid for responsive UI layouts",
+        "testStrategy": "1. Verify all buttons work correctly with both mouse and touch input\n2. Test keyboard navigation (Tab, Enter, Arrow keys)\n3. Confirm responsive layout on different screen sizes (320px-1920px)\n4. Validate settings are saved correctly\n5. Test audio controls work properly\n6. Verify high score display shows correct data\n7. Test accessibility features\n8. Confirm transitions between menu screens\n9. Test pause menu functionality during gameplay\n10. Verify game over screen displays correct information\n11. Test on multiple devices (desktop, tablet, mobile)\n12. Validate touch gestures on mobile devices",
+        "subtasks": [
+          {
+            "id": 1,
+            "title": "MainMenuScene Class and Basic Layout",
+            "description": "Create the MainMenuScene class and implement the basic UI layout with core elements",
+            "dependencies": [],
+            "details": "1. Create MainMenuScene class extending Phaser.Scene with proper initialization\n2. Design and implement the main menu layout with game title, logo, and primary buttons (Play, Settings, Credits)\n3. Set up the background image/graphics for the main menu\n4. Implement basic scene transitions between menu screens\n5. Create initial CSS Grid layout for responsive design",
+            "status": "pending",
+            "testStrategy": "1. Verify MainMenuScene loads correctly\n2. Test that all UI elements appear in the correct positions\n3. Confirm scene transitions work between different menu screens\n4. Check basic layout on different screen sizes"
+          },
+          {
+            "id": 2,
+            "title": "Button Interactions and Navigation",
+            "description": "Implement button interactions, effects, and keyboard/touch navigation",
+            "dependencies": [
+              "3.1"
+            ],
+            "details": "1. Create interactive buttons with hover/click effects using Phaser's input system\n2. Implement UI sound effects for button interactions\n3. Add keyboard navigation support (Tab, Enter, Arrow keys)\n4. Implement touch/mobile interactions for all buttons\n5. Create visual feedback for selected/focused buttons",
+            "status": "pending",
+            "testStrategy": "1. Test all buttons respond correctly to mouse hover and clicks\n2. Verify keyboard navigation works with Tab, Enter, and Arrow keys\n3. Test touch interactions on mobile devices\n4. Confirm sound effects play on button interactions\n5. Validate focus indicators appear correctly"
+          },
+          {
+            "id": 3,
+            "title": "Settings Menu Implementation",
+            "description": "Create the settings menu with all configuration options and controls",
+            "dependencies": [
+              "3.1",
+              "3.2"
+            ],
+            "details": "1. Design and implement settings menu layout with volume controls, difficulty selection, control options, and accessibility settings\n2. Create sliders for volume adjustment\n3. Implement toggle switches for options\n4. Add functionality to save settings to localStorage\n5. Create back button to return to main menu",
+            "status": "pending",
+            "testStrategy": "1. Verify all settings controls display and function correctly\n2. Test volume controls affect game audio\n3. Confirm settings are saved to localStorage and persist between sessions\n4. Validate difficulty selection changes game parameters\n5. Test accessibility options function as expected"
+          },
+          {
+            "id": 4,
+            "title": "High Score and Credits Implementation",
+            "description": "Implement high score display and credits screen with proper data handling",
+            "dependencies": [
+              "3.1",
+              "3.2"
+            ],
+            "details": "1. Create high score display system using localStorage\n2. Design and implement credits screen with proper attribution\n3. Add animations for displaying high scores\n4. Implement sorting and display of top scores\n5. Create navigation between high scores, credits, and main menu",
+            "status": "pending",
+            "testStrategy": "1. Verify high scores are correctly stored and retrieved from localStorage\n2. Test high score display shows correct information in proper order\n3. Confirm credits screen displays all required attribution information\n4. Validate navigation between screens works correctly\n5. Test high score updates when new scores are achieved"
+          },
+          {
+            "id": 5,
+            "title": "Responsive Design and Pause/Game Over Screens",
+            "description": "Implement responsive design for all screen sizes and create pause and game over screens",
+            "dependencies": [
+              "3.1",
+              "3.2",
+              "3.3",
+              "3.4"
+            ],
+            "details": "1. Implement responsive design for different screen sizes (320px-1920px) using CSS Grid\n2. Create pause menu with Resume, Restart, Settings, and Quit options\n3. Implement game over screen with final score display, high score comparison, and play again option\n4. Add animations for menu transitions between all screens\n5. Test and optimize UI for both desktop and mobile devices",
+            "status": "pending",
+            "testStrategy": "1. Test responsive layout on multiple screen sizes and orientations\n2. Verify pause menu correctly pauses game and provides all options\n3. Confirm game over screen displays correct score information\n4. Test all transitions and animations work smoothly\n5. Validate UI works correctly on both desktop and mobile devices"
+          }
+        ]
+      },
+      {
+        "id": 4,
+        "title": "Lane System Implementation",
+        "description": "Develop the core lane system with 3-5 vertical stair lanes that are visually distinct and allow player movement between them.",
+        "status": "pending",
+        "dependencies": [
+          1
+        ],
+        "priority": "high",
+        "details": "1. Create a LaneManager class to handle lane logic\n2. Implement 3-5 vertical lanes with proper spacing\n3. Design visually distinct lane graphics using Phaser's graphics or tilemap\n4. Set up lane boundaries and collision detection using Phaser's Arcade Physics\n5. Create lane transition system with smooth animation (0.2 seconds) using easing functions\n6. Implement lane indexing system (0-based or 1-based)\n7. Add visual indicators for current lane\n8. Create debug visualization for lane boundaries\n9. Optimize lane rendering for performance\n10. Implement lane-specific events system\n11. Add support for dynamic lane count based on difficulty\n12. Create helper methods for entity placement in lanes\n13. Implement responsive lane positioning for different screen sizes\n14. Optimize collision detection using spatial partitioning\n15. Ensure lane transition response time < 50ms\n\nCode example for lane setup:\n```typescript\nclass LaneManager {\n  private lanes: Lane[] = [];\n  private laneCount: number;\n  private laneWidth: number;\n  \n  constructor(scene: Phaser.Scene, count: number = 5) {\n    this.laneCount = count;\n    this.laneWidth = scene.game.config.width as number / count;\n    \n    for (let i = 0; i < count; i++) {\n      const xPos = i * this.laneWidth + this.laneWidth / 2;\n      this.lanes.push(new Lane(scene, i, xPos, this.laneWidth));\n    }\n  }\n  \n  getLanePosition(index: number): number {\n    return this.lanes[index].centerX;\n  }\n  \n  // Additional methods...\n}\n```\n\nRelevant Documentation:\n- [Phaser 3 Physics Bodies](https://photonstorm.github.io/phaser3-docs/Phaser.Physics.Arcade.Body.html)\n- [Phaser 3 Collision Detection](https://photonstorm.github.io/phaser3-docs/Phaser.Physics.Arcade.World.html)\n- [Phaser 3 Groups](https://photonstorm.github.io/phaser3-docs/Phaser.GameObjects.Group.html)\n- [Phaser 3 Spatial Partitioning](https://photonstorm.github.io/phaser3-docs/Phaser.Physics.Arcade.World.html#setBounds)\n- [Phaser 3 Performance Optimization](https://photonstorm.github.io/phaser3-docs/Phaser.GameObjects.GameObject.html#setActive)",
+        "testStrategy": "1. Verify correct number of lanes are created\n2. Test lane boundaries prevent entities from overlapping\n3. Validate smooth transition animation between lanes\n4. Measure performance with multiple entities in different lanes\n5. Test lane system at different screen resolutions\n6. Verify lane indexing works correctly\n7. Test lane-specific events trigger properly\n8. Validate visual indicators for lanes\n9. Measure lane transition response time (should be < 50ms)\n10. Test collision detection optimization with many entities\n11. Verify boundary collision prevention works correctly\n12. Test cross-platform lane positioning on different devices\n13. Validate that collision detection only occurs within active lane",
+        "subtasks": [
+          {
+            "id": 1,
+            "title": "Create LaneManager Class",
+            "description": "Develop the core LaneManager class to handle lane logic and management",
+            "dependencies": [],
+            "details": "Implement the LaneManager class as shown in the code example, with proper initialization of lanes, lane width calculation based on screen size, and methods for lane position retrieval. Include lane indexing system (0-based) and helper methods for entity placement in lanes. Ensure the class is properly integrated with Phaser's scene system.",
+            "status": "pending",
+            "testStrategy": "Verify correct number of lanes are created. Test lane position calculations at different screen resolutions. Validate lane indexing system works correctly with entity placement."
+          },
+          {
+            "id": 2,
+            "title": "Implement Lane Boundaries and Collision",
+            "description": "Set up lane boundaries and collision detection using Phaser's Arcade Physics",
+            "dependencies": [
+              "4.1"
+            ],
+            "details": "Create physical boundaries for each lane using Phaser.Physics.Arcade.Body. Implement collision detection between entities and lane boundaries. Use Phaser's spatial partitioning for optimized collision detection. Ensure lane boundaries prevent entities from overlapping between lanes. Reference Phaser 3 Physics Bodies and Collision Detection documentation.",
+            "status": "pending",
+            "testStrategy": "Test that entities stay within lane boundaries. Verify collision detection works correctly between entities in the same lane. Measure collision detection performance with multiple entities."
+          },
+          {
+            "id": 3,
+            "title": "Design Lane Visuals",
+            "description": "Create visually distinct lane graphics using Phaser's graphics or tilemap system",
+            "dependencies": [
+              "4.1"
+            ],
+            "details": "Design and implement visually distinct graphics for each lane using either Phaser.Graphics or tilemap. Create visual indicators for the current lane. Implement debug visualization for lane boundaries that can be toggled on/off. Ensure lanes are visually clear and distinguishable for players.",
+            "status": "pending",
+            "testStrategy": "Verify lanes are visually distinct. Test that current lane indicators are clearly visible. Validate debug visualization correctly shows lane boundaries when enabled."
+          },
+          {
+            "id": 4,
+            "title": "Implement Lane Transition System",
+            "description": "Create smooth lane transition animations for player movement between lanes",
+            "dependencies": [
+              "4.1",
+              "4.2"
+            ],
+            "details": "Implement a lane transition system with smooth animation (0.2 seconds) using Phaser's easing functions. Ensure transition response time is less than 50ms. Create methods to handle lane change requests and validate lane change possibility. Use Phaser.Tweens for smooth movement between lanes.",
+            "status": "pending",
+            "testStrategy": "Measure transition animation duration to verify 0.2 second timing. Test response time between input and lane change initiation. Validate smooth animation using different easing functions."
+          },
+          {
+            "id": 5,
+            "title": "Optimize Lane System for Performance",
+            "description": "Implement performance optimizations for the lane system across different screen sizes",
+            "dependencies": [
+              "4.1",
+              "4.2",
+              "4.3",
+              "4.4"
+            ],
+            "details": "Optimize lane rendering for performance using Phaser's GameObject activation/deactivation. Implement responsive lane positioning for different screen sizes. Create a dynamic lane count system based on difficulty levels. Use object pooling for lane-related entities. Reference Phaser 3 Performance Optimization documentation.",
+            "status": "pending",
+            "testStrategy": "Test performance with multiple entities across different lanes. Verify responsive behavior on various screen sizes. Measure frame rate stability with increasing entity counts. Validate dynamic lane count changes with difficulty progression."
+          }
+        ]
+      },
+      {
+        "id": 5,
+        "title": "Player Character Implementation",
+        "description": "Create the player character with movement controls, animations, and collision detection as specified in the player controls requirements.",
+        "status": "pending",
+        "dependencies": [
+          4
+        ],
+        "priority": "high",
+        "details": "1. Create Player class extending Phaser.GameObjects.Sprite\n2. Implement 4-directional sprite animations\n3. Setup dual input system:\n   - Desktop Controls:\n     - Left/Right arrow keys for lane movement\n     - Spacebar for shooting\n     - ESC for pause\n   - Mobile Controls:\n     - Swipe left/right for lane movement\n     - Tap for shooting\n     - Touch-friendly UI elements\n4. Implement lane movement with 50ms response time\n5. Add smooth transition animation between lanes (0.2 seconds) using Phaser.Tweens\n6. Create player collision detection with game entities\n7. Implement shooting mechanics:\n   - Keyboard: Spacebar\n   - Touch: Tap screen\n   - 0.5 second cooldown between shots\n8. Add visual feedback for player actions\n9. Implement player state management (idle, moving, shooting)\n10. Create player sound effects\n11. Add player invincibility frames after collision\n12. Optimize for 60 FPS performance\n\nExample code for player movement:\n```typescript\nclass Player extends Phaser.GameObjects.Sprite {\n  private currentLane: number = 2; // Middle lane for 5 lanes\n  private isMoving: boolean = false;\n  private lastShotTime: number = 0;\n  private shootCooldown: number = 500; // 0.5 seconds in ms\n  \n  constructor(scene: Phaser.Scene, x: number, y: number) {\n    super(scene, x, y, 'player');\n    scene.add.existing(this);\n    scene.physics.add.existing(this);\n    \n    this.setupAnimations();\n    this.setupInput();\n  }\n  \n  private setupInput(): void {\n    this.scene.input.keyboard.on('keydown-LEFT', () => this.moveLeft());\n    this.scene.input.keyboard.on('keydown-RIGHT', () => this.moveRight());\n    this.scene.input.keyboard.on('keydown-SPACE', () => this.shoot());\n    this.scene.input.keyboard.on('keydown-ESC', () => this.scene.scene.pause());\n    \n    // Touch controls setup\n    this.scene.input.on('pointerdown', (pointer) => {\n      // Shooting logic\n      this.shoot();\n    });\n    \n    // Swipe detection\n    let startX = 0;\n    this.scene.input.on('pointerdown', (pointer) => {\n      startX = pointer.x;\n    });\n    \n    this.scene.input.on('pointerup', (pointer) => {\n      const swipeDistance = pointer.x - startX;\n      if (Math.abs(swipeDistance) > 50) { // Minimum swipe distance\n        if (swipeDistance > 0) {\n          this.moveRight();\n        } else {\n          this.moveLeft();\n        }\n      }\n    });\n  }\n  \n  moveLeft(): void {\n    if (this.currentLane > 0 && !this.isMoving) {\n      this.isMoving = true;\n      this.currentLane--;\n      this.moveTo(this.scene.laneManager.getLanePosition(this.currentLane));\n    }\n  }\n  \n  // Additional methods...\n}\n```\n\nRelevant Documentation:\n- [Phaser 3 Input System](https://photonstorm.github.io/phaser3-docs/Phaser.Input.InputPlugin.html)\n- [Phaser 3 Keyboard Input](https://photonstorm.github.io/phaser3-docs/Phaser.Input.Keyboard.KeyboardPlugin.html)\n- [Phaser 3 Touch Input](https://photonstorm.github.io/phaser3-docs/Phaser.Input.Pointer.html)\n- [Phaser 3 Sprite Animation](https://photonstorm.github.io/phaser3-docs/Phaser.GameObjects.Sprite.html)\n- [Phaser 3 Physics Bodies](https://photonstorm.github.io/phaser3-docs/Phaser.Physics.Arcade.Sprite.html)\n- [Phaser 3 Tween System](https://photonstorm.github.io/phaser3-docs/Phaser.Tweens.TweenManager.html)",
+        "testStrategy": "1. Verify player responds to keyboard controls (Left/Right arrows, Spacebar, ESC)\n2. Test touch/swipe controls on mobile devices\n3. Validate lane transition animation using Phaser.Tweens\n4. Measure response time for controls (<50ms)\n5. Test collision detection with game entities\n6. Verify shooting mechanics and cooldown\n7. Test player animations play correctly\n8. Validate player sound effects\n9. Test player state transitions\n10. Verify invincibility frames after collision\n11. Measure performance to ensure 60 FPS\n12. Test cross-platform input responsiveness\n13. Verify ESC key properly pauses the game\n14. Test touch-friendly UI elements on mobile",
+        "subtasks": [
+          {
+            "id": 1,
+            "title": "Player Class and Animation Setup",
+            "description": "Create the Player class extending Phaser.GameObjects.Sprite and implement 4-directional sprite animations",
+            "dependencies": [],
+            "details": "1. Create Player class that extends Phaser.GameObjects.Sprite\n2. Set up constructor with proper scene, position, and texture parameters\n3. Add the sprite to the scene and physics system\n4. Create animation frames for idle, moving left, moving right, and shooting states\n5. Implement animation switching based on player state\n6. Ensure animations loop correctly for continuous states\n7. Reference Phaser.GameObjects.Sprite documentation for proper implementation",
+            "status": "pending",
+            "testStrategy": "1. Verify Player class instantiates correctly\n2. Test all animations play at appropriate times\n3. Confirm animation transitions are smooth\n4. Check that sprite appears correctly in the game scene\n5. Validate physics body is properly attached to the sprite"
+          },
+          {
+            "id": 2,
+            "title": "Input System Implementation",
+            "description": "Set up dual input system for both desktop (keyboard) and mobile (touch/swipe) controls",
+            "dependencies": [
+              "5.1"
+            ],
+            "details": "1. Implement keyboard controls using Phaser.Input.Keyboard:\n   - Left/Right arrow keys for lane movement\n   - Spacebar for shooting\n   - ESC for pause\n2. Set up touch controls:\n   - Implement swipe detection with minimum threshold (50px)\n   - Add tap detection for shooting\n   - Create touch-friendly pause button\n3. Ensure both input systems can work simultaneously\n4. Add input response time optimization (target: 50ms)\n5. Implement input debouncing to prevent accidental double inputs",
+            "status": "pending",
+            "testStrategy": "1. Test keyboard controls respond within 50ms\n2. Verify swipe detection works with different swipe speeds and distances\n3. Confirm tap detection triggers shooting correctly\n4. Test input system on multiple devices and browsers\n5. Validate ESC key and pause button correctly pause the game"
+          },
+          {
+            "id": 3,
+            "title": "Lane Movement and Transitions",
+            "description": "Implement lane-based movement system with smooth transitions between lanes",
+            "dependencies": [
+              "5.1",
+              "5.2"
+            ],
+            "details": "1. Create lane movement methods (moveLeft, moveRight)\n2. Implement lane position tracking with currentLane variable\n3. Add boundary checking to prevent moving outside available lanes\n4. Create smooth transition animation between lanes using Phaser.Tweens\n5. Set transition duration to 0.2 seconds with appropriate easing\n6. Implement movement locking during transitions to prevent input queuing\n7. Add visual feedback during lane transitions\n8. Ensure player stays on the correct Y-axis during movement",
+            "status": "pending",
+            "testStrategy": "1. Verify player moves correctly between lanes\n2. Test boundary conditions (can't move past first or last lane)\n3. Measure transition animation duration (should be 0.2 seconds)\n4. Confirm smooth animation with proper easing\n5. Test rapid input handling during transitions"
+          },
+          {
+            "id": 4,
+            "title": "Collision Detection System",
+            "description": "Implement player collision detection with game entities and appropriate responses",
+            "dependencies": [
+              "5.1",
+              "5.3"
+            ],
+            "details": "1. Set up physics body for the player with appropriate size and offset\n2. Configure collision detection with different game entities (hazards, strollers, VIPs)\n3. Implement collision callbacks for different entity types\n4. Add invincibility frames after collision (with visual feedback)\n5. Create collision response methods (damage, life loss, score gain)\n6. Implement hitbox visualization for debugging\n7. Optimize collision detection for performance",
+            "status": "pending",
+            "testStrategy": "1. Test collisions with all entity types\n2. Verify appropriate responses for each collision type\n3. Confirm invincibility frames work correctly\n4. Test edge cases (simultaneous collisions, rapid collisions)\n5. Validate collision detection performance with many entities"
+          },
+          {
+            "id": 5,
+            "title": "Shooting Mechanics and State Management",
+            "description": "Implement player shooting mechanics and state management system",
+            "dependencies": [
+              "5.1",
+              "5.2",
+              "5.4"
+            ],
+            "details": "1. Create shoot() method with 0.5 second cooldown\n2. Implement projectile creation and launching\n3. Add visual feedback for shooting (animation, effects)\n4. Create player state management system (idle, moving, shooting, hit)\n5. Implement state transitions with appropriate animations\n6. Add sound effects for shooting and state changes\n7. Create cooldown timer visualization\n8. Optimize shooting mechanics for 60 FPS performance",
+            "status": "pending",
+            "testStrategy": "1. Verify shooting cooldown works correctly (0.5 seconds)\n2. Test rapid fire attempts to ensure cooldown is enforced\n3. Confirm projectiles spawn at correct position\n4. Validate state transitions occur correctly\n5. Test shooting during different player states\n6. Measure performance impact of multiple projectiles"
+          }
+        ]
+      },
+      {
+        "id": 6,
+        "title": "Entity Spawning System",
+        "description": "Implement the entity spawning system for strollers, hazards, VIPs, and assassins with appropriate spawn rates and behaviors.",
+        "status": "pending",
+        "dependencies": [
+          4,
+          5
+        ],
+        "priority": "high",
+        "details": "1. Create EntitySpawner class to manage entity creation\n2. Implement stroller spawning:\n   - Spawn rate: Every 2-4 seconds (randomized)\n   - Movement: Constant downward speed (100-150 pixels/second)\n   - Visual: Animated rolling motion\n3. Implement hazard spawning:\n   - Spawn rate: Every 3-6 seconds (randomized)\n   - Movement: Variable speed (80-200 pixels/second)\n   - Types: 3 different hazard types with unique sprites\n4. Implement VIP and assassin paired spawning:\n   - Paired spawn events every 60-90 seconds\n   - VIP appears first, assassin follows 2-3 seconds later\n   - VIP movement: Slow, dignified pace\n   - Assassin movement: Fast, aggressive approach\n5. Create entity pooling system for performance optimization using Phaser.GameObjects.Group\n6. Implement difficulty-based spawn rate adjustment\n7. Add visual and audio cues for entity spawning\n8. Create spawn patterns for increased challenge\n9. Implement lane-based entity placement using the LaneManager\n10. Optimize performance using JavaScript best practices\n\nExample code for entity spawner:\n```typescript\nclass EntitySpawner {\n  private scene: GameScene;\n  private strollerTimer: Phaser.Time.TimerEvent;\n  private hazardTimer: Phaser.Time.TimerEvent;\n  private vipTimer: Phaser.Time.TimerEvent;\n  private difficultyLevel: number = 0;\n  \n  constructor(scene: GameScene) {\n    this.scene = scene;\n    this.setupTimers();\n  }\n  \n  private setupTimers(): void {\n    // Stroller spawning (2-4 seconds)\n    this.strollerTimer = this.scene.time.addEvent({\n      delay: Phaser.Math.Between(2000, 4000),\n      callback: this.spawnStroller,\n      callbackScope: this,\n      loop: true\n    });\n    \n    // Hazard spawning (3-6 seconds)\n    this.hazardTimer = this.scene.time.addEvent({\n      delay: Phaser.Math.Between(3000, 6000),\n      callback: this.spawnHazard,\n      callbackScope: this,\n      loop: true\n    });\n    \n    // VIP/Assassin spawning (60-90 seconds)\n    this.vipTimer = this.scene.time.addEvent({\n      delay: Phaser.Math.Between(60000, 90000),\n      callback: this.spawnVIPSequence,\n      callbackScope: this,\n      loop: true\n    });\n  }\n  \n  spawnStroller(): void {\n    const lane = Phaser.Math.Between(0, this.scene.laneManager.getLaneCount() - 1);\n    const speed = Phaser.Math.Between(100, 150);\n    \n    // Get stroller from object pool or create new one\n    const stroller = this.scene.strollerPool.get();\n    if (stroller) {\n      stroller.spawn(lane, speed);\n    }\n    \n    // Reset timer with new random delay\n    this.strollerTimer.reset({\n      delay: Phaser.Math.Between(2000, 4000) / (1 + this.difficultyLevel * 0.2),\n      callback: this.spawnStroller,\n      callbackScope: this,\n      loop: false\n    });\n  }\n  \n  // Additional methods...\n}\n```",
+        "testStrategy": "1. Verify entity spawn rates match requirements\n2. Test entity movement speeds and behaviors\n3. Validate entity animations and visual effects\n4. Measure performance with multiple entities on screen\n5. Test entity pooling system efficiency using Phaser.GameObjects.Group\n6. Verify difficulty adjustments affect spawn rates correctly\n7. Test VIP/assassin paired spawning timing\n8. Validate entity sound effects\n9. Test entity cleanup when leaving screen\n10. Verify spawn patterns create appropriate challenge\n11. Test lane-based entity placement accuracy\n12. Benchmark performance with various entity counts",
+        "subtasks": [
+          {
+            "id": 1,
+            "title": "EntitySpawner Class Implementation",
+            "description": "Create the core EntitySpawner class with timer management and basic spawning functionality",
+            "dependencies": [],
+            "details": "Implement the EntitySpawner class with constructor, initialization methods, and timer setup for different entity types. Include methods for managing spawn rates, difficulty adjustment, and basic entity creation. Set up the class structure with proper TypeScript typing and integration with the GameScene.",
+            "status": "pending",
+            "testStrategy": "Verify EntitySpawner initializes correctly with the game scene. Test timer creation and callback functionality. Validate spawn rate calculations match requirements. Ensure proper integration with the game's difficulty system."
+          },
+          {
+            "id": 2,
+            "title": "Stroller and Hazard Spawning Implementation",
+            "description": "Implement spawning logic for strollers and hazards with appropriate rates and behaviors",
+            "dependencies": [
+              "6.1"
+            ],
+            "details": "Create spawnStroller() and spawnHazard() methods with randomized spawn rates (2-4s for strollers, 3-6s for hazards). Implement movement behaviors with appropriate speeds (100-150 pixels/second for strollers, 80-200 pixels/second for hazards). Add visual configurations including animations for strollers and three distinct hazard types with unique sprites.",
+            "status": "pending",
+            "testStrategy": "Test spawn timing for strollers and hazards to ensure they match requirements. Verify entity movement speeds and behaviors. Validate that hazards have three distinct visual types. Measure performance with multiple entities spawning simultaneously."
+          },
+          {
+            "id": 3,
+            "title": "VIP and Assassin Paired Spawning",
+            "description": "Implement the paired spawning system for VIPs and assassins with appropriate timing and behaviors",
+            "dependencies": [
+              "6.1"
+            ],
+            "details": "Create spawnVIPSequence() method to handle the paired spawning of VIPs and assassins every 60-90 seconds. Implement the 2-3 second delay between VIP and assassin appearance. Configure VIP movement with slow, dignified pace and assassin movement with fast, aggressive approach. Add unique visual and audio cues for these special entities.",
+            "status": "pending",
+            "testStrategy": "Verify VIP and assassin paired spawning occurs at the correct intervals. Test the timing between VIP appearance and assassin follow-up. Validate movement behaviors match specifications. Ensure visual and audio cues trigger correctly."
+          },
+          {
+            "id": 4,
+            "title": "Entity Pooling System",
+            "description": "Implement an efficient entity pooling system using Phaser.GameObjects.Group for performance optimization",
+            "dependencies": [
+              "6.2",
+              "6.3"
+            ],
+            "details": "Create separate object pools for each entity type (strollers, hazards, VIPs, assassins) using Phaser.GameObjects.Group. Implement methods for getting entities from pools, returning them when inactive, and expanding pools when needed. Optimize memory usage by reusing game objects rather than creating/destroying them repeatedly.",
+            "status": "pending",
+            "testStrategy": "Test entity retrieval and return to pool functionality. Measure performance improvements compared to non-pooled implementation. Verify pools expand correctly when needed. Test with high entity counts to ensure stability and performance."
+          },
+          {
+            "id": 5,
+            "title": "Lane-Based Placement and Difficulty Integration",
+            "description": "Implement lane-based entity placement and integrate with the difficulty system for dynamic spawn adjustments",
+            "dependencies": [
+              "6.2",
+              "6.3",
+              "6.4"
+            ],
+            "details": "Integrate the EntitySpawner with the LaneManager to place entities in appropriate lanes. Implement difficulty-based spawn rate adjustments that increase frequency and entity speed as difficulty increases. Create spawn patterns for increased challenge at higher difficulty levels. Add visual and audio feedback for entity spawning events.",
+            "status": "pending",
+            "testStrategy": "Verify entities spawn correctly in lanes without overlapping. Test difficulty adjustments affect spawn rates and entity behaviors. Validate spawn patterns create appropriate challenge levels. Ensure visual and audio cues match spawning events."
+          }
+        ]
+      },
+      {
+        "id": 7,
+        "title": "Collision and Interaction System",
+        "description": "Implement collision detection and interaction logic between the player and game entities (strollers, hazards, VIPs, assassins).",
+        "status": "pending",
+        "dependencies": [
+          5,
+          6
+        ],
+        "priority": "high",
+        "details": "1. Create CollisionManager class to handle all game collisions\n2. Implement player-stroller collision for rescue:\n   - Detection using Phaser's Arcade Physics\n   - Award 1 point for each rescue\n   - Play success sound effect\n   - Show visual feedback\n3. Implement player-hazard collision:\n   - Deduct 2 points\n   - Remove 1 life\n   - Play impact sound\n   - Add screen shake effect\n4. Implement player-VIP interaction:\n   - Award 5 points for protection\n   - Play heroic fanfare\n   - Show visual celebration\n5. Implement player-assassin interaction:\n   - Shooting mechanics to eliminate assassins\n   - Visual effects for successful hit\n6. Implement VIP-assassin interaction:\n   - Deduct 5 points if assassin reaches VIP\n   - Remove 2 lives\n   - Play dramatic sound\n7. Add collision resolution and entity cleanup\n8. Implement streak tracking for bonus points\n9. Create visual feedback system for all interactions\n10. Implement object pooling for performance optimization\n11. Use spatial partitioning by lanes for efficient collision detection\n12. Disable physics for off-screen entities\n13. Optimize collision detection frequency\n\nExample collision implementation:\n```typescript\nclass CollisionManager {\n  private scene: GameScene;\n  private currentStreak: number = 0;\n  \n  constructor(scene: GameScene) {\n    this.scene = scene;\n    this.setupCollisions();\n  }\n  \n  private setupCollisions(): void {\n    // Player-stroller collision\n    this.scene.physics.add.overlap(\n      this.scene.player,\n      this.scene.strollerGroup,\n      this.handleStrollerRescue,\n      undefined,\n      this\n    );\n    \n    // Player-hazard collision\n    this.scene.physics.add.overlap(\n      this.scene.player,\n      this.scene.hazardGroup,\n      this.handleHazardCollision,\n      undefined,\n      this\n    );\n    \n    // Additional collision setup...\n  }\n  \n  private handleStrollerRescue(player: Player, stroller: Stroller): void {\n    if (stroller.active) {\n      // Award points\n      this.scene.scoreManager.addPoints(1);\n      \n      // Update streak\n      this.currentStreak++;\n      if (this.currentStreak >= 10) {\n        this.scene.scoreManager.addPoints(10); // Bonus for 10 streak\n        this.currentStreak = 0;\n      }\n      \n      // Visual and audio feedback\n      this.scene.sound.play('rescue');\n      this.scene.effectsManager.playRescueEffect(stroller.x, stroller.y);\n      \n      // Deactivate stroller and return to pool\n      stroller.deactivate();\n    }\n  }\n  \n  // Additional methods...\n}\n```\n\nRelevant Phaser 3 Documentation:\n- [Phaser 3 Collision Detection](https://photonstorm.github.io/phaser3-docs/Phaser.Physics.Arcade.World.html)\n- [Phaser 3 Overlap Detection](https://photonstorm.github.io/phaser3-docs/Phaser.Physics.Arcade.World.html#overlap)\n- [Phaser 3 Collider Groups](https://photonstorm.github.io/phaser3-docs/Phaser.Physics.Arcade.World.html#addCollider)\n- [Phaser 3 Physics Bodies](https://photonstorm.github.io/phaser3-docs/Phaser.Physics.Arcade.Body.html)\n- [Phaser 3 Object Pooling](https://photonstorm.github.io/phaser3-docs/Phaser.GameObjects.Group.html)\n- [Phaser 3 Performance Optimization](https://photonstorm.github.io/phaser3-docs/Phaser.GameObjects.GameObject.html#setActive)",
+        "testStrategy": "1. Verify all collision types are detected correctly\n2. Test point awards and deductions\n3. Validate life system updates properly\n4. Test streak bonus system\n5. Verify visual feedback for all interactions\n6. Test sound effects play correctly\n7. Measure performance with multiple simultaneous collisions\n8. Validate entity cleanup after collision\n9. Test edge cases (multiple collisions in same frame)\n10. Verify collision detection at different game speeds\n11. Test object pooling efficiency with high entity counts\n12. Benchmark performance with and without spatial partitioning\n13. Verify physics disabling for off-screen entities works correctly\n14. Test projectile collision accuracy at various distances\n15. Validate collision detection optimization doesn't miss any collisions",
+        "subtasks": [
+          {
+            "id": 1,
+            "title": "Implement CollisionManager Class",
+            "description": "Create the CollisionManager class to handle all collision detection and interaction logic between game entities.",
+            "dependencies": [],
+            "details": "Create a CollisionManager class that initializes with the game scene and sets up all collision detection using Phaser's Arcade Physics. Implement the setupCollisions method to register all entity overlaps. Create a basic streak tracking system for bonus points. Include methods for enabling/disabling collision detection and implement spatial partitioning by lanes for efficient collision detection.",
+            "status": "pending",
+            "testStrategy": "Verify CollisionManager properly initializes with the game scene. Test that all collision detection methods are registered correctly. Validate streak tracking increments and resets properly. Measure performance with multiple simultaneous collisions."
+          },
+          {
+            "id": 2,
+            "title": "Implement Player-Entity Collisions",
+            "description": "Implement collision detection and interaction logic for player with strollers and hazards.",
+            "dependencies": [
+              "7.1"
+            ],
+            "details": "Create handleStrollerRescue method that awards 1 point, plays success sound, shows visual feedback, and deactivates the stroller. Implement handleHazardCollision method that deducts 2 points, removes 1 life, plays impact sound, adds screen shake effect, and deactivates the hazard. Use Phaser's overlap detection with appropriate collision groups and optimize with object pooling for performance.",
+            "status": "pending",
+            "testStrategy": "Test point awards for stroller rescues and point deductions for hazard collisions. Verify life system updates properly. Test visual and audio feedback for both collision types. Validate that entities are properly deactivated and returned to the object pool."
+          },
+          {
+            "id": 3,
+            "title": "Implement VIP and Assassin Interactions",
+            "description": "Implement collision and interaction logic for player-VIP, player-assassin, and VIP-assassin scenarios.",
+            "dependencies": [
+              "7.1"
+            ],
+            "details": "Create handleVIPProtection method that awards 5 points, plays heroic fanfare, and shows visual celebration. Implement handleAssassinElimination for player shooting mechanics with visual effects for successful hits. Create handleVIPAssassinInteraction that deducts 5 points, removes 2 lives, and plays dramatic sound if an assassin reaches a VIP. Implement appropriate collision groups and detection logic for all these interactions.",
+            "status": "pending",
+            "testStrategy": "Verify point awards for VIP protection and point deductions for VIP-assassin interactions. Test life deduction system. Validate shooting mechanics for assassin elimination. Test visual and audio feedback for all interaction types."
+          },
+          {
+            "id": 4,
+            "title": "Implement Visual and Audio Feedback System",
+            "description": "Create a comprehensive visual and audio feedback system for all collision and interaction events.",
+            "dependencies": [
+              "7.2",
+              "7.3"
+            ],
+            "details": "Implement visual effects for successful stroller rescues, hazard impacts, VIP protection, and assassin elimination. Create screen shake effect for hazard collisions. Implement particle effects for successful interactions. Set up audio playback for all collision types with appropriate sound effects. Create a visual feedback manager to handle all visual effects consistently.",
+            "status": "pending",
+            "testStrategy": "Verify all visual effects display correctly for each interaction type. Test that audio plays correctly for all collision events. Validate screen shake effect intensity and duration. Test particle effects for performance impact with multiple simultaneous effects."
+          },
+          {
+            "id": 5,
+            "title": "Optimize Collision System Performance",
+            "description": "Implement performance optimizations for the collision system to handle many entities efficiently.",
+            "dependencies": [
+              "7.1",
+              "7.2",
+              "7.3",
+              "7.4"
+            ],
+            "details": "Implement object pooling for collision effects using Phaser.GameObjects.Group. Use spatial partitioning by lanes to reduce collision checks. Disable physics for off-screen entities. Optimize collision detection frequency based on entity type and importance. Implement collision resolution and entity cleanup to prevent memory leaks. Add debug visualization options for collision boundaries during development.",
+            "status": "pending",
+            "testStrategy": "Measure performance with varying numbers of entities. Test memory usage during extended gameplay. Verify that off-screen entities have physics disabled. Validate that spatial partitioning reduces CPU usage. Test collision system at different frame rates to ensure consistent behavior."
+          }
+        ]
+      },
+      {
+        "id": 8,
+        "title": "Scoring and Lives System",
+        "description": "Implement the scoring mechanics and lives system as specified in the scoring and progression requirements.",
+        "status": "pending",
+        "dependencies": [
+          7
+        ],
+        "priority": "high",
+        "details": "1. Create ScoreManager class to handle score tracking\n2. Implement point system according to requirements:\n   - Stroller rescued: +1 point\n   - Hazard collision: -2 points\n   - VIP protected: +5 points\n   - VIP missed: -5 points\n   - Perfect streak (10 saves): +10 bonus points\n3. Create LivesManager to handle player lives\n4. Implement starting lives (3-5, configurable)\n5. Create visual representation with heart icons\n6. Implement life loss animation with screen flash\n7. Add game over condition when lives reach 0\n8. Create high score tracking using localStorage\n9. Implement score animation for visual feedback\n10. Add streak counter display and animation\n11. Create score persistence between sessions\n12. Implement game state management for different game phases\n13. Use Phaser's EventEmitter for score and lives events\n14. Utilize Phaser's Data Manager for state tracking\n\nExample implementation:\n```typescript\nclass ScoreManager {\n  private score: number = 0;\n  private highScore: number = 0;\n  private streak: number = 0;\n  private scoreText: Phaser.GameObjects.Text;\n  private streakText: Phaser.GameObjects.Text;\n  private events: Phaser.Events.EventEmitter;\n  \n  constructor(scene: Phaser.Scene) {\n    this.loadHighScore();\n    this.events = new Phaser.Events.EventEmitter();\n    \n    // Create score display\n    this.scoreText = scene.add.text(20, 20, 'Score: 0', {\n      fontSize: '32px',\n      color: '#ffffff'\n    });\n    \n    // Create streak display\n    this.streakText = scene.add.text(20, 60, 'Streak: 0', {\n      fontSize: '24px',\n      color: '#ffff00'\n    });\n  }\n  \n  addPoints(points: number): void {\n    this.score += points;\n    this.updateScoreDisplay();\n    \n    // Emit score change event\n    this.events.emit('scoreChange', this.score);\n    \n    if (this.score > this.highScore) {\n      this.highScore = this.score;\n      this.saveHighScore();\n      this.events.emit('newHighScore', this.highScore);\n    }\n  }\n  \n  addStreak(): void {\n    this.streak++;\n    this.updateStreakDisplay();\n    this.events.emit('streakChange', this.streak);\n    \n    if (this.streak >= 10) {\n      this.addPoints(10); // Bonus points\n      this.resetStreak();\n      // Play bonus animation\n      this.events.emit('perfectStreak');\n    }\n  }\n  \n  saveHighScore(): void {\n    localStorage.setItem('highScore', this.highScore.toString());\n  }\n  \n  loadHighScore(): void {\n    const savedScore = localStorage.getItem('highScore');\n    if (savedScore) {\n      this.highScore = parseInt(savedScore, 10);\n    }\n  }\n  \n  // Additional methods...\n}\n\nclass LivesManager {\n  private lives: number;\n  private maxLives: number;\n  private heartIcons: Phaser.GameObjects.Image[] = [];\n  private scene: Phaser.Scene;\n  private events: Phaser.Events.EventEmitter;\n  \n  constructor(scene: Phaser.Scene, startingLives: number = 3) {\n    this.scene = scene;\n    this.maxLives = startingLives;\n    this.lives = startingLives;\n    this.events = new Phaser.Events.EventEmitter();\n    this.createHeartDisplay();\n  }\n  \n  loseLife(): boolean {\n    if (this.lives > 0) {\n      this.lives--;\n      this.updateHeartDisplay();\n      this.playLifeLossAnimation();\n      \n      // Emit life change event\n      this.events.emit('lifeChange', this.lives);\n      \n      if (this.lives === 0) {\n        this.events.emit('gameOver');\n        return true; // Game over\n      }\n      return false;\n    }\n    return true; // Already at 0 lives\n  }\n  \n  // Additional methods...\n}\n\nclass GameStateManager {\n  private scene: Phaser.Scene;\n  private currentState: string;\n  private states: {[key: string]: Function} = {};\n  \n  constructor(scene: Phaser.Scene) {\n    this.scene = scene;\n    this.currentState = 'init';\n    \n    // Define game states\n    this.states = {\n      'init': this.initState.bind(this),\n      'playing': this.playingState.bind(this),\n      'paused': this.pausedState.bind(this),\n      'gameOver': this.gameOverState.bind(this)\n    };\n    \n    // Store game state in scene data\n    this.scene.data.set('gameState', this.currentState);\n  }\n  \n  changeState(newState: string): void {\n    if (this.states[newState]) {\n      this.currentState = newState;\n      this.scene.data.set('gameState', this.currentState);\n      this.states[newState]();\n    }\n  }\n  \n  // State handler methods...\n}\n```",
+        "testStrategy": "1. Verify score increases and decreases correctly\n2. Test lives system decrements properly\n3. Validate high score tracking and persistence\n4. Test streak counter and bonus points\n5. Verify heart icons update with life changes\n6. Test life loss animation\n7. Validate game over condition triggers correctly\n8. Test score animation and visual feedback\n9. Verify score persistence between game sessions\n10. Test edge cases (negative score, max lives)\n11. Verify event emission and handling for score and lives changes\n12. Test game state transitions between different phases\n13. Validate data persistence using localStorage\n14. Test integration with Phaser's Data Manager\n15. Verify proper event cleanup when scenes change",
+        "subtasks": [
+          {
+            "id": 1,
+            "title": "Implement ScoreManager Class",
+            "description": "Create the ScoreManager class to handle score tracking, point calculations, and streak management",
+            "dependencies": [],
+            "details": "Develop the ScoreManager class with properties for score, highScore, and streak. Implement methods for adding/subtracting points based on game events (stroller rescued: +1, hazard collision: -2, VIP protected: +5, VIP missed: -5). Create streak tracking functionality with bonus points for 10 consecutive saves. Use Phaser's EventEmitter for score-related events. Include visual score display and animations for feedback.",
+            "status": "pending",
+            "testStrategy": "Test score increments/decrements for different game events. Verify streak counter increments correctly. Validate bonus points are awarded after 10 consecutive saves. Test score animations and visual feedback."
+          },
+          {
+            "id": 2,
+            "title": "Implement LivesManager Class",
+            "description": "Create the LivesManager class to handle player lives, visual representation, and life loss mechanics",
+            "dependencies": [],
+            "details": "Develop the LivesManager class with configurable starting lives (3-5). Create visual heart icons to represent lives. Implement methods for losing lives and checking game over condition. Add screen flash animation for life loss. Use Phaser's EventEmitter to broadcast life-related events. Ensure proper positioning of heart icons in the UI.",
+            "status": "pending",
+            "testStrategy": "Verify lives decrement correctly on appropriate game events. Test visual heart icon updates. Validate life loss animation plays correctly. Confirm game over condition triggers when lives reach zero."
+          },
+          {
+            "id": 3,
+            "title": "Implement High Score System",
+            "description": "Create persistent high score tracking using localStorage with proper loading and saving",
+            "dependencies": [
+              "8.1"
+            ],
+            "details": "Extend the ScoreManager to include high score persistence using localStorage. Implement methods to save high scores when the game ends or when a new high score is achieved. Create functionality to load previous high scores when the game starts. Add visual indication when player achieves a new high score. Ensure proper error handling for localStorage access.",
+            "status": "pending",
+            "testStrategy": "Test high score persistence between game sessions. Verify high score updates correctly when beaten. Test localStorage error handling. Validate high score display updates appropriately."
+          },
+          {
+            "id": 4,
+            "title": "Implement Score Animation and Visual Feedback",
+            "description": "Create visual feedback for score changes, streak counters, and point events",
+            "dependencies": [
+              "8.1",
+              "8.2"
+            ],
+            "details": "Implement floating score text animations that appear when points are earned or lost. Create visual effects for streak milestones (color changes, size animations). Add particle effects for bonus point events. Implement screen shake for significant point losses. Ensure all animations are configurable and can be disabled for performance. Use Phaser's tween system for smooth animations.",
+            "status": "pending",
+            "testStrategy": "Verify score animations display correctly for different point values. Test streak counter visual effects at different milestones. Validate bonus point animations are visible and clear. Test performance with multiple simultaneous animations."
+          },
+          {
+            "id": 5,
+            "title": "Implement Game State Management",
+            "description": "Create a GameStateManager to handle different game phases and integrate with scoring and lives systems",
+            "dependencies": [
+              "8.1",
+              "8.2",
+              "8.3"
+            ],
+            "details": "Develop a GameStateManager class to handle different game states (playing, paused, game over). Implement state transitions based on lives and score events. Create game over condition when lives reach zero. Add pause functionality that stops score accumulation. Implement game restart with score reset but high score persistence. Use Phaser's Data Manager for state tracking and scene transitions.",
+            "status": "pending",
+            "testStrategy": "Test state transitions between playing, paused, and game over states. Verify game over triggers correctly when lives reach zero. Validate pause functionality stops gameplay but maintains state. Test game restart functionality resets appropriate values."
+          }
+        ]
+      },
+      {
+        "id": 9,
+        "title": "Difficulty Progression System",
+        "description": "Implement the difficulty progression system based on time and score milestones as specified in the requirements.",
+        "details": "1. Create DifficultyManager class to handle game difficulty\n2. Implement time-based scaling:\n   - 0-30 seconds: Easy spawn rates\n   - 30-60 seconds: Medium spawn rates\n   - 60+ seconds: Hard spawn rates\n3. Implement score milestone difficulty increases:\n   - 10 points: First difficulty increase\n   - 25 points: Second difficulty increase\n   - 50 points: Maximum difficulty\n4. Create visual feedback for difficulty changes (screen color changes)\n5. Implement entity speed scaling based on difficulty\n6. Add spawn rate adjustments based on difficulty\n7. Create difficulty-based hazard variety\n8. Implement adaptive difficulty based on player performance\n9. Add audio cues for difficulty transitions\n10. Create difficulty level display for player awareness\n\nExample implementation:\n```typescript\nclass DifficultyManager {\n  private scene: GameScene;\n  private difficultyLevel: number = 0;\n  private maxDifficultyLevel: number = 3;\n  private gameStartTime: number;\n  private difficultyColors: string[] = ['#1a6844', '#664d1a', '#661a1a'];\n  \n  constructor(scene: GameScene) {\n    this.scene = scene;\n    this.gameStartTime = Date.now();\n    \n    // Setup time-based difficulty updates\n    this.scene.time.addEvent({\n      delay: 1000, // Check every second\n      callback: this.updateTimeDifficulty,\n      callbackScope: this,\n      loop: true\n    });\n    \n    // Listen for score changes\n    this.scene.events.on('scoreChanged', this.checkScoreMilestones, this);\n  }\n  \n  private updateTimeDifficulty(): void {\n    const elapsedSeconds = (Date.now() - this.gameStartTime) / 1000;\n    \n    if (elapsedSeconds > 60 && this.difficultyLevel < 3) {\n      this.setDifficultyLevel(3);\n    } else if (elapsedSeconds > 30 && this.difficultyLevel < 2) {\n      this.setDifficultyLevel(2);\n    }\n  }\n  \n  private checkScoreMilestones(score: number): void {\n    if (score >= 50 && this.difficultyLevel < 3) {\n      this.setDifficultyLevel(3);\n    } else if (score >= 25 && this.difficultyLevel < 2) {\n      this.setDifficultyLevel(2);\n    } else if (score >= 10 && this.difficultyLevel < 1) {\n      this.setDifficultyLevel(1);\n    }\n  }\n  \n  setDifficultyLevel(level: number): void {\n    if (level !== this.difficultyLevel && level <= this.maxDifficultyLevel) {\n      this.difficultyLevel = level;\n      \n      // Visual feedback - background tint change\n      if (level > 0) {\n        this.scene.cameras.main.setBackgroundColor(this.difficultyColors[level - 1]);\n        this.scene.tweens.add({\n          targets: this.scene.cameras.main,\n          duration: 1000,\n          flash: 0.5\n        });\n      }\n      \n      // Audio cue\n      this.scene.sound.play('difficulty_change');\n      \n      // Update spawn rates and entity speeds\n      this.scene.entitySpawner.updateDifficulty(level);\n      \n      // Emit event for other systems\n      this.scene.events.emit('difficultyChanged', level);\n    }\n  }\n  \n  // Additional methods...\n}\n```",
+        "testStrategy": "1. Verify time-based difficulty increases\n2. Test score milestone difficulty triggers\n3. Validate visual feedback for difficulty changes\n4. Test entity speed scaling with difficulty\n5. Verify spawn rate adjustments\n6. Test hazard variety changes with difficulty\n7. Validate adaptive difficulty adjustments\n8. Test audio cues for difficulty transitions\n9. Verify difficulty level display updates\n10. Test edge cases (max difficulty, rapid score changes)",
+        "priority": "medium",
+        "dependencies": [
+          6,
+          8
+        ],
+        "status": "pending",
+        "subtasks": [
+          {
+            "id": 1,
+            "title": "Create DifficultyManager Class",
+            "description": "Implement the core DifficultyManager class with necessary properties and initialization logic",
+            "dependencies": [],
+            "details": "Create a DifficultyManager class that tracks difficulty levels, initializes with default values, and connects to the game scene. Include properties for current difficulty level, maximum difficulty level, game start time, and difficulty-based visual elements. Implement the constructor to initialize these properties and set up event listeners.",
+            "status": "pending",
+            "testStrategy": "Verify the DifficultyManager initializes correctly with default values. Test that it properly connects to the game scene and registers event listeners."
+          },
+          {
+            "id": 2,
+            "title": "Implement Time-Based Difficulty Scaling",
+            "description": "Create the time-based difficulty progression system with defined time thresholds",
+            "dependencies": [
+              "9.1"
+            ],
+            "details": "Implement the updateTimeDifficulty method to track elapsed game time and trigger difficulty increases at specified thresholds (0-30s: easy, 30-60s: medium, 60+s: hard). Set up a timer event that checks elapsed time every second and calls this method. Ensure proper difficulty level transitions based on time thresholds.",
+            "status": "pending",
+            "testStrategy": "Test that difficulty increases at the correct time thresholds. Verify the timer event fires regularly and updates difficulty appropriately. Validate that difficulty doesn't decrease if score-based difficulty is higher."
+          },
+          {
+            "id": 3,
+            "title": "Implement Score Milestone Difficulty Triggers",
+            "description": "Create the score-based difficulty progression system with defined point thresholds",
+            "dependencies": [
+              "9.1"
+            ],
+            "details": "Implement the checkScoreMilestones method to monitor player score and trigger difficulty increases at specified point thresholds (10 points: first increase, 25 points: second increase, 50 points: maximum difficulty). Set up event listeners for score changes and ensure proper difficulty level transitions based on score milestones.",
+            "status": "pending",
+            "testStrategy": "Test that difficulty increases at the correct score thresholds. Verify the score event listener works properly. Validate that the highest difficulty level from either time or score is maintained."
+          },
+          {
+            "id": 4,
+            "title": "Create Visual and Audio Feedback for Difficulty Changes",
+            "description": "Implement visual indicators and audio cues for difficulty transitions",
+            "dependencies": [
+              "9.1",
+              "9.2",
+              "9.3"
+            ],
+            "details": "Enhance the setDifficultyLevel method to provide feedback when difficulty changes. Implement background color changes using the difficultyColors array, add screen flash effects using tweens, play audio cues for transitions, and display difficulty level indicators for player awareness. Ensure smooth transitions between difficulty states.",
+            "status": "pending",
+            "testStrategy": "Verify background color changes correctly with difficulty increases. Test that screen flash animations trigger properly. Validate that audio cues play at difficulty transitions. Ensure difficulty level indicators update appropriately."
+          },
+          {
+            "id": 5,
+            "title": "Implement Entity Adjustments Based on Difficulty",
+            "description": "Create systems to modify entity behavior based on current difficulty level",
+            "dependencies": [
+              "9.1",
+              "9.2",
+              "9.3",
+              "9.4"
+            ],
+            "details": "Implement methods to adjust game parameters based on difficulty level: increase entity movement speeds, modify spawn rates and patterns, introduce new hazard varieties at higher difficulties, and create an adaptive difficulty system that adjusts based on player performance. Emit difficulty change events for other systems to respond to.",
+            "status": "pending",
+            "testStrategy": "Test that entity speeds scale appropriately with difficulty. Verify spawn rates increase at higher difficulties. Validate that new hazard types appear at appropriate difficulty levels. Test the adaptive difficulty system responds correctly to player performance metrics."
+          }
+        ]
+      },
+      {
+        "id": 10,
+        "title": "HUD and UI Implementation",
+        "description": "Create the heads-up display (HUD) and user interface elements as specified in the UI requirements.",
+        "details": "1. Create UIManager class to handle all UI elements\n2. Implement score display in top-left corner with large font\n3. Create lives display in top-right corner with heart icons\n4. Add timer in top-center with countdown format\n5. Implement streak counter below score with animation\n6. Create pause button with menu overlay\n7. Implement responsive UI scaling for different screen sizes\n8. Add UI animations for score changes and events\n9. Create game over screen with:\n   - Final score display\n   - High score comparison\n   - Play again button\n   - Share score button\n   - Main menu button\n10. Implement UI sound effects for interactions\n11. Add accessibility features (color-blind friendly, keyboard navigation)\n\nExample implementation:\n```typescript\nclass UIManager {\n  private scene: Phaser.Scene;\n  private scoreText: Phaser.GameObjects.Text;\n  private streakText: Phaser.GameObjects.Text;\n  private timerText: Phaser.GameObjects.Text;\n  private heartIcons: Phaser.GameObjects.Image[] = [];\n  private pauseButton: Phaser.GameObjects.Image;\n  \n  constructor(scene: Phaser.Scene) {\n    this.scene = scene;\n    this.createHUD();\n  }\n  \n  private createHUD(): void {\n    // Score display - top left\n    this.scoreText = this.scene.add.text(20, 20, 'Score: 0', {\n      fontSize: '32px',\n      fontFamily: 'Arial',\n      color: '#ffffff',\n      stroke: '#000000',\n      strokeThickness: 4\n    });\n    this.scoreText.setScrollFactor(0);\n    \n    // Streak counter - below score\n    this.streakText = this.scene.add.text(20, 60, 'Streak: 0', {\n      fontSize: '24px',\n      fontFamily: 'Arial',\n      color: '#ffff00',\n      stroke: '#000000',\n      strokeThickness: 3\n    });\n    this.streakText.setScrollFactor(0);\n    \n    // Timer - top center\n    const centerX = this.scene.cameras.main.width / 2;\n    this.timerText = this.scene.add.text(centerX, 20, 'Time: 0', {\n      fontSize: '28px',\n      fontFamily: 'Arial',\n      color: '#ffffff',\n      stroke: '#000000',\n      strokeThickness: 4\n    });\n    this.timerText.setOrigin(0.5, 0);\n    this.timerText.setScrollFactor(0);\n    \n    // Lives display - top right\n    this.createLivesDisplay();\n    \n    // Pause button\n    this.pauseButton = this.scene.add.image(\n      this.scene.cameras.main.width - 20,\n      20,\n      'pause_button'\n    );\n    this.pauseButton.setOrigin(1, 0);\n    this.pauseButton.setInteractive();\n    this.pauseButton.on('pointerdown', () => {\n      this.scene.sound.play('click');\n      this.scene.scene.pause();\n      this.scene.scene.launch('PauseScene');\n    });\n  }\n  \n  // Additional methods...\n}\n```",
+        "testStrategy": "1. Verify all UI elements display correctly\n2. Test UI updates with game events (score changes, life loss)\n3. Validate UI animations and transitions\n4. Test responsive layout on different screen sizes\n5. Verify pause functionality works correctly\n6. Test game over screen and button interactions\n7. Validate UI sound effects\n8. Test accessibility features\n9. Verify UI performance with many game objects\n10. Test UI with different aspect ratios",
+        "priority": "medium",
+        "dependencies": [
+          8
+        ],
+        "status": "pending",
+        "subtasks": [
+          {
+            "id": 1,
+            "title": "Create UIManager Class and Core HUD Elements",
+            "description": "Implement the UIManager class to handle all UI elements and create the core HUD components including score display, lives display, and timer.",
+            "dependencies": [],
+            "details": "Create a UIManager class that initializes and manages all UI elements. Implement the score display in the top-left corner with large font and stroke for visibility. Create the lives display in the top-right corner using heart icons. Add a timer in the top-center with countdown format. Ensure all elements are properly positioned and scaled according to the screen size.",
+            "status": "pending",
+            "testStrategy": "Verify all core HUD elements display correctly on screen. Test that the UIManager properly initializes all components. Confirm elements maintain proper positioning across different screen resolutions."
+          },
+          {
+            "id": 2,
+            "title": "Implement Interactive UI Elements and Animations",
+            "description": "Add interactive UI elements including the pause button and implement animations for score changes and streak counter.",
+            "dependencies": [
+              "10.1"
+            ],
+            "details": "Create a pause button in an accessible corner of the screen with proper interactive states. Implement the streak counter below the score with animation effects when the streak changes. Add animations for score changes to provide visual feedback. Ensure all interactive elements have proper hit areas and visual feedback on interaction.",
+            "status": "pending",
+            "testStrategy": "Test pause button functionality and verify it correctly pauses the game. Validate animations trigger correctly when score or streak values change. Ensure interactive elements respond appropriately to mouse/touch input."
+          },
+          {
+            "id": 3,
+            "title": "Develop Game Over Screen",
+            "description": "Create a comprehensive game over screen with final score display, high score comparison, and navigation buttons.",
+            "dependencies": [
+              "10.1"
+            ],
+            "details": "Implement a game over screen that displays when the player loses. Include the final score with appropriate styling, high score comparison with animation if a new high score is achieved, and navigation buttons (Play Again, Share Score, Main Menu). Ensure the screen has a semi-transparent background and smooth transition animations.",
+            "status": "pending",
+            "testStrategy": "Verify the game over screen appears correctly when triggered. Test all buttons function as expected. Confirm high score comparison works correctly. Validate screen displays properly on different device sizes."
+          },
+          {
+            "id": 4,
+            "title": "Implement Responsive UI Scaling",
+            "description": "Ensure all UI elements scale and position correctly across different screen sizes and device types.",
+            "dependencies": [
+              "10.1",
+              "10.2",
+              "10.3"
+            ],
+            "details": "Create a responsive scaling system that adjusts UI element sizes and positions based on the screen dimensions. Implement breakpoints for different device categories (phone, tablet, desktop). Ensure text remains readable and interactive elements maintain appropriate hit areas across all screen sizes. Test and adjust layout for both landscape and portrait orientations.",
+            "status": "pending",
+            "testStrategy": "Test UI on multiple screen resolutions ranging from 320px to 1920px width. Verify all elements remain visible and properly positioned. Confirm text readability and touch target sizes meet accessibility standards on small screens."
+          },
+          {
+            "id": 5,
+            "title": "Add UI Sound Effects and Accessibility Features",
+            "description": "Implement sound effects for UI interactions and add accessibility features to ensure the game is playable by users with different abilities.",
+            "dependencies": [
+              "10.2",
+              "10.3"
+            ],
+            "details": "Add sound effects for button clicks, menu navigation, score changes, and other UI interactions. Implement accessibility features including color-blind friendly UI options, keyboard navigation support, text scaling options, and high contrast mode. Ensure all interactive elements have appropriate ARIA attributes for screen readers.",
+            "status": "pending",
+            "testStrategy": "Test all UI sound effects trigger at appropriate times. Verify keyboard navigation works for all interactive elements. Test color-blind modes with appropriate simulation tools. Validate screen reader compatibility with assistive technology."
+          }
+        ]
+      },
+      {
+        "id": 11,
+        "title": "Audio System Implementation",
+        "description": "Implement the audio system with background music and sound effects as specified in the audio requirements.",
+        "status": "pending",
+        "dependencies": [
+          2
+        ],
+        "priority": "medium",
+        "details": "1. Create AudioManager class to handle all game audio\n2. Implement background music:\n   - Upbeat, energetic loop\n   - Volume control\n   - Seamless looping\n   - Fade effects for transitions\n3. Add sound effects for:\n   - Stroller rescue: Success chime\n   - Hazard collision: Impact sound\n   - Shooting: Laser/pew sound\n   - VIP protection: Heroic fanfare\n   - Life loss: Dramatic sound\n   - UI interactions: Click/tap sounds\n4. Implement audio pooling for performance\n5. Add volume settings in options menu\n6. Create audio mute functionality\n7. Implement spatial audio for entity sounds (volume based on entity position)\n8. Add audio fade effects for transitions\n9. Create adaptive audio based on game state and difficulty level\n10. Implement audio preloading and caching\n11. Utilize audio sprites to combine multiple effects for performance\n12. Optimize audio performance for mobile devices\n\nExample implementation:\n```typescript\nclass AudioManager {\n  private scene: Phaser.Scene;\n  private backgroundMusic: Phaser.Sound.BaseSound;\n  private sounds: Map<string, Phaser.Sound.BaseSound> = new Map();\n  private musicVolume: number = 0.5;\n  private sfxVolume: number = 0.7;\n  private isMuted: boolean = false;\n  \n  constructor(scene: Phaser.Scene) {\n    this.scene = scene;\n    this.initAudio();\n  }\n  \n  private initAudio(): void {\n    // Background music\n    this.backgroundMusic = this.scene.sound.add('background_music', {\n      volume: this.musicVolume,\n      loop: true\n    });\n    \n    // Sound effects\n    this.sounds.set('rescue', this.scene.sound.add('rescue_sound', { volume: this.sfxVolume }));\n    this.sounds.set('collision', this.scene.sound.add('collision_sound', { volume: this.sfxVolume }));\n    this.sounds.set('shoot', this.scene.sound.add('shoot_sound', { volume: this.sfxVolume }));\n    this.sounds.set('vip_saved', this.scene.sound.add('vip_saved_sound', { volume: this.sfxVolume }));\n    this.sounds.set('life_loss', this.scene.sound.add('life_loss_sound', { volume: this.sfxVolume }));\n    this.sounds.set('click', this.scene.sound.add('click_sound', { volume: this.sfxVolume }));\n    this.sounds.set('difficulty_change', this.scene.sound.add('difficulty_change_sound', { volume: this.sfxVolume }));\n  }\n  \n  playBackgroundMusic(): void {\n    if (!this.backgroundMusic.isPlaying) {\n      this.backgroundMusic.play();\n    }\n  }\n  \n  playSound(key: string, volumeMultiplier: number = 1): void {\n    if (this.sounds.has(key) && !this.isMuted) {\n      const sound = this.sounds.get(key);\n      sound.play({ volume: this.sfxVolume * volumeMultiplier });\n    }\n  }\n  \n  // Additional methods...\n}\n```\n\n**Documentation References:**\n- [Phaser 3 Audio System](https://photonstorm.github.io/phaser3-docs/Phaser.Sound.BaseSound.html)\n- [Phaser 3 Audio Loading](https://photonstorm.github.io/phaser3-docs/Phaser.Loader.LoaderPlugin.html#audio)\n- [Phaser 3 Audio Sprites](https://photonstorm.github.io/phaser3-docs/Phaser.Sound.AudioSprite.html)\n- [Phaser 3 Audio Events](https://photonstorm.github.io/phaser3-docs/Phaser.Sound.Events.html)\n- [Phaser 3 Audio Optimization](https://photonstorm.github.io/phaser3-docs/Phaser.Sound.BaseSoundManager.html)\n- [Web Audio API](https://developer.mozilla.org/en-US/docs/Web/API/Web_Audio_API)",
+        "testStrategy": "1. Verify background music plays correctly with seamless looping\n2. Test all sound effects trigger at appropriate times\n3. Validate volume controls work properly for both music and effects\n4. Test mute functionality\n5. Verify audio pooling performance\n6. Test spatial audio positioning based on entity location\n7. Validate audio fade effects during transitions\n8. Test adaptive audio changes with game state and difficulty levels\n9. Verify audio preloading and caching\n10. Test audio sprites functionality and performance\n11. Test audio on different devices and browsers\n12. Validate mobile optimization with performance metrics\n13. Test memory usage during extended gameplay",
+        "subtasks": [
+          {
+            "id": 1,
+            "title": "Create AudioManager Class",
+            "description": "Develop the core AudioManager class to handle all game audio functionality including initialization, playback control, and audio resource management.",
+            "dependencies": [],
+            "details": "Implement the AudioManager class with proper initialization, sound loading, and basic playback methods. Include constructor that accepts a Phaser.Scene parameter, private properties for storing sound references, volume controls, and mute state. Create methods for playing, pausing, resuming, and stopping sounds. Implement proper resource management to prevent memory leaks.",
+            "status": "pending",
+            "testStrategy": "Verify AudioManager initializes correctly with a Phaser scene. Test basic audio playback functionality. Confirm proper resource management with no memory leaks. Validate error handling for missing audio assets."
+          },
+          {
+            "id": 2,
+            "title": "Implement Background Music System",
+            "description": "Create a system for background music with seamless looping, volume control, and fade effects for transitions between game states.",
+            "dependencies": [
+              "11.1"
+            ],
+            "details": "Add methods to AudioManager for background music control including playBackgroundMusic(), stopBackgroundMusic(), fadeIn(), and fadeOut() with configurable duration parameters. Implement seamless looping using Phaser's loop property. Create transition effects between different music tracks for game state changes (menu to gameplay, gameplay to game over). Ensure background music persists across applicable scene transitions.",
+            "status": "pending",
+            "testStrategy": "Test seamless looping with no audible gaps. Verify fade effects work correctly with different durations. Confirm volume control specifically for background music. Validate music persistence across scene transitions."
+          },
+          {
+            "id": 3,
+            "title": "Implement Sound Effects System",
+            "description": "Add sound effects for all game events including stroller rescue, hazard collision, shooting, VIP protection, life loss, and UI interactions.",
+            "dependencies": [
+              "11.1"
+            ],
+            "details": "Create a comprehensive sound effect system with methods for playing different categories of sounds. Implement all required sound effects: success chime for stroller rescue, impact sound for hazard collision, laser/pew sound for shooting, heroic fanfare for VIP protection, dramatic sound for life loss, and click/tap sounds for UI interactions. Add volume control specifically for sound effects. Create methods to play sounds with optional parameters for volume multiplier and rate.",
+            "status": "pending",
+            "testStrategy": "Verify all sound effects play at appropriate game events. Test volume control specifically for sound effects. Confirm sound effects play correctly with different parameter variations. Validate sound effects don't interfere with background music."
+          },
+          {
+            "id": 4,
+            "title": "Implement Audio Optimization Features",
+            "description": "Add audio pooling, preloading, caching, and audio sprites to optimize performance, especially for mobile devices.",
+            "dependencies": [
+              "11.1",
+              "11.3"
+            ],
+            "details": "Implement audio pooling using Phaser's sound groups to limit simultaneous sounds and improve performance. Create audio preloading and caching system to prevent loading delays during gameplay. Implement audio sprites to combine multiple sound effects into single files for better performance. Add methods for managing audio memory usage. Optimize audio formats and compression for mobile devices. Implement fallback sounds for unsupported formats.",
+            "status": "pending",
+            "testStrategy": "Measure performance with and without audio pooling. Test audio loading times with preloading vs. on-demand loading. Verify audio sprites play correct sound segments. Validate performance on mobile devices with limited resources. Test memory usage during extended gameplay."
+          },
+          {
+            "id": 5,
+            "title": "Implement Advanced Audio Features",
+            "description": "Add spatial audio, volume settings UI, mute functionality, and adaptive audio based on game state and difficulty.",
+            "dependencies": [
+              "11.1",
+              "11.2",
+              "11.3"
+            ],
+            "details": "Implement spatial audio for entity sounds with volume based on entity position relative to player. Create volume settings UI in the options menu with separate sliders for music and sound effects. Add mute/unmute functionality with visual indicator. Implement adaptive audio system that changes music and sound characteristics based on game state (normal, intense, victory, defeat) and difficulty level. Create methods to save and load audio preferences.",
+            "status": "pending",
+            "testStrategy": "Test spatial audio positioning with moving entities. Verify volume settings UI correctly adjusts audio levels. Confirm mute functionality works for both music and sound effects. Validate adaptive audio changes with different game states and difficulty levels. Test persistence of audio settings between game sessions."
+          }
+        ]
+      },
+      {
+        "id": 12,
+        "title": "Game State Management",
+        "description": "Implement game state management including pause, game over, and scene transitions.",
+        "details": "1. Create GameStateManager class to handle game states\n2. Implement pause functionality:\n   - Pause button in UI\n   - Keyboard pause (ESC key)\n   - Pause overlay with semi-transparent background\n   - Time scaling to zero for paused state\n3. Create PauseScene with menu options:\n   - Resume button\n   - Restart button\n   - Settings button\n   - Quit to menu button\n4. Implement game over state:\n   - Trigger on zero lives\n   - Stop entity spawning\n   - Show game over overlay\n   - Display final score\n   - Compare with high score\n   - Provide restart and menu options\n5. Add auto-save functionality every 30 seconds\n6. Implement scene transitions with fade effects\n7. Create state persistence between scene changes\n8. Add error handling and recovery\n9. Implement offline support with localStorage\n\nExample implementation:\n```typescript\nclass GameStateManager {\n  private scene: GameScene;\n  private isGameOver: boolean = false;\n  private gameTime: number = 0;\n  private lastSaveTime: number = 0;\n  \n  constructor(scene: GameScene) {\n    this.scene = scene;\n    this.setupEventListeners();\n  }\n  \n  private setupEventListeners(): void {\n    // Listen for pause key\n    this.scene.input.keyboard.on('keydown-ESC', () => {\n      this.pauseGame();\n    });\n    \n    // Listen for life loss events\n    this.scene.events.on('lifeChanged', (lives: number) => {\n      if (lives <= 0) {\n        this.gameOver();\n      }\n    });\n    \n    // Update timer for auto-save\n    this.scene.events.on('update', (time: number, delta: number) => {\n      this.gameTime += delta;\n      \n      // Auto-save every 30 seconds\n      if (this.gameTime - this.lastSaveTime > 30000) {\n        this.saveGameState();\n        this.lastSaveTime = this.gameTime;\n      }\n    });\n  }\n  \n  pauseGame(): void {\n    if (!this.isGameOver) {\n      this.scene.physics.pause();\n      this.scene.scene.pause();\n      this.scene.scene.launch('PauseScene');\n    }\n  }\n  \n  resumeGame(): void {\n    this.scene.physics.resume();\n    this.scene.scene.resume();\n  }\n  \n  gameOver(): void {\n    if (!this.isGameOver) {\n      this.isGameOver = true;\n      this.scene.physics.pause();\n      \n      // Stop all spawners\n      this.scene.entitySpawner.stopAll();\n      \n      // Save final state and high score\n      this.saveGameState();\n      this.saveHighScore();\n      \n      // Show game over scene\n      this.scene.scene.launch('GameOverScene', {\n        score: this.scene.scoreManager.getScore(),\n        highScore: this.scene.scoreManager.getHighScore()\n      });\n    }\n  }\n  \n  // Additional methods...\n}\n```",
+        "testStrategy": "1. Verify pause functionality works correctly\n2. Test pause menu options\n3. Validate game over state triggers properly\n4. Test game over screen and options\n5. Verify auto-save functionality\n6. Test scene transitions and effects\n7. Validate state persistence between scenes\n8. Test error handling and recovery\n9. Verify offline support with localStorage\n10. Test edge cases (rapid state changes, browser refresh)",
+        "priority": "medium",
+        "dependencies": [
+          8,
+          10
+        ],
+        "status": "pending",
+        "subtasks": [
+          {
+            "id": 1,
+            "title": "Create GameStateManager Class",
+            "description": "Implement the core GameStateManager class with basic state tracking and event handling",
+            "dependencies": [],
+            "details": "Create a GameStateManager class that handles different game states (playing, paused, game over). Implement state variables, constructor, and basic event listeners. Set up the connection to the game scene and implement methods for state transitions. Include documentation based on Phaser 3 scene management.",
+            "status": "pending",
+            "testStrategy": "Verify the GameStateManager initializes correctly. Test state tracking variables. Confirm event listeners are properly set up. Validate the manager connects correctly to the game scene."
+          },
+          {
+            "id": 2,
+            "title": "Implement Pause Functionality",
+            "description": "Create pause system with UI overlay and input controls",
+            "dependencies": [
+              "12.1"
+            ],
+            "details": "Implement pause functionality including UI pause button, keyboard ESC key listener, semi-transparent overlay, and time scaling to zero. Create the PauseScene with menu options (Resume, Restart, Settings, Quit). Use Phaser's scene management to handle scene pausing/resuming and implement proper event handling for pause state transitions.",
+            "status": "pending",
+            "testStrategy": "Test pause activation via UI button and ESC key. Verify game physics and animations stop when paused. Confirm the pause overlay appears correctly. Test all pause menu options function as expected. Validate time scaling works properly."
+          },
+          {
+            "id": 3,
+            "title": "Implement Game Over State",
+            "description": "Create game over detection, overlay and end-game options",
+            "dependencies": [
+              "12.1"
+            ],
+            "details": "Implement game over state that triggers when player lives reach zero. Stop all entity spawning and game physics. Create game over overlay showing final score and high score comparison. Add restart and menu options. Implement proper cleanup of resources when game over occurs. Use Phaser's scene management for the GameOverScene.",
+            "status": "pending",
+            "testStrategy": "Verify game over triggers correctly when lives reach zero. Test that entity spawning stops. Confirm game over overlay displays with correct score information. Validate restart and menu options work properly. Test high score comparison and storage."
+          },
+          {
+            "id": 4,
+            "title": "Add Scene Transitions and State Persistence",
+            "description": "Implement smooth scene transitions with fade effects and state persistence between scenes",
+            "dependencies": [
+              "12.1",
+              "12.2",
+              "12.3"
+            ],
+            "details": "Create fade transition effects between scenes using Phaser's camera fade methods. Implement state persistence to maintain game data between scene changes. Create a data management system to store and retrieve game state. Handle scene initialization with previous state data. Implement proper scene shutdown and cleanup.",
+            "status": "pending",
+            "testStrategy": "Test fade transitions between all game scenes. Verify game state persists correctly between scene changes. Validate that game objects initialize properly with persisted data. Test scene cleanup to ensure no memory leaks."
+          },
+          {
+            "id": 5,
+            "title": "Implement Auto-Save and Error Recovery",
+            "description": "Add auto-save functionality, offline support, and error handling/recovery",
+            "dependencies": [
+              "12.1",
+              "12.4"
+            ],
+            "details": "Implement auto-save functionality that saves game state every 30 seconds. Add localStorage support for offline gameplay. Create error handling system to detect and recover from common errors. Implement data validation to prevent corruption. Add user feedback for save/load operations. Create recovery mechanisms for interrupted gameplay sessions.",
+            "status": "pending",
+            "testStrategy": "Verify auto-save triggers at correct intervals. Test localStorage functionality works across browser sessions. Validate error handling by simulating common errors. Test recovery from interrupted gameplay. Confirm data validation prevents corruption of saved states."
+          }
+        ]
+      },
+      {
+        "id": 13,
+        "title": "Visual Effects and Animation System",
+        "description": "Implement visual effects and animations to enhance game feel and provide feedback to the player.",
+        "details": "1. Create EffectsManager class to handle visual effects\n2. Implement particle effects for:\n   - Stroller rescue (sparkles/stars)\n   - Hazard collision (explosion/smoke)\n   - Shooting (projectile trail)\n   - VIP protection (golden aura)\n   - Assassin elimination (disappearing effect)\n3. Add screen effects:\n   - Screen shake on collision\n   - Flash on life loss\n   - Color changes for difficulty increases\n   - Slow-motion effect for significant events\n4. Implement sprite animations:\n   - Player movement animations\n   - Stroller rolling animation\n   - Hazard movement animations\n   - VIP and assassin character animations\n5. Add transition effects between scenes\n6. Create UI animations for score changes and notifications\n7. Implement weather/environmental effects based on game progress\n8. Add camera effects (zoom, pan, follow)\n9. Create animation manager for centralized control\n\nExample implementation:\n```typescript\nclass EffectsManager {\n  private scene: Phaser.Scene;\n  private particles: Map<string, Phaser.GameObjects.Particles.ParticleEmitterManager> = new Map();\n  \n  constructor(scene: Phaser.Scene) {\n    this.scene = scene;\n    this.createParticleSystems();\n  }\n  \n  private createParticleSystems(): void {\n    // Rescue effect particles\n    const rescueParticles = this.scene.add.particles('star_particle');\n    this.particles.set('rescue', rescueParticles);\n    rescueParticles.createEmitter({\n      speed: { min: 50, max: 100 },\n      angle: { min: 0, max: 360 },\n      scale: { start: 1, end: 0 },\n      lifespan: 800,\n      quantity: 15,\n      on: false\n    });\n    \n    // Collision effect particles\n    const collisionParticles = this.scene.add.particles('smoke_particle');\n    this.particles.set('collision', collisionParticles);\n    collisionParticles.createEmitter({\n      speed: { min: 50, max: 150 },\n      angle: { min: 0, max: 360 },\n      scale: { start: 0.5, end: 0 },\n      tint: 0xff0000,\n      lifespan: 500,\n      quantity: 20,\n      on: false\n    });\n    \n    // Additional particle systems...\n  }\n  \n  playRescueEffect(x: number, y: number): void {\n    const emitter = this.particles.get('rescue').emitters.getFirst();\n    emitter.setPosition(x, y);\n    emitter.explode();\n  }\n  \n  playCollisionEffect(x: number, y: number): void {\n    const emitter = this.particles.get('collision').emitters.getFirst();\n    emitter.setPosition(x, y);\n    emitter.explode();\n    \n    // Screen shake\n    this.scene.cameras.main.shake(200, 0.01);\n  }\n  \n  flashScreen(color: number = 0xff0000, duration: number = 100): void {\n    this.scene.cameras.main.flash(duration, color);\n  }\n  \n  // Additional methods...\n}\n```",
+        "testStrategy": "1. Verify all particle effects display correctly\n2. Test screen effects (shake, flash, color changes)\n3. Validate sprite animations play properly\n4. Test transition effects between scenes\n5. Verify UI animations for score changes\n6. Test weather/environmental effects\n7. Validate camera effects\n8. Measure performance with multiple effects active\n9. Test effects on different devices and browsers\n10. Verify animation manager controls all animations correctly",
+        "priority": "medium",
+        "dependencies": [
+          5,
+          6,
+          7,
+          11
+        ],
+        "status": "pending",
+        "subtasks": [
+          {
+            "id": 1,
+            "title": "EffectsManager Implementation",
+            "description": "Create the core EffectsManager class to handle all visual effects and animations in the game",
+            "dependencies": [],
+            "details": "Develop the EffectsManager class with proper initialization, resource management, and methods for triggering different effects. Include particle system setup, screen effect methods, and animation control. Implement proper memory management and object pooling for performance optimization.",
+            "status": "pending",
+            "testStrategy": "Test initialization with different scenes, verify resource loading and unloading, check memory usage during extended gameplay, ensure all effect methods can be called without errors."
+          },
+          {
+            "id": 2,
+            "title": "Particle Effects System",
+            "description": "Implement various particle effects for game events including stroller rescue, hazard collision, shooting, VIP protection, and assassin elimination",
+            "dependencies": [
+              "13.1"
+            ],
+            "details": "Create particle emitters for each game event with appropriate textures, colors, and behaviors. Configure particle properties (speed, scale, lifespan, etc.) for each effect type. Implement methods to trigger effects at specific coordinates with proper z-index ordering.",
+            "status": "pending",
+            "testStrategy": "Test each particle effect individually, verify proper positioning and timing, check performance with multiple simultaneous effects, ensure effects scale appropriately on different devices."
+          },
+          {
+            "id": 3,
+            "title": "Screen and Camera Effects",
+            "description": "Add screen-wide visual effects including screen shake, flashes, color changes, slow-motion, and camera movements",
+            "dependencies": [
+              "13.1"
+            ],
+            "details": "Implement screen shake effect with configurable intensity and duration. Create screen flash effect with color parameter. Add color filter effects for difficulty changes. Develop slow-motion effect with time scaling. Implement camera effects including zoom, pan, and follow behaviors.",
+            "status": "pending",
+            "testStrategy": "Test each screen effect in isolation and in combination, verify proper timing and intensity, check for performance impact, ensure effects don't interfere with gameplay mechanics."
+          },
+          {
+            "id": 4,
+            "title": "Sprite Animation System",
+            "description": "Create and manage sprite animations for player, strollers, hazards, VIPs, assassins, and other game entities",
+            "dependencies": [
+              "13.1"
+            ],
+            "details": "Set up sprite sheets and animation frames for all game entities. Create animation sequences for different states (idle, moving, special actions). Implement animation manager to control playback, transitions, and events. Add support for animation callbacks on specific frames.",
+            "status": "pending",
+            "testStrategy": "Verify all animations play correctly, test animation transitions between states, check for visual glitches or frame skipping, ensure animations work at different game speeds."
+          },
+          {
+            "id": 5,
+            "title": "UI and Transition Effects",
+            "description": "Implement UI animations, scene transitions, and environmental effects to enhance game presentation",
+            "dependencies": [
+              "13.1",
+              "13.3",
+              "13.4"
+            ],
+            "details": "Create smooth transitions between game scenes with fade, slide, or custom effects. Implement UI animations for score changes, notifications, and button interactions. Add weather and environmental effects based on game progress. Ensure all effects are optimized for performance and can be disabled on lower-end devices.",
+            "status": "pending",
+            "testStrategy": "Test scene transitions for smoothness and timing, verify UI animations enhance rather than hinder usability, measure performance impact of environmental effects, ensure all animations complete properly even when interrupted."
+          }
+        ]
+      },
+      {
+        "id": 14,
+        "title": "Performance Optimization",
+        "description": "Optimize game performance to meet the specified requirements for FPS, load time, and memory usage.",
+        "status": "pending",
+        "dependencies": [
+          6,
+          7,
+          11,
+          13
+        ],
+        "priority": "high",
+        "details": "1. Implement object pooling for frequently created/destroyed entities (strollers, hazards, projectiles):\n   - Use Phaser.GameObjects.Group for pooling\n   - Reference: [Phaser 3 Object Pooling](https://photonstorm.github.io/phaser3-docs/Phaser.GameObjects.Group.html)\n\n2. Optimize asset loading and management:\n   - Texture atlases for sprites\n   - Audio sprite for sound effects\n   - Compressed textures where supported\n\n3. Implement efficient collision detection:\n   - Spatial partitioning by lanes\n   - Collision groups\n   - Optimized physics bodies\n   - Disable physics for off-screen entities\n\n4. Add performance monitoring tools:\n   - FPS counter\n   - Memory usage tracking\n   - Render time measurement\n   - Response time for user inputs (<50ms)\n\n5. Implement adaptive quality settings:\n   - Particle count adjustment\n   - Render quality scaling\n   - Animation complexity reduction\n\n6. Optimize rendering pipeline with WebGL:\n   - Minimize draw calls\n   - Use sprite batching\n   - Implement culling for off-screen objects\n   - Reference: [Phaser 3 Rendering Optimization](https://photonstorm.github.io/phaser3-docs/Phaser.Renderer.WebGL.WebGLRenderer.html)\n\n7. Add asset preloading and caching strategies\n\n8. Implement memory management and garbage collection optimization:\n   - Reference: [Phaser 3 Memory Management](https://photonstorm.github.io/phaser3-docs/Phaser.GameObjects.GameObject.html#destroy)\n\n9. Create performance testing suite\n\nExample implementation:\n```typescript\nclass PerformanceManager {\n  private scene: Phaser.Scene;\n  private fpsText: Phaser.GameObjects.Text;\n  private memoryText: Phaser.GameObjects.Text;\n  private responseTimeText: Phaser.GameObjects.Text;\n  private lastFpsUpdate: number = 0;\n  private fpsUpdateInterval: number = 500; // Update every 500ms\n  private qualityLevel: number = 2; // 0=low, 1=medium, 2=high\n  private lastInputTime: number = 0;\n  private inputResponseTimes: number[] = [];\n  \n  constructor(scene: Phaser.Scene) {\n    this.scene = scene;\n    this.setupMonitoring();\n    this.setupAdaptiveQuality();\n    this.monitorInputResponse();\n  }\n  \n  private setupMonitoring(): void {\n    // Only show in development mode\n    if (process.env.NODE_ENV === 'development') {\n      this.fpsText = this.scene.add.text(10, this.scene.cameras.main.height - 80, 'FPS: 0', {\n        fontSize: '16px',\n        color: '#00ff00'\n      });\n      this.fpsText.setScrollFactor(0);\n      \n      this.memoryText = this.scene.add.text(10, this.scene.cameras.main.height - 60, 'Memory: 0 MB', {\n        fontSize: '16px',\n        color: '#00ff00'\n      });\n      this.memoryText.setScrollFactor(0);\n      \n      this.responseTimeText = this.scene.add.text(10, this.scene.cameras.main.height - 40, 'Input: 0 ms', {\n        fontSize: '16px',\n        color: '#00ff00'\n      });\n      this.responseTimeText.setScrollFactor(0);\n      \n      this.scene.events.on('update', this.updateMonitoring, this);\n    }\n  }\n  \n  private updateMonitoring(time: number): void {\n    // Update FPS counter periodically to avoid performance impact\n    if (time - this.lastFpsUpdate > this.fpsUpdateInterval) {\n      this.fpsText.setText(`FPS: ${Math.round(this.scene.game.loop.actualFps)}`);\n      \n      // Memory usage (if available)\n      if (window.performance && window.performance.memory) {\n        const memoryUsed = Math.round(window.performance.memory.usedJSHeapSize / 1048576);\n        this.memoryText.setText(`Memory: ${memoryUsed} MB`);\n      }\n      \n      // Average input response time\n      if (this.inputResponseTimes.length > 0) {\n        const avgResponseTime = this.inputResponseTimes.reduce((a, b) => a + b, 0) / this.inputResponseTimes.length;\n        this.responseTimeText.setText(`Input: ${Math.round(avgResponseTime)} ms`);\n        this.inputResponseTimes = []; // Reset for next sample\n      }\n      \n      this.lastFpsUpdate = time;\n      \n      // Check if we need to adjust quality\n      this.checkPerformance();\n    }\n  }\n  \n  private monitorInputResponse(): void {\n    // Track when input starts\n    this.scene.input.keyboard.on('keydown', () => {\n      this.lastInputTime = performance.now();\n    });\n    \n    // Track touch/pointer inputs\n    this.scene.input.on('pointerdown', () => {\n      this.lastInputTime = performance.now();\n    });\n    \n    // Measure response time when player actually moves\n    this.scene.events.on('playerMove', () => {\n      if (this.lastInputTime > 0) {\n        const responseTime = performance.now() - this.lastInputTime;\n        this.inputResponseTimes.push(responseTime);\n        this.lastInputTime = 0;\n      }\n    });\n  }\n  \n  private checkPerformance(): void {\n    const currentFps = this.scene.game.loop.actualFps;\n    \n    // If FPS drops below thresholds, reduce quality\n    if (currentFps < 30 && this.qualityLevel > 0) {\n      this.qualityLevel--;\n      this.applyQualitySettings();\n    } else if (currentFps > 55 && this.qualityLevel < 2) {\n      this.qualityLevel++;\n      this.applyQualitySettings();\n    }\n  }\n  \n  private applyQualitySettings(): void {\n    // Apply different quality settings based on level\n    switch (this.qualityLevel) {\n      case 0: // Low\n        this.scene.effectsManager.setParticleCount(0.3); // 30% of normal\n        this.scene.effectsManager.disableScreenEffects();\n        // Disable non-essential physics\n        this.scene.entityManager.setOffScreenPhysics(false);\n        break;\n      case 1: // Medium\n        this.scene.effectsManager.setParticleCount(0.7); // 70% of normal\n        this.scene.effectsManager.enableBasicScreenEffects();\n        this.scene.entityManager.setOffScreenPhysics(false);\n        break;\n      case 2: // High (default)\n        this.scene.effectsManager.setParticleCount(1.0); // 100% of normal\n        this.scene.effectsManager.enableAllScreenEffects();\n        this.scene.entityManager.setOffScreenPhysics(true);\n        break;\n    }\n    \n    console.log(`Quality level set to: ${this.qualityLevel}`);\n  }\n  \n  // Additional methods...\n}\n```",
+        "testStrategy": "1. Measure FPS on target devices (should be 60 FPS minimum)\n2. Test load time on various connection speeds (<3 seconds on 3G)\n3. Monitor memory usage (<100MB)\n4. Verify object pooling reduces garbage collection\n5. Test performance with many entities on screen\n6. Validate adaptive quality settings improve performance\n7. Measure rendering optimization effectiveness\n8. Test asset loading and caching strategies\n9. Verify performance on minimum spec devices\n10. Run performance testing suite on different browsers\n11. Measure response time for user inputs (<50ms)\n12. Test WebGL rendering optimization\n13. Verify spatial partitioning improves collision detection performance\n14. Benchmark memory management techniques\n15. Test performance with physics disabled for off-screen entities",
+        "subtasks": [
+          {
+            "id": 1,
+            "title": "Implement Object Pooling System",
+            "description": "Create an object pooling system for frequently created/destroyed entities to reduce garbage collection and improve performance.",
+            "dependencies": [],
+            "details": "Implement object pooling using Phaser.GameObjects.Group for strollers, hazards, projectiles, and other frequently spawned entities. Create a PoolManager class that handles creation, retrieval, and return of objects to the pool. Implement methods for pre-populating pools at game start and dynamically expanding pools when needed. Use the Phaser 3 documentation on object pooling as reference: https://photonstorm.github.io/phaser3-docs/Phaser.GameObjects.Group.html.",
+            "status": "pending",
+            "testStrategy": "Measure memory usage with and without object pooling. Verify reduction in garbage collection pauses. Test with high entity counts (50+ entities) to ensure stable performance. Profile using Chrome DevTools to confirm object allocation reduction."
+          },
+          {
+            "id": 2,
+            "title": "Optimize Asset Loading and Management",
+            "description": "Implement efficient asset loading strategies including texture atlases, audio sprites, and compressed textures to reduce load times and memory usage.",
+            "dependencies": [],
+            "details": "Create texture atlases for all game sprites using TexturePacker or similar tools. Implement audio sprites for sound effects to reduce file requests. Use compressed texture formats (WebP, ASTC, etc.) with fallbacks for unsupported browsers. Implement progressive loading with a loading bar. Add asset preloading for upcoming game levels/sections. Implement proper asset caching strategies and memory management for textures.",
+            "status": "pending",
+            "testStrategy": "Measure initial load time on various connection speeds (target <3 seconds on 3G). Compare memory usage before and after optimization. Test texture loading across different browsers and devices. Verify audio performance with simultaneous sound effects."
+          },
+          {
+            "id": 3,
+            "title": "Implement Efficient Collision Detection",
+            "description": "Optimize the collision detection system using spatial partitioning, collision groups, and physics body optimization.",
+            "dependencies": [],
+            "details": "Implement lane-based spatial partitioning to limit collision checks to entities in the same lane. Create collision groups to filter unnecessary collision checks. Optimize physics bodies by using simplified shapes and appropriate collision masks. Disable physics for off-screen entities. Implement a quadtree or grid-based spatial indexing for more complex scenes. Use Phaser's built-in collision optimization features like Arcade Physics' 'skipQuadTree' option when appropriate.",
+            "status": "pending",
+            "testStrategy": "Profile collision detection performance with many entities (30+ on screen). Measure CPU usage during heavy collision scenarios. Compare frame rate with optimized vs. unoptimized collision detection. Test on lower-end devices to ensure stable performance."
+          },
+          {
+            "id": 4,
+            "title": "Create Performance Monitoring Tools",
+            "description": "Implement performance monitoring tools to track FPS, memory usage, render time, and input response time.",
+            "dependencies": [],
+            "details": "Create a PerformanceManager class that displays real-time metrics including FPS counter, memory usage tracking, render time measurement, and input response time monitoring. Implement logging of performance metrics for later analysis. Add visual indicators when performance drops below acceptable thresholds. Create a debug mode toggle to show/hide performance metrics. Implement the example code provided in the task description with additional features for comprehensive monitoring.",
+            "status": "pending",
+            "testStrategy": "Verify accuracy of FPS counter against browser dev tools. Test memory usage tracking across different browsers. Measure impact of the monitoring tools themselves on performance (should be minimal). Validate input response time measurements against requirements (<50ms)."
+          },
+          {
+            "id": 5,
+            "title": "Implement WebGL Rendering Optimizations and Adaptive Quality",
+            "description": "Optimize the WebGL rendering pipeline and implement adaptive quality settings that adjust based on device performance.",
+            "dependencies": [
+              "14.1",
+              "14.2",
+              "14.3",
+              "14.4"
+            ],
+            "details": "Minimize draw calls through sprite batching and texture atlases. Implement culling for off-screen objects. Use WebGL-specific optimizations like custom shaders for special effects. Create an adaptive quality system that dynamically adjusts settings based on performance: particle count adjustment, render quality scaling, animation complexity reduction, and physics simplification. Implement memory management and garbage collection optimization techniques. Reference Phaser 3 WebGL rendering documentation: https://photonstorm.github.io/phaser3-docs/Phaser.Renderer.WebGL.WebGLRenderer.html.",
+            "status": "pending",
+            "testStrategy": "Test performance across various devices (high-end, mid-range, low-end). Verify FPS stability during complex scenes. Measure memory usage over extended gameplay sessions. Validate adaptive quality adjustments improve performance on lower-end devices. Create a performance testing suite to automate tests across different scenarios and device profiles."
+          }
+        ]
+      },
+      {
+        "id": 15,
+        "title": "Cross-Platform Compatibility and Testing",
+        "description": "Ensure the game works correctly across different browsers, devices, and screen sizes as specified in the requirements.",
+        "status": "pending",
+        "dependencies": [
+          10,
+          14
+        ],
+        "priority": "high",
+        "details": "1. Implement responsive design:\n   - Flexible layout that adapts to screen sizes (320px-1920px width)\n   - Dynamic scaling of game elements\n   - Orientation handling (portrait/landscape)\n2. Create platform-specific controls:\n   - Keyboard controls for desktop\n   - Touch controls for mobile\n   - Gamepad support where available\n3. Implement browser compatibility fixes:\n   - Chrome 80+\n   - Firefox 75+\n   - Safari 13+\n   - Mobile browsers\n4. Add device detection and capability checking\n5. Create accessibility features:\n   - Color-blind friendly design\n   - Keyboard navigation\n   - Touch-friendly targets (minimum 44px)\n   - Screen reader support\n6. Implement offline support with service workers\n7. Add automated testing suite:\n   - Unit tests for game logic\n   - Integration tests for game systems\n   - Performance benchmarks\n8. Create manual testing protocol:\n   - Device testing matrix\n   - Browser testing checklist\n   - Usability testing guidelines\n9. Implement analytics for monitoring real-world usage\n10. Implement adaptive UI scaling based on device capabilities\n11. Adjust quality settings based on device performance\n\nExample implementation:\n```typescript\nclass PlatformManager {\n  private scene: Phaser.Scene;\n  private isMobile: boolean;\n  private isOffline: boolean = false;\n  private orientation: string = 'landscape';\n  \n  constructor(scene: Phaser.Scene) {\n    this.scene = scene;\n    this.detectPlatform();\n    this.setupResponsiveHandling();\n    this.setupOfflineDetection();\n  }\n  \n  private detectPlatform(): void {\n    // Check if mobile device based on user agent or touch capability\n    this.isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) || \n                   (navigator.maxTouchPoints && navigator.maxTouchPoints > 2);\n    \n    console.log(`Platform detected: ${this.isMobile ? 'Mobile' : 'Desktop'}`);\n    \n    // Apply platform-specific settings\n    if (this.isMobile) {\n      this.setupMobileControls();\n    } else {\n      this.setupDesktopControls();\n    }\n  }\n  \n  private setupResponsiveHandling(): void {\n    // Listen for resize events\n    window.addEventListener('resize', () => this.handleResize());\n    \n    // Initial sizing\n    this.handleResize();\n    \n    // Orientation change handling\n    window.addEventListener('orientationchange', () => {\n      setTimeout(() => this.handleResize(), 100); // Small delay to ensure dimensions updated\n    });\n  }\n  \n  private handleResize(): void {\n    const width = window.innerWidth;\n    const height = window.innerHeight;\n    \n    // Update game size\n    this.scene.scale.resize(width, height);\n    \n    // Determine orientation\n    const newOrientation = width > height ? 'landscape' : 'portrait';\n    if (newOrientation !== this.orientation) {\n      this.orientation = newOrientation;\n      this.handleOrientationChange();\n    }\n    \n    // Reposition UI elements\n    if (this.scene.uiManager) {\n      this.scene.uiManager.repositionElements();\n    }\n    \n    console.log(`Game resized: ${width}x${height}, Orientation: ${this.orientation}`);\n  }\n  \n  private handleOrientationChange(): void {\n    if (this.isMobile && this.orientation === 'portrait') {\n      // Show rotation suggestion for mobile in portrait\n      this.showRotationOverlay();\n    } else {\n      this.hideRotationOverlay();\n    }\n    \n    // Emit event for other systems to adjust\n    this.scene.events.emit('orientationChanged', this.orientation);\n  }\n  \n  // Additional methods...\n}\n\nclass AccessibilityManager {\n  private scene: Phaser.Scene;\n  private colorBlindMode: boolean = false;\n  \n  constructor(scene: Phaser.Scene) {\n    this.scene = scene;\n    this.setupAccessibilityOptions();\n  }\n  \n  private setupAccessibilityOptions(): void {\n    // Check for stored preferences\n    this.colorBlindMode = localStorage.getItem('colorBlindMode') === 'true';\n    \n    if (this.colorBlindMode) {\n      this.applyColorBlindMode();\n    }\n  }\n  \n  toggleColorBlindMode(): void {\n    this.colorBlindMode = !this.colorBlindMode;\n    localStorage.setItem('colorBlindMode', this.colorBlindMode.toString());\n    \n    if (this.colorBlindMode) {\n      this.applyColorBlindMode();\n    } else {\n      this.removeColorBlindMode();\n    }\n  }\n  \n  private applyColorBlindMode(): void {\n    // Apply color filters or alternative color schemes\n    // Replace red/green with blue/yellow for deuteranopia\n    // Update UI elements with accessible colors\n    // Add patterns to distinguish elements beyond color\n  }\n  \n  // Additional methods...\n}\n```",
+        "testStrategy": "1. Test on multiple browsers (Chrome 80+, Firefox 75+, Safari 13+)\n2. Verify responsive design on different screen sizes (320px-1920px)\n3. Test touch controls on mobile devices (iOS and Android)\n4. Validate keyboard controls on desktop\n5. Test orientation changes (portrait/landscape)\n6. Verify accessibility features work correctly, including color-blind mode\n7. Test offline functionality\n8. Run automated test suite\n9. Perform manual testing according to protocol\n10. Validate analytics data collection\n11. Test input responsiveness (< 50ms)\n12. Perform performance testing on minimum spec devices\n13. Verify adaptive UI scaling works correctly\n14. Test touch-friendly UI elements (minimum 44px)",
+        "subtasks": [
+          {
+            "id": 1,
+            "title": "Implement Responsive Design System",
+            "description": "Create a responsive design system that adapts to different screen sizes and orientations using Phaser 3's Scale Manager.",
+            "dependencies": [],
+            "details": "Implement flexible layout that adapts to screen sizes from 320px to 1920px width. Create dynamic scaling of game elements using Phaser.Scale.ScaleModes. Handle orientation changes between portrait and landscape modes with appropriate UI adjustments. Use Phaser.Scale.CENTER_BOTH for proper centering. Implement event listeners for resize and orientation change events.",
+            "status": "pending",
+            "testStrategy": "Test on devices with various screen sizes (320px, 768px, 1024px, 1920px). Verify game elements scale proportionally. Test orientation changes between portrait and landscape. Validate UI repositioning on resize events. Measure performance impact of scaling operations."
+          },
+          {
+            "id": 2,
+            "title": "Develop Platform-Specific Controls",
+            "description": "Implement control systems optimized for different platforms including keyboard, touch, and gamepad support.",
+            "dependencies": [
+              "15.1"
+            ],
+            "details": "Create keyboard controls for desktop with arrow keys, spacebar, and ESC. Implement touch controls for mobile with swipe detection and virtual buttons. Add gamepad support using Phaser.Input.Gamepad API. Create a control manager class that detects platform and sets appropriate control scheme. Ensure touch targets are at least 44px in size for accessibility.",
+            "status": "pending",
+            "testStrategy": "Test keyboard controls on desktop browsers. Validate touch controls on iOS and Android devices. Test gamepad functionality with common controllers. Measure input response time (target <50ms). Verify control switching when changing devices."
+          },
+          {
+            "id": 3,
+            "title": "Implement Browser Compatibility and Device Detection",
+            "description": "Ensure game compatibility across specified browsers and implement device capability detection.",
+            "dependencies": [
+              "15.1"
+            ],
+            "details": "Create browser-specific fixes for Chrome 80+, Firefox 75+, Safari 13+, and mobile browsers. Implement feature detection using Modernizr or equivalent. Add device detection to identify mobile/desktop platforms. Create capability checking for WebGL support, audio capabilities, and storage access. Implement fallbacks for unsupported features. Use Phaser.Device for platform detection.",
+            "status": "pending",
+            "testStrategy": "Test on all required browsers (Chrome 80+, Firefox 75+, Safari 13+, mobile browsers). Verify game functionality with WebGL and Canvas renderers. Test with various device capabilities enabled/disabled. Validate fallback mechanisms work correctly. Create browser compatibility test matrix."
+          },
+          {
+            "id": 4,
+            "title": "Create Accessibility Features",
+            "description": "Implement accessibility features to ensure the game is usable by players with different abilities.",
+            "dependencies": [
+              "15.2"
+            ],
+            "details": "Develop color-blind friendly design with alternative color schemes. Implement keyboard navigation for all game functions. Ensure touch-friendly targets (minimum 44px) for all interactive elements. Add screen reader support using ARIA attributes. Create configurable text size options. Implement alternative control schemes. Add visual indicators that don't rely solely on color.",
+            "status": "pending",
+            "testStrategy": "Test with color blindness simulation tools. Verify all game functions are accessible via keyboard. Test with screen readers on different platforms. Validate touch target sizes meet accessibility guidelines. Get feedback from users with different abilities if possible."
+          },
+          {
+            "id": 5,
+            "title": "Develop Testing Protocol and Performance Optimization",
+            "description": "Create comprehensive testing protocols and implement adaptive performance optimizations for different devices.",
+            "dependencies": [
+              "15.1",
+              "15.2",
+              "15.3",
+              "15.4"
+            ],
+            "details": "Create automated testing suite with unit tests for game logic, integration tests for game systems, and performance benchmarks. Develop manual testing protocol with device testing matrix and browser testing checklist. Implement analytics for monitoring real-world usage. Add adaptive UI scaling based on device capabilities. Create performance profiles to adjust quality settings (particle effects, animation complexity, render quality) based on device performance.",
+            "status": "pending",
+            "testStrategy": "Run automated tests on CI/CD pipeline. Execute manual testing protocol across device matrix. Measure performance metrics (FPS, load times, memory usage) on different devices. Test adaptive quality settings on low-end and high-end devices. Validate analytics data collection."
+          }
+        ]
+      }
+    ],
+    "metadata": {
+      "created": "2025-07-20T17:40:18.134Z",
+      "updated": "2025-07-20T17:40:18.134Z",
+      "description": "Tasks for master context"
+    }
+  }
+}

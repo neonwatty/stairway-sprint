@@ -1,0 +1,88 @@
+# Stairway Sprint – Mini Game Design Document
+
+## 1. High-Level Concept
+**Title (working):** Stairway Sprint  
+**Elevator Pitch:** Race down multiple stair lanes to rescue runaway strollers and protect VIPs from assassins, while avoiding hazards.  
+**Genre & Platform:** 2D arcade action game for web/mobile using Phaser 3 (JavaScript/TypeScript).
+
+## 2. Core Gameplay Loop
+1. **Spawn Event**  
+   - Baby strollers or hazards (lawnmowers, crates) randomly enter one of 3–5 stair lanes from the top.  
+2. **Player Reaction**  
+   - Player moves down a selected lane to intercept; use arrow keys or touch/swipe to switch lanes.  
+3. **Outcome**  
+   - Stroller captured = +1 point  
+   - Hazard collision = –1 life or –2 points  
+4. **VIP Threat**  
+   - When a VIP (celebrity/president/pope) appears, an assassin arrives too. Player must shoot with spacebar or tap.  
+5. **End Conditions**  
+   - 0 lives = Game Over  
+   - Reach score/time target = Victory
+
+## 3. Core Mechanics
+- **Lanes:** 3–5 vertical stair lanes  
+- **Entities:**  
+  - *Stroller:* moves downward at constant speed  
+  - *Hazard:* random speed; collision damages player  
+  - *VIP & Assassin:* paired spawn event; assassin must be shot  
+- **Player Controls:**  
+  - Left/right arrow or swipe to switch lanes  
+  - Spacebar or tap to shoot  
+- **Physics:** Phaser Arcade Physics for collisions and movement :contentReference[oaicite:1]{index=1}  
+- **Scoring & Lives:**  
+  | Event          | Score / Life       |
+  |----------------|--------------------|
+  | Stroller saved | +1 point           |
+  | Hazard hit     | –1 life / –2 points|
+  | VIP shot       | +5 points          |
+  | VIP missed     | –2 lives           |
+
+  Start with 3–5 lives.
+
+## 4. Art & Audio
+- **Graphics:**  
+  - Top-down sprites: strollers, hazards, VIPs, assassin, player  
+  - Staircase background via tilemap or repeating sprites  
+- **Audio:**  
+  - Sounds for rescuing, collision, shooting, background music  
+- **Animations:**  
+  - Movement, collision reaction, shooting animation frames
+
+## 5. Difficulty Progression
+- Increasing spawn rate of strollers/hazards every 30 seconds  
+- VIP events become more frequent (every 60 seconds)  
+- Score milestones trigger visual/audio feedback (e.g., at 10, 25, 50 points)
+
+## 6. Technical Stack
+- **Engine:** Phaser 3.x (MIT license)—supports Canvas/WebGL, Arcade Physics :contentReference[oaicite:2]{index=2}  
+- **Scenes:**  
+  - `PreloadScene`: preload assets  
+  - `MainMenuScene`: title/menu  
+  - `GameScene`: main gameplay  
+  - `GameOverScene`: end screen  
+- **Lifecycle methods:** `preload()`, `create()`, `update()`  
+- **Game Configuration:** Include renderer type, canvas size, physics settings, and scene list as shown in Phaser tutorials :contentReference[oaicite:3]{index=3}.
+
+## 7. MVP Feature Checklist
+- [ ] Stair lane rendering  
+- [ ] Stroller spawning  
+- [ ] Player lane movement  
+- [ ] Collision detection + scoring/lives  
+- [ ] Hazard spawn & penalty  
+- [ ] VIP + assassin logic  
+- [ ] Shooting mechanic  
+- [ ] Difficulty ramp  
+- [ ] UI elements (score/lives) and sound  
+- [ ] Menu & game over scenes
+
+## 8. Next Steps (AI-Prompt Examples)
+1. **Initialize lanes & spawning:**  
+   > "In `GameScene.create()`, set up 4 lanes and timed stroller spawn every 2 seconds."
+2. **Add player controls:**  
+   > "Add keyboard and touch input to switch lanes with boundary checks."
+3. **Implement collision logic:**  
+   > "In `update()`, detect overlaps between player and entities, update score or lives."
+4. **Create VIP & assassin:**  
+   > "Generate paired VIP and assassin spawn function; implement shooting and outcome handling."
+5. **Build progression & UI:**  
+   > "Add timer-based difficulty increase and UI elements for score and lives."
