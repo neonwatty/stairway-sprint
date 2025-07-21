@@ -26,6 +26,10 @@ export class PauseScene extends Phaser.Scene {
       .on('pointerover', () => resumeButton.setStyle({ backgroundColor: '#555555' }))
       .on('pointerout', () => resumeButton.setStyle({ backgroundColor: '#333333' }))
       .on('pointerdown', () => {
+        const gameScene = this.scene.get('GameScene') as any;
+        if (gameScene && gameScene.resume) {
+          gameScene.resume();
+        }
         this.scene.resume('GameScene');
         this.scene.stop();
       });

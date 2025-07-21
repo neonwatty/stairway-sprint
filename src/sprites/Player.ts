@@ -155,22 +155,11 @@ export class Player extends Phaser.GameObjects.Sprite {
   public hit(): void {
     if (this.invincible) return;
     
-    this.lives--;
-    this.invincible = true;
     this.setState(PlayerState.HIT);
+    this.lives--;
     
-    this.scene.tweens.add({
-      targets: this,
-      alpha: 0.3,
-      duration: 100,
-      ease: 'Linear',
-      repeat: 5,
-      yoyo: true,
-      onComplete: () => {
-        this.alpha = 1;
-        this.invincible = false;
-        this.setState(PlayerState.IDLE);
-      }
+    this.scene.time.delayedCall(500, () => {
+      this.setState(PlayerState.IDLE);
     });
   }
   
@@ -208,6 +197,23 @@ export class Player extends Phaser.GameObjects.Sprite {
   
   public isInvincible(): boolean {
     return this.invincible;
+  }
+  
+  public setInvincible(invincible: boolean): void {
+    this.invincible = invincible;
+    
+    if (invincible) {
+      this.scene.tweens.add({
+        targets: this,
+        alpha: { from: 1, to: 0.5 },
+        duration: 200,
+        repeat: -1,
+        yoyo: true
+      });
+    } else {
+      this.scene.tweens.killTweensOf(this);
+      this.setAlpha(1);
+    }
   }
   
   update(): void {

@@ -14,10 +14,10 @@ export class EntitySpawner {
   private vipTimer?: Phaser.Time.TimerEvent;
   private difficultyLevel: number = 0;
   
-  private strollerPool: Phaser.GameObjects.Group;
-  private hazardPool: Phaser.GameObjects.Group;
-  private vipPool: Phaser.GameObjects.Group;
-  private assassinPool: Phaser.GameObjects.Group;
+  private strollerPool!: Phaser.GameObjects.Group;
+  private hazardPool!: Phaser.GameObjects.Group;
+  private vipPool!: Phaser.GameObjects.Group;
+  private assassinPool!: Phaser.GameObjects.Group;
   
   private activeVIPs: VIP[] = [];
   

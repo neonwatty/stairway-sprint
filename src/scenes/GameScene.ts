@@ -6,21 +6,25 @@ import { Stroller } from '../sprites/Stroller';
 import { Hazard } from '../sprites/Hazard';
 import { VIP } from '../sprites/VIP';
 import { Assassin } from '../sprites/Assassin';
+import { ScoreManager } from '../managers/ScoreManager';
+import { LivesManager } from '../managers/LivesManager';
+import { GameStateManager, GameState } from '../managers/GameStateManager';
 
 export class GameScene extends Phaser.Scene {
   private player!: Player;
   private laneManager!: LaneManager;
   private entitySpawner!: EntitySpawner;
+  private scoreManager!: ScoreManager;
+  private livesManager!: LivesManager;
+  private gameStateManager!: GameStateManager;
   private cursors!: Phaser.Types.Input.Keyboard.CursorKeys;
   private spaceKey!: Phaser.Input.Keyboard.Key;
-  private projectiles: Phaser.GameObjects.Group;
-  private hearts: Phaser.GameObjects.Image[] = [];
-  private scoreText!: Phaser.GameObjects.Text;
-  private score: number = 0;
+  private projectiles!: Phaser.GameObjects.Group;
   private touchStartX: number = 0;
   private touchStartY: number = 0;
   private touchTime: number = 0;
   private minSwipeDistance: number = 50;
+  private currentStreak: number = 0;
 
   constructor() {
     super({ key: 'GameScene' });
@@ -35,7 +39,10 @@ export class GameScene extends Phaser.Scene {
     // Background with tiled stairs
     this.add.rectangle(width / 2, height / 2, width, height, 0x2a2a2a);
 
-    // Create lane manager
+    // Create managers
+    this.scoreManager = new ScoreManager(this);
+    this.livesManager = new LivesManager(this, 3);
+    this.gameStateManager = new GameStateManager(this);
     this.laneManager = new LaneManager(this, 3);
 
     // Create player using Player class
@@ -57,6 +64,9 @@ export class GameScene extends Phaser.Scene {
 
     // Create UI
     this.createUI();
+    
+    // Set up event listeners
+    this.setupEventListeners();
 
     // Set up keyboard controls
     this.cursors = this.input.keyboard!.createCursorKeys();
@@ -79,21 +89,17 @@ export class GameScene extends Phaser.Scene {
     this.input.keyboard!.on('keydown-D', () => {
       this.laneManager.setDebugMode(!this.laneManager.showDebug);
     });
+    
+    // Start the game
+    this.gameStateManager.changeState(GameState.PLAYING);
   }
 
   private createUI(): void {
-    // Lives display
-    for (let i = 0; i < 3; i++) {
-      const heart = this.add.image(30 + i * 40, 30, 'heart-full');
-      heart.setScale(1.2);
-      this.hearts.push(heart);
-    }
-
     // Score display
-    this.scoreText = this.add.text(this.cameras.main.width - 20, 30, 'Score: 0', {
-      font: '24px Arial',
-      color: '#ffffff'
-    }).setOrigin(1, 0.5);
+    this.scoreManager.createDisplay(20, 20);
+    
+    // Lives display
+    this.livesManager.createDisplay(this.cameras.main.width - 150, 30);
 
     // Pause button for mobile
     const pauseButton = this.add.image(this.cameras.main.width - 30, 80, 'pause-icon');
@@ -104,6 +110,9 @@ export class GameScene extends Phaser.Scene {
   }
 
   update(): void {
+    // Only process input if playing
+    if (!this.gameStateManager.isPlaying()) return;
+    
     // Handle keyboard input
     if (Phaser.Input.Keyboard.JustDown(this.cursors.left)) {
       this.player.moveLeft();
@@ -129,32 +138,33 @@ export class GameScene extends Phaser.Scene {
         this.projectiles.remove(proj, true, true);
       }
     });
-    
-    // Update lives display if changed
-    if (this.player.getLives() !== this.hearts.filter(h => h.texture.key === 'heart-full').length) {
-      this.updateLives();
-    }
   }
 
-  private updateLives(): void {
-    const lives = this.player.getLives();
-    for (let i = 0; i < this.hearts.length; i++) {
-      if (i < lives) {
-        this.hearts[i].setTexture('heart-full');
-      } else {
-        this.hearts[i].setTexture('heart-empty');
-      }
-    }
+  private setupEventListeners(): void {
+    // Lives manager events
+    this.livesManager.getEvents().on('gameOver', () => {
+      this.gameStateManager.changeState(GameState.GAME_OVER);
+      
+      // Stop all tweens and timers to prevent errors
+      this.tweens.killAll();
+      this.time.removeAllEvents();
+      
+      // Stop the current scene first, then start the game over scene
+      this.scene.stop();
+      this.scene.start('GameOverScene', { 
+        score: this.scoreManager.getScore(),
+        highScore: this.scoreManager.getHighScore()
+      });
+    });
     
-    // Game over check
-    if (lives <= 0) {
-      this.scene.start('GameOverScene', { score: this.score });
-    }
-  }
-  
-  private updateScore(points: number): void {
-    this.score += points;
-    this.scoreText.setText(`Score: ${this.score}`);
+    // Player invincibility events
+    this.livesManager.getEvents().on('invincibilityStart', () => {
+      this.player.setInvincible(true);
+    });
+    
+    this.livesManager.getEvents().on('invincibilityEnd', () => {
+      this.player.setInvincible(false);
+    });
   }
   
   private setupTouchControls(): void {
@@ -246,7 +256,8 @@ export class GameScene extends Phaser.Scene {
   private handleStrollerCollision(player: Player, stroller: Stroller): void {
     if (!stroller.active) return;
     
-    this.updateScore(100);
+    this.scoreManager.addPoints(1);
+    this.scoreManager.addStreak();
     stroller.deactivate();
     
     // Visual feedback
@@ -263,9 +274,11 @@ export class GameScene extends Phaser.Scene {
   }
   
   private handleHazardCollision(player: Player, hazard: Hazard): void {
-    if (!hazard.active || player.isInvincible()) return;
+    if (!hazard.active || this.livesManager.isInvincible()) return;
     
-    this.player.hit();
+    this.scoreManager.addPoints(-2);
+    this.scoreManager.resetStreak();
+    this.livesManager.loseLife();
     hazard.deactivate();
     
     // Screen shake
@@ -276,7 +289,8 @@ export class GameScene extends Phaser.Scene {
     if (!vip.active || vip.isProtected()) return;
     
     vip.protect();
-    this.updateScore(50);
+    this.scoreManager.addPoints(5);
+    this.scoreManager.addStreak();
     
     // Visual celebration
     const emitter = this.add.particles(vip.x, vip.y, 'star', {
@@ -293,9 +307,10 @@ export class GameScene extends Phaser.Scene {
   }
   
   private handleAssassinCollision(player: Player, assassin: Assassin): void {
-    if (!assassin.active || player.isInvincible()) return;
+    if (!assassin.active || this.livesManager.isInvincible()) return;
     
-    this.player.hit();
+    this.scoreManager.resetStreak();
+    this.livesManager.loseLife();
     assassin.eliminate();
   }
   
@@ -304,7 +319,7 @@ export class GameScene extends Phaser.Scene {
     
     assassin.eliminate();
     projectile.destroy();
-    this.updateScore(25);
+    this.scoreManager.addPoints(2);
     
     // Hit effect
     const flash = this.add.image(assassin.x, assassin.y, 'star');
@@ -326,35 +341,63 @@ export class GameScene extends Phaser.Scene {
   private handleVIPAssassinCollision(vip: VIP, assassin: Assassin): void {
     if (!vip.active || !assassin.active || vip.isProtected()) return;
     
-    this.updateScore(-200);
-    this.player.setLives(Math.max(0, this.player.getLives() - 2));
+    this.scoreManager.addPoints(-5);
+    this.scoreManager.resetStreak();
+    
+    // Store current lives before losing them
+    const livesBeforeLoss = this.livesManager.getLives();
+    
+    this.livesManager.loseLife();
+    this.livesManager.loseLife();
     
     vip.deactivate();
     assassin.deactivate();
     
-    // Dramatic effect
-    this.cameras.main.shake(500, 0.02);
-    this.cameras.main.flash(500, 255, 0, 0, false, 0.5);
+    // Only do dramatic effect if not causing game over
+    if (livesBeforeLoss > 2) {
+      this.cameras.main.shake(500, 0.02);
+      this.cameras.main.flash(500, 255, 0, 0, false, 0.5);
+    }
   }
   
   private pauseGame(): void {
-    this.entitySpawner.pause();
-    this.scene.pause();
-    this.scene.launch('PauseScene');
+    if (this.gameStateManager.canPause()) {
+      this.gameStateManager.changeState(GameState.PAUSED);
+      this.entitySpawner.pause();
+      this.scene.pause();
+      this.scene.launch('PauseScene');
+    }
   }
   
   shutdown(): void {
+    // Kill all active tweens and timers
+    this.tweens.killAll();
+    this.time.removeAllEvents();
+    
+    // Destroy managers
     if (this.entitySpawner) {
       this.entitySpawner.destroy();
     }
     if (this.laneManager) {
       this.laneManager.destroy();
     }
+    if (this.scoreManager) {
+      this.scoreManager.destroy();
+    }
+    if (this.livesManager) {
+      this.livesManager.destroy();
+    }
+    if (this.gameStateManager) {
+      this.gameStateManager.destroy();
+    }
   }
   
   resume(): void {
-    if (this.entitySpawner) {
-      this.entitySpawner.resume();
+    if (this.gameStateManager.canResume()) {
+      this.gameStateManager.changeState(GameState.PLAYING);
+      if (this.entitySpawner) {
+        this.entitySpawner.resume();
+      }
     }
   }
 }
