@@ -1,0 +1,37 @@
+{
+  "name": "stairway-sprint",
+  "version": "1.0.0",
+  "description": "2D arcade action game where players control a baby in a stroller navigating down an infinitely scrolling stairway",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "preview": "vite preview"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/neonwatty/stairway-sprint.git"
+  },
+  "keywords": [
+    "game",
+    "phaser",
+    "arcade",
+    "action",
+    "2D"
+  ],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/neonwatty/stairway-sprint/issues"
+  },
+  "homepage": "https://github.com/neonwatty/stairway-sprint#readme",
+  "dependencies": {
+    "phaser": "^3.60.0"
+  },
+  "devDependencies": {
+    "@types/node": "^24.0.15",
+    "canvas": "^3.1.2",
+    "typescript": "^5.1.6",
+    "vite": "^4.4.9"
+  }
+}
