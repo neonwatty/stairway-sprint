@@ -14,6 +14,9 @@ import { EffectsManager } from '../managers/EffectsManager';
 import { DebugVisualizer } from '../managers/DebugVisualizer';
 import { DifficultyManager } from '../managers/DifficultyManager';
 import { DifficultyDisplay } from '../ui/DifficultyDisplay';
+import { UIManager } from '../ui/UIManager';
+import { AccessibilityManager } from '../managers/AccessibilityManager';
+import { UISoundManager } from '../managers/UISoundManager';
 
 export class GameScene extends Phaser.Scene {
   private player!: Player;
@@ -27,6 +30,9 @@ export class GameScene extends Phaser.Scene {
   private debugVisualizer!: DebugVisualizer;
   private difficultyManager!: DifficultyManager;
   private difficultyDisplay!: DifficultyDisplay;
+  private uiManager!: UIManager;
+  private accessibilityManager!: AccessibilityManager;
+  private uiSoundManager!: UISoundManager;
   private cursors!: Phaser.Types.Input.Keyboard.CursorKeys;
   private spaceKey!: Phaser.Input.Keyboard.Key;
   private projectiles!: Phaser.GameObjects.Group;
@@ -56,6 +62,11 @@ export class GameScene extends Phaser.Scene {
     this.laneManager = new LaneManager(this, 3);
     this.effectsManager = new EffectsManager(this);
     this.difficultyManager = new DifficultyManager(this);
+    
+    // Initialize accessibility managers
+    this.accessibilityManager = new AccessibilityManager(this);
+    this.uiSoundManager = new UISoundManager(this);
+    this.uiSoundManager.setAccessibilityManager(this.accessibilityManager);
 
     // Create player using Player class
     const startLane = Math.floor(this.laneManager.getLaneCount() / 2);
@@ -143,26 +154,29 @@ export class GameScene extends Phaser.Scene {
   }
 
   private createUI(): void {
-    // Score display
-    this.scoreManager.createDisplay(20, 20);
-    
-    // Lives display
-    this.livesManager.createDisplay(this.cameras.main.width - 150, 30);
+    // Create UI Manager
+    this.uiManager = new UIManager(this, this.scoreManager, this.livesManager);
+    this.uiManager.setAccessibilityManager(this.accessibilityManager);
+    this.uiManager.setUISoundManager(this.uiSoundManager);
+    this.uiManager.create();
     
     // Difficulty display
     this.difficultyDisplay = new DifficultyDisplay(this, this.cameras.main.width / 2, 40);
     const initialConfig = this.difficultyManager.getDifficultyConfig();
     this.difficultyDisplay.updateDifficulty(this.difficultyManager.getCurrentDifficulty(), initialConfig);
 
-    // Pause button for mobile
-    const pauseButton = this.add.image(this.cameras.main.width - 30, 80, 'pause-icon');
-    pauseButton.setInteractive({ useHandCursor: true });
-    pauseButton.on('pointerdown', () => {
+    // Listen for pause event from UIManager
+    this.events.on('pauseGame', () => {
       this.pauseGame();
     });
   }
 
   update(): void {
+    // Update UI Manager (timer)
+    if (this.uiManager) {
+      this.uiManager.updateTimer();
+    }
+    
     // Only process input if playing
     if (!this.gameStateManager.isPlaying()) return;
     
@@ -279,7 +293,7 @@ export class GameScene extends Phaser.Scene {
       this.difficultyDisplay.updateDifficulty(data.level, data.config);
       
       // Show transition message
-      const messages = {
+      const messages: { [key: number]: string } = {
         1: 'Speed Increasing!',
         2: 'Getting Intense!',
         3: 'NIGHTMARE MODE!'
@@ -332,6 +346,9 @@ export class GameScene extends Phaser.Scene {
     if (this.gameStateManager.canPause()) {
       this.gameStateManager.changeState(GameState.PAUSED);
       this.entitySpawner.pause();
+      if (this.uiManager) {
+        this.uiManager.stopTimer();
+      }
       this.scene.pause();
       this.scene.launch('PauseScene');
     }
@@ -373,6 +390,15 @@ export class GameScene extends Phaser.Scene {
     if (this.difficultyDisplay) {
       this.difficultyDisplay.destroy();
     }
+    if (this.uiManager) {
+      this.uiManager.destroy();
+    }
+    if (this.accessibilityManager) {
+      this.accessibilityManager.destroy();
+    }
+    
+    // Remove event listeners
+    this.events.off('pauseGame');
   }
   
   resume(): void {
@@ -380,6 +406,9 @@ export class GameScene extends Phaser.Scene {
       this.gameStateManager.changeState(GameState.PLAYING);
       if (this.entitySpawner) {
         this.entitySpawner.resume();
+      }
+      if (this.uiManager) {
+        this.uiManager.resumeTimer();
       }
     }
   }

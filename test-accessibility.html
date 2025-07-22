@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stairway Sprint - Accessibility Test</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 20px;
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+        }
+        #game-container {
+            max-width: 640px;
+            margin: 0 auto;
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+        .test-section {
+            margin: 20px 0;
+            padding: 15px;
+            background-color: #f8f8f8;
+            border-radius: 4px;
+        }
+        .test-section h2 {
+            margin-top: 0;
+            color: #555;
+        }
+        .test-list {
+            list-style-type: none;
+            padding: 0;
+        }
+        .test-list li {
+            margin: 10px 0;
+            padding: 5px 0;
+        }
+        .test-list li:before {
+            content: "✓ ";
+            color: #4CAF50;
+            font-weight: bold;
+        }
+        #phaser-game {
+            width: 100%;
+            display: block;
+            margin: 20px 0;
+        }
+        .keyboard-shortcuts {
+            background-color: #e8f4f8;
+            padding: 15px;
+            border-radius: 4px;
+            margin-top: 20px;
+        }
+        .keyboard-shortcuts h3 {
+            margin-top: 0;
+            color: #0066cc;
+        }
+        .shortcut {
+            display: flex;
+            justify-content: space-between;
+            margin: 5px 0;
+            padding: 5px;
+            background-color: white;
+            border-radius: 3px;
+        }
+        .key {
+            font-family: monospace;
+            background-color: #f0f0f0;
+            padding: 2px 6px;
+            border-radius: 3px;
+            border: 1px solid #ccc;
+        }
+    </style>
+</head>
+<body>
+    <div id="game-container">
+        <h1>Stairway Sprint - Accessibility Features Test</h1>
+        
+        <div class="test-section">
+            <h2>Implemented Accessibility Features:</h2>
+            <ul class="test-list">
+                <li>Keyboard navigation for all menus (Tab, Shift+Tab, Arrow keys)</li>
+                <li>Visual focus indicators with yellow outline</li>
+                <li>Color-blind friendly modes (Protanopia, Deuteranopia, Tritanopia)</li>
+                <li>High contrast mode option</li>
+                <li>UI sound effects with adjustable volume</li>
+                <li>Screen reader support (ARIA live regions)</li>
+                <li>Proper contrast ratios (WCAG 2.1 compliant)</li>
+                <li>Settings persistence in localStorage</li>
+            </ul>
+        </div>
+        
+        <div id="phaser-game"></div>
+        
+        <div class="keyboard-shortcuts">
+            <h3>Keyboard Shortcuts:</h3>
+            <div class="shortcut">
+                <span>Navigate menus</span>
+                <span><span class="key">Tab</span> / <span class="key">↑</span> <span class="key">↓</span></span>
+            </div>
+            <div class="shortcut">
+                <span>Select/Activate</span>
+                <span><span class="key">Enter</span> / <span class="key">Space</span></span>
+            </div>
+            <div class="shortcut">
+                <span>Pause game</span>
+                <span><span class="key">ESC</span> / <span class="key">P</span></span>
+            </div>
+            <div class="shortcut">
+                <span>Move player</span>
+                <span><span class="key">←</span> <span class="key">→</span> / <span class="key">A</span> <span class="key">D</span></span>
+            </div>
+        </div>
+        
+        <div class="test-section">
+            <h2>Testing Instructions:</h2>
+            <ol>
+                <li><strong>Keyboard Navigation:</strong> Press Tab to navigate through menu items. Yellow outline shows focus.</li>
+                <li><strong>Settings Access:</strong> Select "Settings" from main menu or pause menu.</li>
+                <li><strong>Color Blind Mode:</strong> In settings, choose different color blind modes to see visual adjustments.</li>
+                <li><strong>High Contrast:</strong> Toggle high contrast mode for improved visibility.</li>
+                <li><strong>Sound Volume:</strong> Adjust UI sound volume with + and - buttons.</li>
+                <li><strong>Screen Reader:</strong> Enable screen reader mode for ARIA announcements.</li>
+            </ol>
+        </div>
+    </div>
+    
+    <script type="module">
+        // Import and start the game
+        import('./src/main.ts');
+    </script>
+</body>
+</html>

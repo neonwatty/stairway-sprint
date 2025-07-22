@@ -1,19 +1,22 @@
 import Phaser from 'phaser';
 import { DifficultyLevel, DifficultyConfig } from '../managers/DifficultyManager';
+import { ResponsiveUtils, FontSize, getResponsive } from '../utils/ResponsiveUtils';
 
 export class DifficultyDisplay {
   private scene: Phaser.Scene;
-  private container: Phaser.GameObjects.Container;
-  private difficultyText: Phaser.GameObjects.Text;
+  private container!: Phaser.GameObjects.Container;
+  private difficultyText!: Phaser.GameObjects.Text;
   private difficultyStars: Phaser.GameObjects.Image[] = [];
-  private backgroundPanel: Phaser.GameObjects.Rectangle;
+  private backgroundPanel!: Phaser.GameObjects.Rectangle;
   private x: number;
   private y: number;
+  private responsive: ResponsiveUtils;
   
   constructor(scene: Phaser.Scene, x: number, y: number) {
     this.scene = scene;
     this.x = x;
     this.y = y;
+    this.responsive = getResponsive(scene);
     
     this.createDisplay();
   }
@@ -22,32 +25,33 @@ export class DifficultyDisplay {
     // Create container for all difficulty UI elements
     this.container = this.scene.add.container(this.x, this.y);
     
-    // Background panel
-    this.backgroundPanel = this.scene.add.rectangle(0, 0, 200, 60, 0x000000, 0.7);
+    // Background panel with responsive sizing
+    const panelWidth = this.responsive.scale(200);
+    const panelHeight = this.responsive.scale(60);
+    this.backgroundPanel = this.scene.add.rectangle(0, 0, panelWidth, panelHeight, 0x000000, 0.7);
     this.backgroundPanel.setStrokeStyle(2, 0xffffff, 0.5);
     this.container.add(this.backgroundPanel);
     
     // Difficulty label
-    const label = this.scene.add.text(-90, -20, 'DIFFICULTY', {
-      fontSize: '14px',
-      color: '#888888',
-      fontFamily: 'Arial'
-    });
+    const labelStyle = this.responsive.getFontStyle(FontSize.SMALL, '#888888');
+    const labelX = -panelWidth / 2 + this.responsive.scale(10);
+    const label = this.scene.add.text(labelX, -this.responsive.scale(20), 'DIFFICULTY', labelStyle);
     this.container.add(label);
     
     // Difficulty name text
-    this.difficultyText = this.scene.add.text(-90, -5, 'Leisurely Stroll', {
-      fontSize: '18px',
-      color: '#ffffff',
-      fontFamily: 'Arial',
+    const textStyle = {
+      ...this.responsive.getFontStyle(FontSize.NORMAL, '#ffffff'),
       fontStyle: 'bold'
-    });
+    };
+    this.difficultyText = this.scene.add.text(labelX, -this.responsive.scale(5), 'Leisurely Stroll', textStyle);
     this.container.add(this.difficultyText);
     
     // Create star indicators
+    const starScale = this.responsive.getUIScale() * 0.4;
+    const starSpacing = this.responsive.scale(25);
     for (let i = 0; i < 4; i++) {
-      const star = this.scene.add.image(-90 + (i * 25), 20, 'star');
-      star.setScale(0.4);
+      const star = this.scene.add.image(labelX + (i * starSpacing), this.responsive.scale(20), 'star');
+      star.setScale(starScale);
       star.setTint(0x444444); // Inactive color
       this.difficultyStars.push(star);
       this.container.add(star);
@@ -84,8 +88,10 @@ export class DifficultyDisplay {
       ease: 'Power2'
     });
     
-    // Flash effect on panel
-    const flashOverlay = this.scene.add.rectangle(0, 0, 200, 60, 0xffffff, 0.8);
+    // Flash effect on panel with responsive sizing
+    const panelWidth = this.responsive.scale(200);
+    const panelHeight = this.responsive.scale(60);
+    const flashOverlay = this.scene.add.rectangle(0, 0, panelWidth, panelHeight, 0xffffff, 0.8);
     this.container.add(flashOverlay);
     
     this.scene.tweens.add({
@@ -116,10 +122,11 @@ export class DifficultyDisplay {
         
         // Stagger the star animations
         this.scene.time.delayedCall(index * 100, () => {
+          const targetScale = this.responsive.getUIScale() * 0.6;
           this.scene.tweens.add({
             targets: star,
-            scaleX: 0.6,
-            scaleY: 0.6,
+            scaleX: targetScale,
+            scaleY: targetScale,
             duration: 300,
             yoyo: true,
             ease: 'Bounce.out'
@@ -133,14 +140,13 @@ export class DifficultyDisplay {
   }
   
   public showTransitionMessage(message: string, duration: number = 2000): void {
-    const transitionText = this.scene.add.text(0, 50, message, {
-      fontSize: '24px',
-      color: '#ffffff',
-      fontFamily: 'Arial',
+    const textStyle = {
+      ...this.responsive.getFontStyle(FontSize.NORMAL, '#ffffff'),
       fontStyle: 'bold',
       stroke: '#000000',
-      strokeThickness: 4
-    });
+      strokeThickness: this.responsive.scale(4)
+    };
+    const transitionText = this.scene.add.text(0, this.responsive.scale(50), message, textStyle);
     transitionText.setOrigin(0.5);
     this.container.add(transitionText);
     

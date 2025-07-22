@@ -17,26 +17,8 @@ export class ScoreManager {
   }
   
   public createDisplay(x: number, y: number): void {
-    this.scoreText = this.scene.add.text(x, y, 'Score: 0', {
-      fontSize: '32px',
-      fontFamily: 'Arial',
-      color: '#ffffff',
-      stroke: '#000000',
-      strokeThickness: 4
-    });
-    this.scoreText.setScrollFactor(0);
-    this.scoreText.setDepth(100);
-    
-    this.streakText = this.scene.add.text(x, y + 40, 'Streak: 0', {
-      fontSize: '24px',
-      fontFamily: 'Arial',
-      color: '#ffff00',
-      stroke: '#000000',
-      strokeThickness: 3
-    });
-    this.streakText.setScrollFactor(0);
-    this.streakText.setDepth(100);
-    
+    // Display creation now handled by UIManager
+    // Keep high score text for compatibility
     this.highScoreText = this.scene.add.text(x, y + 75, `High: ${this.highScore}`, {
       fontSize: '20px',
       fontFamily: 'Arial',
@@ -112,35 +94,11 @@ export class ScoreManager {
   }
   
   private updateScoreDisplay(): void {
-    if (this.scoreText) {
-      this.scoreText.setText(`Score: ${this.score}`);
-      
-      this.scene.tweens.add({
-        targets: this.scoreText,
-        scaleX: 1.2,
-        scaleY: 1.2,
-        duration: 100,
-        yoyo: true,
-        ease: 'Power2'
-      });
-    }
+    // Score display is now handled by UIManager through events
   }
   
   private updateStreakDisplay(): void {
-    if (this.streakText) {
-      this.streakText.setText(`Streak: ${this.streak}`);
-      
-      if (this.streak > 0) {
-        this.scene.tweens.add({
-          targets: this.streakText,
-          scaleX: 1.1,
-          scaleY: 1.1,
-          duration: 150,
-          yoyo: true,
-          ease: 'Back.easeOut'
-        });
-      }
-    }
+    // Streak display is now handled by UIManager through events
   }
   
   private updateHighScoreDisplay(): void {
@@ -246,8 +204,6 @@ export class ScoreManager {
   
   public destroy(): void {
     this.events.removeAllListeners();
-    if (this.scoreText) this.scoreText.destroy();
-    if (this.streakText) this.streakText.destroy();
     if (this.highScoreText) this.highScoreText.destroy();
   }
 }

@@ -17,15 +17,8 @@ export class LivesManager {
   }
   
   public createDisplay(x: number, y: number): void {
-    const spacing = 40;
-    
-    for (let i = 0; i < this.maxLives; i++) {
-      const heart = this.scene.add.image(x + i * spacing, y, 'heart-full');
-      heart.setScale(1.2);
-      heart.setScrollFactor(0);
-      heart.setDepth(100);
-      this.heartIcons.push(heart);
-    }
+    // Display creation now handled by UIManager
+    // This method is kept for compatibility but does nothing
   }
   
   public loseLife(): boolean {
@@ -80,65 +73,24 @@ export class LivesManager {
   }
   
   private updateHeartDisplay(): void {
-    for (let i = 0; i < this.heartIcons.length; i++) {
-      if (i < this.lives) {
-        this.heartIcons[i].setTexture('heart-full');
-        this.heartIcons[i].setAlpha(1);
-      } else {
-        this.heartIcons[i].setTexture('heart-empty');
-        this.heartIcons[i].setAlpha(0.5);
-      }
-    }
+    // Heart display is now handled by UIManager through events
   }
   
   private playLifeLossAnimation(): void {
-    if (this.lives >= 0 && this.lives < this.heartIcons.length) {
-      const lostHeart = this.heartIcons[this.lives];
-      
-      this.scene.tweens.add({
-        targets: lostHeart,
-        scaleX: 1.5,
-        scaleY: 1.5,
-        alpha: 0,
-        duration: 300,
-        ease: 'Power2',
-        onComplete: () => {
-          lostHeart.setTexture('heart-empty');
-          lostHeart.setAlpha(0.5);
-          lostHeart.setScale(1.2);
-        }
-      });
-      
-      // Only do camera effects if not game over
-      if (this.lives > 0) {
-        this.scene.cameras.main.shake(300, 0.02);
-        this.scene.cameras.main.flash(300, 255, 0, 0);
-      }
+    // Only do camera effects if not game over
+    if (this.lives > 0) {
+      this.scene.cameras.main.shake(300, 0.02);
+      this.scene.cameras.main.flash(300, 255, 0, 0);
     }
   }
   
   private playLifeGainAnimation(): void {
-    if (this.lives > 0 && this.lives <= this.heartIcons.length) {
-      const gainedHeart = this.heartIcons[this.lives - 1];
+    // Life gain effects are shown at player position
+    if (this.lives > 0) {
+      const centerX = this.scene.cameras.main.width / 2;
+      const centerY = this.scene.cameras.main.height / 2;
       
-      this.scene.tweens.add({
-        targets: gainedHeart,
-        scaleX: { from: 0, to: 1.5 },
-        scaleY: { from: 0, to: 1.5 },
-        duration: 300,
-        ease: 'Back.easeOut',
-        onComplete: () => {
-          this.scene.tweens.add({
-            targets: gainedHeart,
-            scaleX: 1.2,
-            scaleY: 1.2,
-            duration: 200,
-            ease: 'Power2'
-          });
-        }
-      });
-      
-      const emitter = this.scene.add.particles(gainedHeart.x, gainedHeart.y, 'star', {
+      const emitter = this.scene.add.particles(centerX, centerY, 'star', {
         speed: { min: 100, max: 200 },
         scale: { start: 0.5, end: 0 },
         lifespan: 500,
@@ -167,7 +119,5 @@ export class LivesManager {
   
   public destroy(): void {
     this.events.removeAllListeners();
-    this.heartIcons.forEach(heart => heart.destroy());
-    this.heartIcons = [];
   }
 }

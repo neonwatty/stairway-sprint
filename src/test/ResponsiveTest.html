@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Responsive UI Test - Stairway Sprint</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 20px;
+            font-family: Arial, sans-serif;
+            background: #222;
+            color: #fff;
+        }
+        
+        .test-container {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .device-emulator {
+            border: 2px solid #444;
+            border-radius: 8px;
+            overflow: hidden;
+            background: #000;
+            position: relative;
+        }
+        
+        .device-label {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            background: rgba(0,0,0,0.8);
+            padding: 5px 10px;
+            border-radius: 4px;
+            font-size: 12px;
+            z-index: 10;
+        }
+        
+        iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+        
+        /* Device sizes */
+        .phone-portrait {
+            width: 375px;
+            height: 667px;
+        }
+        
+        .phone-landscape {
+            width: 667px;
+            height: 375px;
+        }
+        
+        .tablet-portrait {
+            width: 768px;
+            height: 1024px;
+        }
+        
+        .desktop {
+            width: 1200px;
+            height: 800px;
+        }
+        
+        h1 {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .controls {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            justify-content: center;
+        }
+        
+        button {
+            padding: 10px 20px;
+            background: #333;
+            color: #fff;
+            border: 1px solid #555;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        
+        button:hover {
+            background: #444;
+        }
+        
+        .device-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="test-container">
+        <h1>Responsive UI Test - Stairway Sprint</h1>
+        
+        <div class="controls">
+            <button onclick="testDevice('phone-portrait')">Phone Portrait</button>
+            <button onclick="testDevice('phone-landscape')">Phone Landscape</button>
+            <button onclick="testDevice('tablet-portrait')">Tablet Portrait</button>
+            <button onclick="testDevice('desktop')">Desktop</button>
+        </div>
+        
+        <div id="test-frame" class="device-emulator phone-portrait">
+            <div class="device-label" id="device-label">Phone Portrait (375x667)</div>
+            <iframe src="../../index.html" id="game-frame"></iframe>
+        </div>
+        
+        <div style="margin-top: 40px; padding: 20px; background: #333; border-radius: 8px;">
+            <h2>Responsive Features Implemented:</h2>
+            <ul>
+                <li><strong>Device Detection:</strong> Automatically detects phone (&lt;768px), tablet (768-1024px), and desktop (&gt;1024px)</li>
+                <li><strong>Dynamic Font Sizing:</strong> Text scales based on device category with min/max limits</li>
+                <li><strong>Touch Target Compliance:</strong> All interactive elements maintain minimum 44x44px touch targets</li>
+                <li><strong>Safe Area Support:</strong> UI elements respect device safe areas (notches, home indicators)</li>
+                <li><strong>Orientation Handling:</strong> Adapts layout for portrait and landscape orientations</li>
+                <li><strong>Scale Factor Calculation:</strong> UI elements scale proportionally to screen size</li>
+                <li><strong>Breakpoint System:</strong> Different configurations for each device category</li>
+            </ul>
+            
+            <h3>Testing Instructions:</h3>
+            <ol>
+                <li>Click the device buttons above to test different screen sizes</li>
+                <li>Notice how UI elements resize and reposition</li>
+                <li>Check that text remains readable at all sizes</li>
+                <li>Verify touch targets are appropriately sized</li>
+                <li>Test in your browser's device emulator for more accurate results</li>
+            </ol>
+        </div>
+    </div>
+    
+    <script>
+        function testDevice(deviceClass) {
+            const frame = document.getElementById('test-frame');
+            const label = document.getElementById('device-label');
+            const gameFrame = document.getElementById('game-frame');
+            
+            // Remove all device classes
+            frame.className = 'device-emulator';
+            
+            // Add new device class
+            frame.classList.add(deviceClass);
+            
+            // Update label
+            const labels = {
+                'phone-portrait': 'Phone Portrait (375x667)',
+                'phone-landscape': 'Phone Landscape (667x375)',
+                'tablet-portrait': 'Tablet Portrait (768x1024)',
+                'desktop': 'Desktop (1200x800)'
+            };
+            
+            label.textContent = labels[deviceClass];
+            
+            // Reload iframe to trigger resize
+            gameFrame.src = gameFrame.src;
+        }
+    </script>
+</body>
+</html>
