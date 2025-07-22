@@ -171,6 +171,11 @@ export class LaneManager {
   public getLaneCount(): number {
     return this.laneCount;
   }
+  
+  public getLaneBoundary(index: number): number {
+    // Returns x position of lane boundary (0 to laneCount)
+    return index * this.laneWidth;
+  }
 
   public getCurrentLaneIndex(): number {
     return this.currentLaneIndex;

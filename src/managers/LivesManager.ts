@@ -112,7 +112,7 @@ export class LivesManager {
       // Only do camera effects if not game over
       if (this.lives > 0) {
         this.scene.cameras.main.shake(300, 0.02);
-        this.scene.cameras.main.flash(300, 255, 0, 0, false, 0.3);
+        this.scene.cameras.main.flash(300, 255, 0, 0);
       }
     }
   }

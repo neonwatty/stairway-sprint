@@ -8,7 +8,7 @@ export enum PlayerState {
   HIT = 'hit'
 }
 
-export class Player extends Phaser.GameObjects.Sprite {
+export class Player extends Phaser.Physics.Arcade.Sprite {
   private currentLane: number = 1;
   private laneManager?: LaneManager;
   private isMoving: boolean = false;
@@ -33,7 +33,7 @@ export class Player extends Phaser.GameObjects.Sprite {
     body.setOffset(10, 10);
     
     this.setupAnimations();
-    this.setState(PlayerState.IDLE);
+    this.setPlayerState(PlayerState.IDLE);
   }
   
   public setLaneManager(laneManager: LaneManager): void {
@@ -77,7 +77,7 @@ export class Player extends Phaser.GameObjects.Sprite {
     
     this.isMoving = true;
     this.currentLane--;
-    this.setState(PlayerState.MOVING);
+    this.setPlayerState(PlayerState.MOVING);
     
     this.play('player-moving-left');
     
@@ -91,7 +91,7 @@ export class Player extends Phaser.GameObjects.Sprite {
       ease: 'Power2',
       onComplete: () => {
         this.isMoving = false;
-        this.setState(PlayerState.IDLE);
+        this.setPlayerState(PlayerState.IDLE);
         this.play('player-idle');
       }
     });
@@ -105,7 +105,7 @@ export class Player extends Phaser.GameObjects.Sprite {
     
     this.isMoving = true;
     this.currentLane++;
-    this.setState(PlayerState.MOVING);
+    this.setPlayerState(PlayerState.MOVING);
     
     this.play('player-moving-right');
     
@@ -119,7 +119,7 @@ export class Player extends Phaser.GameObjects.Sprite {
       ease: 'Power2',
       onComplete: () => {
         this.isMoving = false;
-        this.setState(PlayerState.IDLE);
+        this.setPlayerState(PlayerState.IDLE);
         this.play('player-idle');
       }
     });
@@ -129,7 +129,7 @@ export class Player extends Phaser.GameObjects.Sprite {
     if (!this.canShoot) return null;
     
     this.canShoot = false;
-    this.setState(PlayerState.SHOOTING);
+    this.setPlayerState(PlayerState.SHOOTING);
     this.play('player-shooting');
     
     const projectile = this.scene.add.image(this.x, this.y - 40, 'projectile');
@@ -140,7 +140,7 @@ export class Player extends Phaser.GameObjects.Sprite {
     
     this.scene.time.delayedCall(100, () => {
       if (this.currentState === PlayerState.SHOOTING) {
-        this.setState(PlayerState.IDLE);
+        this.setPlayerState(PlayerState.IDLE);
         this.play('player-idle');
       }
     });
@@ -155,11 +155,11 @@ export class Player extends Phaser.GameObjects.Sprite {
   public hit(): void {
     if (this.invincible) return;
     
-    this.setState(PlayerState.HIT);
+    this.setPlayerState(PlayerState.HIT);
     this.lives--;
     
     this.scene.time.delayedCall(500, () => {
-      this.setState(PlayerState.IDLE);
+      this.setPlayerState(PlayerState.IDLE);
     });
   }
   
@@ -171,11 +171,11 @@ export class Player extends Phaser.GameObjects.Sprite {
     this.isMoving = false;
     this.canShoot = true;
     this.invincible = false;
-    this.setState(PlayerState.IDLE);
+    this.setPlayerState(PlayerState.IDLE);
     this.alpha = 1;
   }
   
-  private setState(state: PlayerState): void {
+  private setPlayerState(state: PlayerState): void {
     this.currentState = state;
   }
   
@@ -187,12 +187,12 @@ export class Player extends Phaser.GameObjects.Sprite {
     return this.lives;
   }
   
-  public setLives(lives: number): void {
-    this.lives = lives;
-  }
-  
   public getCurrentLane(): number {
     return this.currentLane;
+  }
+  
+  public setLives(lives: number): void {
+    this.lives = lives;
   }
   
   public isInvincible(): boolean {

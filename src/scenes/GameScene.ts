@@ -9,6 +9,9 @@ import { Assassin } from '../sprites/Assassin';
 import { ScoreManager } from '../managers/ScoreManager';
 import { LivesManager } from '../managers/LivesManager';
 import { GameStateManager, GameState } from '../managers/GameStateManager';
+import { CollisionManager } from '../managers/CollisionManager';
+import { EffectsManager } from '../managers/EffectsManager';
+import { DebugVisualizer } from '../managers/DebugVisualizer';
 
 export class GameScene extends Phaser.Scene {
   private player!: Player;
@@ -17,6 +20,9 @@ export class GameScene extends Phaser.Scene {
   private scoreManager!: ScoreManager;
   private livesManager!: LivesManager;
   private gameStateManager!: GameStateManager;
+  private collisionManager!: CollisionManager;
+  private effectsManager!: EffectsManager;
+  private debugVisualizer!: DebugVisualizer;
   private cursors!: Phaser.Types.Input.Keyboard.CursorKeys;
   private spaceKey!: Phaser.Input.Keyboard.Key;
   private projectiles!: Phaser.GameObjects.Group;
@@ -44,12 +50,17 @@ export class GameScene extends Phaser.Scene {
     this.livesManager = new LivesManager(this, 3);
     this.gameStateManager = new GameStateManager(this);
     this.laneManager = new LaneManager(this, 3);
+    this.effectsManager = new EffectsManager(this);
 
     // Create player using Player class
     const startLane = Math.floor(this.laneManager.getLaneCount() / 2);
     const startX = this.laneManager.getLanePosition(startLane);
     this.player = new Player(this, startX, height - 100);
     this.player.setLaneManager(this.laneManager);
+    
+    // Initialize collision manager after player is created
+    this.collisionManager = new CollisionManager(this, this.player, this.scoreManager, this.livesManager);
+    this.collisionManager.setEffectsManager(this.effectsManager);
     
     // Create projectiles group
     this.projectiles = this.add.group({
@@ -59,8 +70,17 @@ export class GameScene extends Phaser.Scene {
     // Create entity spawner
     this.entitySpawner = new EntitySpawner(this, this.laneManager);
     
-    // Set up collision detection
-    this.setupCollisions();
+    // Set up collision detection with CollisionManager
+    this.collisionManager.setupCollisions(
+      this.entitySpawner.getStrollerGroup(),
+      this.entitySpawner.getHazardGroup(),
+      this.entitySpawner.getVIPGroup(),
+      this.entitySpawner.getAssassinGroup(),
+      this.projectiles
+    );
+    
+    // Create debug visualizer
+    this.debugVisualizer = new DebugVisualizer(this, this.collisionManager, this.laneManager);
 
     // Create UI
     this.createUI();
@@ -88,6 +108,12 @@ export class GameScene extends Phaser.Scene {
     // Debug mode toggle (D key)
     this.input.keyboard!.on('keydown-D', () => {
       this.laneManager.setDebugMode(!this.laneManager.showDebug);
+    });
+    
+    // Collision debug mode toggle (C key)
+    this.input.keyboard!.on('keydown-C', () => {
+      this.debugVisualizer.toggle();
+      this.collisionManager.setDebugMode(this.debugVisualizer.isEnabled());
     });
     
     // Start the game
@@ -138,6 +164,31 @@ export class GameScene extends Phaser.Scene {
         this.projectiles.remove(proj, true, true);
       }
     });
+    
+    // Update spatial partitioning for collision optimization
+    if (this.collisionManager) {
+      const allEntities = [
+        ...this.entitySpawner.getStrollerGroup().getChildren(),
+        ...this.entitySpawner.getHazardGroup().getChildren(),
+        ...this.entitySpawner.getVIPGroup().getChildren(),
+        ...this.entitySpawner.getAssassinGroup().getChildren()
+      ];
+      this.collisionManager.updateSpatialPartitioning(allEntities);
+      
+      // Reset frame stats for next frame
+      this.collisionManager.resetFrameStats();
+    }
+    
+    // Update debug visualizer
+    if (this.debugVisualizer) {
+      this.debugVisualizer.update({
+        strollers: this.entitySpawner.getStrollerGroup().getChildren(),
+        hazards: this.entitySpawner.getHazardGroup().getChildren(),
+        vips: this.entitySpawner.getVIPGroup().getChildren(),
+        assassins: this.entitySpawner.getAssassinGroup().getChildren(),
+        player: this.player
+      });
+    }
   }
 
   private setupEventListeners(): void {
@@ -164,6 +215,16 @@ export class GameScene extends Phaser.Scene {
     
     this.livesManager.getEvents().on('invincibilityEnd', () => {
       this.player.setInvincible(false);
+    });
+    
+    // Score manager events for streak bonus
+    this.scoreManager.getEvents().on('perfectStreak', () => {
+      if (this.effectsManager) {
+        this.effectsManager.playStreakBonusEffect(
+          this.player.x,
+          this.player.y - 50
+        );
+      }
     });
   }
   
@@ -197,168 +258,12 @@ export class GameScene extends Phaser.Scene {
     });
   }
   
-  private setupCollisions(): void {
-    // Player-stroller collision
-    this.physics.add.overlap(
-      this.player,
-      this.entitySpawner.getStrollerGroup(),
-      this.handleStrollerCollision,
-      undefined,
-      this
-    );
-    
-    // Player-hazard collision
-    this.physics.add.overlap(
-      this.player,
-      this.entitySpawner.getHazardGroup(),
-      this.handleHazardCollision,
-      undefined,
-      this
-    );
-    
-    // Player-VIP collision
-    this.physics.add.overlap(
-      this.player,
-      this.entitySpawner.getVIPGroup(),
-      this.handleVIPCollision,
-      undefined,
-      this
-    );
-    
-    // Player-assassin collision
-    this.physics.add.overlap(
-      this.player,
-      this.entitySpawner.getAssassinGroup(),
-      this.handleAssassinCollision,
-      undefined,
-      this
-    );
-    
-    // Projectile-assassin collision
-    this.physics.add.overlap(
-      this.projectiles,
-      this.entitySpawner.getAssassinGroup(),
-      this.handleProjectileAssassinCollision,
-      undefined,
-      this
-    );
-    
-    // VIP-assassin collision
-    this.physics.add.overlap(
-      this.entitySpawner.getVIPGroup(),
-      this.entitySpawner.getAssassinGroup(),
-      this.handleVIPAssassinCollision,
-      undefined,
-      this
-    );
-  }
   
-  private handleStrollerCollision(player: Player, stroller: Stroller): void {
-    if (!stroller.active) return;
-    
-    this.scoreManager.addPoints(1);
-    this.scoreManager.addStreak();
-    stroller.deactivate();
-    
-    // Visual feedback
-    const emitter = this.add.particles(stroller.x, stroller.y, 'star', {
-      speed: { min: 100, max: 200 },
-      scale: { start: 0.5, end: 0 },
-      lifespan: 500,
-      quantity: 5
-    });
-    
-    this.time.delayedCall(500, () => {
-      emitter.destroy();
-    });
-  }
   
-  private handleHazardCollision(player: Player, hazard: Hazard): void {
-    if (!hazard.active || this.livesManager.isInvincible()) return;
-    
-    this.scoreManager.addPoints(-2);
-    this.scoreManager.resetStreak();
-    this.livesManager.loseLife();
-    hazard.deactivate();
-    
-    // Screen shake
-    this.cameras.main.shake(200, 0.01);
-  }
   
-  private handleVIPCollision(player: Player, vip: VIP): void {
-    if (!vip.active || vip.isProtected()) return;
-    
-    vip.protect();
-    this.scoreManager.addPoints(5);
-    this.scoreManager.addStreak();
-    
-    // Visual celebration
-    const emitter = this.add.particles(vip.x, vip.y, 'star', {
-      speed: { min: 200, max: 300 },
-      scale: { start: 0.8, end: 0 },
-      lifespan: 800,
-      quantity: 10,
-      tint: 0xffd700
-    });
-    
-    this.time.delayedCall(800, () => {
-      emitter.destroy();
-    });
-  }
   
-  private handleAssassinCollision(player: Player, assassin: Assassin): void {
-    if (!assassin.active || this.livesManager.isInvincible()) return;
-    
-    this.scoreManager.resetStreak();
-    this.livesManager.loseLife();
-    assassin.eliminate();
-  }
   
-  private handleProjectileAssassinCollision(projectile: Phaser.GameObjects.Image, assassin: Assassin): void {
-    if (!assassin.active || !projectile.active) return;
-    
-    assassin.eliminate();
-    projectile.destroy();
-    this.scoreManager.addPoints(2);
-    
-    // Hit effect
-    const flash = this.add.image(assassin.x, assassin.y, 'star');
-    flash.setScale(2);
-    flash.setTint(0xff0000);
-    
-    this.tweens.add({
-      targets: flash,
-      scale: 0,
-      alpha: 0,
-      duration: 300,
-      ease: 'Power2',
-      onComplete: () => {
-        flash.destroy();
-      }
-    });
-  }
   
-  private handleVIPAssassinCollision(vip: VIP, assassin: Assassin): void {
-    if (!vip.active || !assassin.active || vip.isProtected()) return;
-    
-    this.scoreManager.addPoints(-5);
-    this.scoreManager.resetStreak();
-    
-    // Store current lives before losing them
-    const livesBeforeLoss = this.livesManager.getLives();
-    
-    this.livesManager.loseLife();
-    this.livesManager.loseLife();
-    
-    vip.deactivate();
-    assassin.deactivate();
-    
-    // Only do dramatic effect if not causing game over
-    if (livesBeforeLoss > 2) {
-      this.cameras.main.shake(500, 0.02);
-      this.cameras.main.flash(500, 255, 0, 0, false, 0.5);
-    }
-  }
   
   private pauseGame(): void {
     if (this.gameStateManager.canPause()) {
@@ -389,6 +294,15 @@ export class GameScene extends Phaser.Scene {
     }
     if (this.gameStateManager) {
       this.gameStateManager.destroy();
+    }
+    if (this.collisionManager) {
+      this.collisionManager.destroy();
+    }
+    if (this.effectsManager) {
+      this.effectsManager.destroy();
+    }
+    if (this.debugVisualizer) {
+      this.debugVisualizer.destroy();
     }
   }
   

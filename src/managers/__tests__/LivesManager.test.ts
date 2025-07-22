@@ -157,7 +157,7 @@ describe('LivesManager', () => {
       livesManager.loseLife();
       
       expect(mockScene.cameras.main.shake).toHaveBeenCalledWith(300, 0.02);
-      expect(mockScene.cameras.main.flash).toHaveBeenCalledWith(300, 255, 0, 0, false, 0.3);
+      expect(mockScene.cameras.main.flash).toHaveBeenCalledWith(300, 255, 0, 0);
     });
 
     it('should not play camera effects on final life loss', () => {
