@@ -5,10 +5,12 @@ import { Hazard } from '../sprites/Hazard';
 import { VIP } from '../sprites/VIP';
 import { Assassin } from '../sprites/Assassin';
 import { LaneManager } from '../utils/LaneManager';
+import { DifficultyManager } from '../managers/DifficultyManager';
 
 export class EntitySpawner {
   private scene: GameScene;
   private laneManager: LaneManager;
+  private difficultyManager?: DifficultyManager;
   private strollerTimer?: Phaser.Time.TimerEvent;
   private hazardTimer?: Phaser.Time.TimerEvent;
   private vipTimer?: Phaser.Time.TimerEvent;
@@ -64,7 +66,9 @@ export class EntitySpawner {
   private startStrollerSpawning(): void {
     const spawnStroller = () => {
       const lane = Phaser.Math.Between(0, this.laneManager.getLaneCount() - 1);
-      const speed = Phaser.Math.Between(100, 150);
+      const baseSpeed = Phaser.Math.Between(100, 150);
+      const speedMultiplier = this.difficultyManager?.getSpeedMultiplier() || 1;
+      const speed = baseSpeed * speedMultiplier;
       
       const stroller = this.strollerPool.get() as Stroller;
       if (stroller) {
@@ -72,7 +76,9 @@ export class EntitySpawner {
         stroller.spawn(lane, speed);
       }
       
-      const delay = Phaser.Math.Between(2000, 4000) / (1 + this.difficultyLevel * 0.2);
+      const baseDelay = Phaser.Math.Between(2000, 4000);
+      const spawnRateMultiplier = this.difficultyManager?.getSpawnRateMultiplier() || 1;
+      const delay = baseDelay / spawnRateMultiplier;
       this.strollerTimer = this.scene.time.delayedCall(delay, spawnStroller);
     };
     
@@ -83,15 +89,21 @@ export class EntitySpawner {
   private startHazardSpawning(): void {
     const spawnHazard = () => {
       const lane = Phaser.Math.Between(0, this.laneManager.getLaneCount() - 1);
-      const speed = Phaser.Math.Between(80, 200);
+      const baseSpeed = Phaser.Math.Between(80, 200);
+      const speedMultiplier = this.difficultyManager?.getSpeedMultiplier() || 1;
+      const speed = baseSpeed * speedMultiplier;
       
       const hazard = this.hazardPool.get() as Hazard;
       if (hazard) {
         hazard.setLaneManager(this.laneManager);
+        // Use hazard variety to determine hazard type based on difficulty
+        const hazardVariety = this.difficultyManager?.getHazardVariety() || 1;
         hazard.spawn(lane, speed);
       }
       
-      const delay = Phaser.Math.Between(3000, 6000) / (1 + this.difficultyLevel * 0.15);
+      const baseDelay = Phaser.Math.Between(3000, 6000);
+      const spawnRateMultiplier = this.difficultyManager?.getSpawnRateMultiplier() || 1;
+      const delay = baseDelay / spawnRateMultiplier;
       this.hazardTimer = this.scene.time.delayedCall(delay, spawnHazard);
     };
     
@@ -102,7 +114,9 @@ export class EntitySpawner {
   private startVIPSpawning(): void {
     const spawnVIPSequence = () => {
       const vipLane = Phaser.Math.Between(0, this.laneManager.getLaneCount() - 1);
-      const vipSpeed = Phaser.Math.Between(60, 80);
+      const baseVipSpeed = Phaser.Math.Between(60, 80);
+      const speedMultiplier = this.difficultyManager?.getSpeedMultiplier() || 1;
+      const vipSpeed = baseVipSpeed * speedMultiplier * 0.8; // VIPs move at 80% of normal speed
       
       const vip = this.vipPool.get() as VIP;
       if (vip) {
@@ -110,7 +124,11 @@ export class EntitySpawner {
         vip.spawn(vipLane, vipSpeed);
         this.activeVIPs.push(vip);
         
-        const assassinDelay = Phaser.Math.Between(2000, 3000);
+        // Assassin spawn delay affected by difficulty
+        const baseAssassinDelay = Phaser.Math.Between(2000, 3000);
+        const aggressiveness = this.difficultyManager?.getAssassinAggressiveness() || 1;
+        const assassinDelay = baseAssassinDelay / aggressiveness;
+        
         this.scene.time.delayedCall(assassinDelay, () => {
           if (vip.active && !vip.isProtected()) {
             this.spawnAssassin(vip);
@@ -118,7 +136,9 @@ export class EntitySpawner {
         });
       }
       
-      const delay = Phaser.Math.Between(60000, 90000) / (1 + this.difficultyLevel * 0.1);
+      const baseDelay = Phaser.Math.Between(60000, 90000);
+      const spawnRateMultiplier = this.difficultyManager?.getSpawnRateMultiplier() || 1;
+      const delay = baseDelay / spawnRateMultiplier;
       this.vipTimer = this.scene.time.delayedCall(delay, spawnVIPSequence);
     };
     
@@ -133,7 +153,10 @@ export class EntitySpawner {
     }
     
     const assassinLane = Phaser.Math.RND.pick(possibleLanes);
-    const assassinSpeed = 150;
+    const baseAssassinSpeed = 150;
+    const speedMultiplier = this.difficultyManager?.getSpeedMultiplier() || 1;
+    const aggressiveness = this.difficultyManager?.getAssassinAggressiveness() || 1;
+    const assassinSpeed = baseAssassinSpeed * speedMultiplier * aggressiveness;
     
     const assassin = this.assassinPool.get() as Assassin;
     if (assassin) {
@@ -141,6 +164,10 @@ export class EntitySpawner {
       assassin.setTarget(targetVIP);
       assassin.spawn(assassinLane, assassinSpeed);
     }
+  }
+  
+  public setDifficultyManager(difficultyManager: DifficultyManager): void {
+    this.difficultyManager = difficultyManager;
   }
   
   public setDifficultyLevel(level: number): void {

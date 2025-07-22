@@ -12,6 +12,8 @@ import { GameStateManager, GameState } from '../managers/GameStateManager';
 import { CollisionManager } from '../managers/CollisionManager';
 import { EffectsManager } from '../managers/EffectsManager';
 import { DebugVisualizer } from '../managers/DebugVisualizer';
+import { DifficultyManager } from '../managers/DifficultyManager';
+import { DifficultyDisplay } from '../ui/DifficultyDisplay';
 
 export class GameScene extends Phaser.Scene {
   private player!: Player;
@@ -23,6 +25,8 @@ export class GameScene extends Phaser.Scene {
   private collisionManager!: CollisionManager;
   private effectsManager!: EffectsManager;
   private debugVisualizer!: DebugVisualizer;
+  private difficultyManager!: DifficultyManager;
+  private difficultyDisplay!: DifficultyDisplay;
   private cursors!: Phaser.Types.Input.Keyboard.CursorKeys;
   private spaceKey!: Phaser.Input.Keyboard.Key;
   private projectiles!: Phaser.GameObjects.Group;
@@ -51,6 +55,7 @@ export class GameScene extends Phaser.Scene {
     this.gameStateManager = new GameStateManager(this);
     this.laneManager = new LaneManager(this, 3);
     this.effectsManager = new EffectsManager(this);
+    this.difficultyManager = new DifficultyManager(this);
 
     // Create player using Player class
     const startLane = Math.floor(this.laneManager.getLaneCount() / 2);
@@ -69,6 +74,7 @@ export class GameScene extends Phaser.Scene {
     
     // Create entity spawner
     this.entitySpawner = new EntitySpawner(this, this.laneManager);
+    this.entitySpawner.setDifficultyManager(this.difficultyManager);
     
     // Set up collision detection with CollisionManager
     this.collisionManager.setupCollisions(
@@ -116,6 +122,22 @@ export class GameScene extends Phaser.Scene {
       this.collisionManager.setDebugMode(this.debugVisualizer.isEnabled());
     });
     
+    // Debug difficulty controls (1-4 keys)
+    if (this.game.config.physics?.arcade?.debug) {
+      this.input.keyboard!.on('keydown-ONE', () => {
+        this.difficultyManager.forceDifficulty(0);
+      });
+      this.input.keyboard!.on('keydown-TWO', () => {
+        this.difficultyManager.forceDifficulty(1);
+      });
+      this.input.keyboard!.on('keydown-THREE', () => {
+        this.difficultyManager.forceDifficulty(2);
+      });
+      this.input.keyboard!.on('keydown-FOUR', () => {
+        this.difficultyManager.forceDifficulty(3);
+      });
+    }
+    
     // Start the game
     this.gameStateManager.changeState(GameState.PLAYING);
   }
@@ -126,6 +148,11 @@ export class GameScene extends Phaser.Scene {
     
     // Lives display
     this.livesManager.createDisplay(this.cameras.main.width - 150, 30);
+    
+    // Difficulty display
+    this.difficultyDisplay = new DifficultyDisplay(this, this.cameras.main.width / 2, 40);
+    const initialConfig = this.difficultyManager.getDifficultyConfig();
+    this.difficultyDisplay.updateDifficulty(this.difficultyManager.getCurrentDifficulty(), initialConfig);
 
     // Pause button for mobile
     const pauseButton = this.add.image(this.cameras.main.width - 30, 80, 'pause-icon');
@@ -204,7 +231,8 @@ export class GameScene extends Phaser.Scene {
       this.scene.stop();
       this.scene.start('GameOverScene', { 
         score: this.scoreManager.getScore(),
-        highScore: this.scoreManager.getHighScore()
+        highScore: this.scoreManager.getHighScore(),
+        highestDifficulty: this.difficultyManager.getDifficultyStats().highestLevelReached
       });
     });
     
@@ -224,6 +252,41 @@ export class GameScene extends Phaser.Scene {
           this.player.x,
           this.player.y - 50
         );
+      }
+    });
+    
+    // Score change events for difficulty
+    this.scoreManager.getEvents().on('scoreChange', (score: number) => {
+      this.events.emit('scoreChanged', score);
+    });
+    
+    // Lives events for difficulty
+    this.livesManager.getEvents().on('lifeChanged', (lives: number) => {
+      if (lives < this.livesManager.getMaxLives()) {
+        this.events.emit('lifeLost');
+      }
+    });
+    
+    // Streak events for difficulty
+    this.scoreManager.getEvents().on('streakChange', (streak: number) => {
+      if (streak >= 10) {
+        this.events.emit('streakAchieved');
+      }
+    });
+    
+    // Difficulty change events
+    this.difficultyManager.on('difficultyChanged', (data: any) => {
+      this.difficultyDisplay.updateDifficulty(data.level, data.config);
+      
+      // Show transition message
+      const messages = {
+        1: 'Speed Increasing!',
+        2: 'Getting Intense!',
+        3: 'NIGHTMARE MODE!'
+      };
+      
+      if (messages[data.level]) {
+        this.difficultyDisplay.showTransitionMessage(messages[data.level]);
       }
     });
   }
@@ -303,6 +366,12 @@ export class GameScene extends Phaser.Scene {
     }
     if (this.debugVisualizer) {
       this.debugVisualizer.destroy();
+    }
+    if (this.difficultyManager) {
+      this.difficultyManager.destroy();
+    }
+    if (this.difficultyDisplay) {
+      this.difficultyDisplay.destroy();
     }
   }
   

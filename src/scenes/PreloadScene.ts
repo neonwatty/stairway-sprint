@@ -201,7 +201,8 @@ export class PreloadScene extends Phaser.Scene {
           { key: 'heart-empty', path: 'images/ui/heart-empty.png', type: 'image' },
           { key: 'button', path: 'images/ui/button.png', type: 'image' },
           { key: 'pause-icon', path: 'images/ui/pause-icon.png', type: 'image' },
-          { key: 'play-icon', path: 'images/ui/play-icon.png', type: 'image' }
+          { key: 'play-icon', path: 'images/ui/play-icon.png', type: 'image' },
+          { key: 'star', path: 'images/ui/star.png', type: 'image' }
         ]
       },
       {
@@ -212,7 +213,9 @@ export class PreloadScene extends Phaser.Scene {
           { key: 'sfx-hit', path: 'audio/sfx-hit.mp3', type: 'audio' },
           { key: 'sfx-shoot', path: 'audio/sfx-shoot.mp3', type: 'audio' },
           { key: 'sfx-powerup', path: 'audio/sfx-powerup.mp3', type: 'audio' },
-          { key: 'sfx-gameover', path: 'audio/sfx-gameover.mp3', type: 'audio' }
+          { key: 'sfx-gameover', path: 'audio/sfx-gameover.mp3', type: 'audio' },
+          { key: 'difficulty_increase', path: 'audio/difficulty-increase.mp3', type: 'audio' },
+          { key: 'difficulty_decrease', path: 'audio/difficulty-decrease.mp3', type: 'audio' }
         ]
       }
     ];
