@@ -77,6 +77,15 @@ npm run preview    # Preview production build
 - **Mobile**: Swipe or tap gestures
 - **Pause**: ESC or P key, tap pause button on mobile
 
+## Testing Guidelines
+
+**IMPORTANT**: When running tests, avoid creating continuously running processes:
+- Always use `npm test -- --run` for single test execution (no watch mode)
+- Never use `npm test` alone as it creates a continuously running process
+- For coverage reports, use `npm test:coverage -- --run`
+- For specific test files, use `npm test -- --run src/path/to/test.ts`
+- This project uses Vitest, not Jest
+
 ## Current Status
 
 This is a greenfield project with comprehensive planning documentation. Begin with Task 1 from `/docs/tasks.json` to set up the development environment and basic project structure.

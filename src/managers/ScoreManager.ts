@@ -10,8 +10,8 @@ export class ScoreManager {
   private highScoreText?: Phaser.GameObjects.Text;
   private events: Phaser.Events.EventEmitter;
   
-  constructor(scene: Phaser.Scene) {
-    this.scene = scene;
+  constructor(scene?: Phaser.Scene) {
+    this.scene = scene!;
     this.events = new Phaser.Events.EventEmitter();
     this.loadHighScore();
   }
@@ -118,6 +118,9 @@ export class ScoreManager {
   }
   
   private showFloatingText(points: number, color: number): void {
+    if (!this.scene || !this.scene.cameras || !this.scene.cameras.main) {
+      return;
+    }
     const centerX = this.scene.cameras.main.width / 2;
     const centerY = this.scene.cameras.main.height / 2;
     

@@ -9,8 +9,8 @@ export class LivesManager {
   private invincible: boolean = false;
   private invincibilityDuration: number = 2000;
   
-  constructor(scene: Phaser.Scene, startingLives: number = 3) {
-    this.scene = scene;
+  constructor(scene?: Phaser.Scene, startingLives: number = 3) {
+    this.scene = scene!;
     this.maxLives = startingLives;
     this.lives = startingLives;
     this.events = new Phaser.Events.EventEmitter();

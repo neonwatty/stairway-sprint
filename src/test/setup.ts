@@ -7,6 +7,9 @@ vi.mock('phaser', () => ({
   ...mockPhaser
 }));
 
+// Set up global Phaser object
+(global as any).Phaser = mockPhaser;
+
 // Setup DOM environment
 global.ResizeObserver = vi.fn().mockImplementation(() => ({
   observe: vi.fn(),
@@ -16,7 +19,10 @@ global.ResizeObserver = vi.fn().mockImplementation(() => ({
 
 // Mock localStorage
 const localStorageMock = {
-  getItem: vi.fn(),
+  getItem: vi.fn((key) => {
+    if (key === 'stairway-sprint-high-score') return '0';
+    return null;
+  }),
   setItem: vi.fn(),
   removeItem: vi.fn(),
   clear: vi.fn(),

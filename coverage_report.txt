@@ -1,0 +1,1120 @@
+
+> stairway-sprint@1.0.0 test:coverage
+> vitest --coverage --run
+
+
+ RUN  v3.2.4 /Users/jeremywatt/Desktop/stairway-sprint
+      Coverage enabled with v8
+
+ ❯ src/managers/__tests__/LivesManager.test.ts (21 tests | 3 failed) 1016ms
+   ✓ LivesManager > initialization > should initialize with specified number of lives 90ms
+   ✓ LivesManager > initialization > should allow custom starting lives 105ms
+   ✓ LivesManager > initialization > should not be invincible on initialization 72ms
+   ✓ LivesManager > life management > should lose a life correctly 45ms
+   ✓ LivesManager > life management > should emit lifeChanged event when losing life 56ms
+   ✓ LivesManager > life management > should return true when losing last life 53ms
+   ✓ LivesManager > life management > should emit gameOver event when losing last life 52ms
+   ✓ LivesManager > life management > should not lose life when invincible 138ms
+   ✓ LivesManager > life management > should not go below 0 lives 147ms
+   ✓ LivesManager > life management > should add life correctly 33ms
+   ✓ LivesManager > life management > should not exceed max lives 5ms
+   ✓ LivesManager > life management > should emit lifeChanged event when gaining life 13ms
+   ✓ LivesManager > invincibility > should start invincibility after losing life 17ms
+   ✓ LivesManager > invincibility > should end invincibility after duration 16ms
+   × LivesManager > display creation > should create heart icons for each life 74ms
+     → expected "spy" to be called 3 times, but got 0 times
+   × LivesManager > display creation > should update heart display when lives change 2ms
+     → Cannot read properties of undefined (reading 'setTexture')
+   ✓ LivesManager > animations > should play life loss animation with camera effects 1ms
+   ✓ LivesManager > animations > should not play camera effects on final life loss 1ms
+   × LivesManager > animations > should play life gain animation with particles 60ms
+     → expected "spy" to be called at least once
+   ✓ LivesManager > reset functionality > should reset lives to maximum 8ms
+   ✓ LivesManager > cleanup > should clean up resources on destroy 11ms
+ ❯ src/managers/__tests__/AccessibilityManager.test.ts (31 tests | 4 failed) 1767ms
+   ✓ AccessibilityManager > initialization > should load default settings when no saved settings exist 120ms
+   ✓ AccessibilityManager > initialization > should load saved settings from localStorage 78ms
+   ✓ AccessibilityManager > initialization > should set up keyboard listeners 116ms
+   ✓ AccessibilityManager > settings management > should update individual settings 45ms
+   ✓ AccessibilityManager > settings management > should save settings to localStorage when updated 18ms
+   × AccessibilityManager > settings management > should apply color blind filter when mode changes 51ms
+     → Phaser is not defined
+   ✓ AccessibilityManager > settings management > should remove color blind filter when set to NONE 28ms
+   ✓ AccessibilityManager > settings management > should apply high contrast immediately when enabled 2ms
+   ✓ AccessibilityManager > focusable elements > should register focusable elements 1ms
+   ✓ AccessibilityManager > focusable elements > should not register same element twice 12ms
+   ✓ AccessibilityManager > focusable elements > should unregister focusable elements 10ms
+   ✓ AccessibilityManager > focusable elements > should clear all focusable elements 3ms
+   ✓ AccessibilityManager > keyboard navigation > should focus next element on TAB 16ms
+   ✓ AccessibilityManager > keyboard navigation > should focus previous element on SHIFT+TAB 2ms
+   ✓ AccessibilityManager > keyboard navigation > should focus next on DOWN arrow 1ms
+   ✓ AccessibilityManager > keyboard navigation > should focus previous on UP arrow 2ms
+   ✓ AccessibilityManager > keyboard navigation > should activate focused element on ENTER 18ms
+   ✓ AccessibilityManager > keyboard navigation > should not navigate when keyboard nav is disabled  645ms
+   ✓ AccessibilityManager > UI sounds > should play UI sound with adjusted volume 117ms
+   ✓ AccessibilityManager > UI sounds > should not play sound if sound not found 97ms
+   ✓ AccessibilityManager > screen reader support > should not create ARIA live region when screen reader mode is off 62ms
+   ✓ AccessibilityManager > screen reader support > should create ARIA live region when screen reader mode is on 188ms
+   ✓ AccessibilityManager > screen reader support > should announce text content for focused text elements 5ms
+   ✓ AccessibilityManager > screen reader support > should use custom accessibility label if available 4ms
+   ✓ AccessibilityManager > contrast checking > should check contrast ratio between colors 2ms
+   ✓ AccessibilityManager > contrast checking > should calculate correct contrast ratios 1ms
+   ✓ AccessibilityManager > cleanup > should clean up all resources on destroy 1ms
+   ✓ AccessibilityManager > cleanup > should clear all focusable elements on destroy 2ms
+   × AccessibilityManager > color blind modes > should apply protanopia filter 49ms
+     → expected "spy" to be called with arguments: [ 16764108, 0.3 ][90m
+
+Number of calls: [1m0[22m
+[39m
+   × AccessibilityManager > color blind modes > should apply deuteranopia filter 8ms
+     → expected "spy" to be called with arguments: [ 13434828, 0.3 ][90m
+
+Number of calls: [1m0[22m
+[39m
+   × AccessibilityManager > color blind modes > should apply tritanopia filter 54ms
+     → expected "spy" to be called with arguments: [ 13421823, 0.3 ][90m
+
+Number of calls: [1m0[22m
+[39m
+ ❯ src/utils/__tests__/ResponsiveUtils.test.ts (33 tests | 2 failed) 3407ms
+   ✓ ResponsiveUtils > device detection > should detect phone for width < 768px 95ms
+   ✓ ResponsiveUtils > device detection > should detect tablet for width 768-1024px 53ms
+   ✓ ResponsiveUtils > device detection > should detect desktop for width > 1024px 102ms
+   ✓ ResponsiveUtils > orientation detection > should detect portrait when height > width 50ms
+   ✓ ResponsiveUtils > orientation detection > should detect landscape when width > height 37ms
+   ✓ ResponsiveUtils > singleton behavior > should return same instance for same scene 51ms
+   ✓ ResponsiveUtils > singleton behavior > should create new instance for different scene 124ms
+   ✓ ResponsiveUtils > singleton behavior > should work with helper function 93ms
+   ✓ ResponsiveUtils > font sizing > should calculate font size for SMALL 75ms
+   ✓ ResponsiveUtils > font sizing > should calculate font size for NORMAL 52ms
+   ✓ ResponsiveUtils > font sizing > should calculate font size for LARGE 118ms
+   ✓ ResponsiveUtils > font sizing > should calculate font size for TITLE 87ms
+   ✓ ResponsiveUtils > font sizing > should clamp font size to min/max values 82ms
+   ✓ ResponsiveUtils > font sizing > should return font style object 117ms
+   ✓ ResponsiveUtils > scaling > should scale values based on device 102ms
+   × ResponsiveUtils > scaling > should scale differently for different devices 322ms
+     → expected 135 not to be 135 // Object.is equality
+   ✓ ResponsiveUtils > scaling > should get UI scale factor 25ms
+   ✓ ResponsiveUtils > spacing and padding > should get responsive spacing 35ms
+   × ResponsiveUtils > spacing and padding > should get different padding for phone vs desktop 44ms
+     → expected 27 to be greater than 27
+   ✓ ResponsiveUtils > touch functionality > should enforce minimum touch target size 19ms
+   ✓ ResponsiveUtils > touch functionality > should detect touch device 16ms
+   ✓ ResponsiveUtils > relative positioning > should calculate relative width position 11ms
+   ✓ ResponsiveUtils > relative positioning > should calculate relative height position 6ms
+   ✓ ResponsiveUtils > safe area insets > should return safe area for phone in portrait 16ms
+   ✓ ResponsiveUtils > safe area insets > should return safe area for phone in landscape 17ms
+   ✓ ResponsiveUtils > safe area insets > should return no safe area for desktop 20ms
+   ✓ ResponsiveUtils > button configuration > should create button config with minimum sizes 11ms
+   ✓ ResponsiveUtils > button configuration > should use specified font size 19ms
+   ✓ ResponsiveUtils > DPI adjustment > should adjust value for high DPI displays  1057ms
+   ✓ ResponsiveUtils > DPI adjustment > should handle fractional DPI 191ms
+   ✓ ResponsiveUtils > update on resize > should update device category on resize 130ms
+   ✓ ResponsiveUtils > update on resize > should update orientation on resize 206ms
+   ✓ ResponsiveUtils > update on resize > should recalculate scale factor on update 6ms
+ ❯ src/scenes/__tests__/GameOverScene.test.ts (25 tests | 22 failed) 1462ms
+   ✓ GameOverScene > initialization > should initialize with game over data  428ms
+   ✓ GameOverScene > initialization > should detect new high score 216ms
+   ✓ GameOverScene > initialization > should not save high score if not new 26ms
+   × GameOverScene > create > should create semi-transparent overlay 115ms
+     → buttonBg.setStrokeStyle is not a function
+   × GameOverScene > create > should create main container 6ms
+     → buttonBg.setStrokeStyle is not a function
+   × GameOverScene > create > should display game over title 58ms
+     → buttonBg.setStrokeStyle is not a function
+   × GameOverScene > create > should display score 18ms
+     → buttonBg.setStrokeStyle is not a function
+   × GameOverScene > create > should display score label 8ms
+     → buttonBg.setStrokeStyle is not a function
+   × GameOverScene > create > should create play again button 7ms
+     → buttonBg.setStrokeStyle is not a function
+   × GameOverScene > create > should create main menu button 17ms
+     → buttonBg.setStrokeStyle is not a function
+   × GameOverScene > create > should create share button if supported 358ms
+     → buttonBg.setStrokeStyle is not a function
+   × GameOverScene > create > should animate entrance 40ms
+     → buttonBg.setStrokeStyle is not a function
+   × GameOverScene > new high score > should display new high score badge 27ms
+     → badgeBg.fillStyle is not a function
+   × GameOverScene > new high score > should display high score value 4ms
+     → badgeBg.fillStyle is not a function
+   × GameOverScene > new high score > should play celebration sound 2ms
+     → badgeBg.fillStyle is not a function
+   × GameOverScene > new high score > should animate high score badge 2ms
+     → badgeBg.fillStyle is not a function
+   × GameOverScene > button interactions > should restart game when play again clicked 5ms
+     → buttonBg.setStrokeStyle is not a function
+   × GameOverScene > button interactions > should go to main menu when button clicked 7ms
+     → buttonBg.setStrokeStyle is not a function
+   × GameOverScene > button interactions > should share score when share button clicked 15ms
+     → buttonBg.setStrokeStyle is not a function
+   × GameOverScene > keyboard shortcuts > should restart on SPACE key 19ms
+     → buttonBg.setStrokeStyle is not a function
+   × GameOverScene > keyboard shortcuts > should go to main menu on ESC key 4ms
+     → buttonBg.setStrokeStyle is not a function
+   × GameOverScene > responsive behavior > should update layout on resize 3ms
+     → buttonBg.setStrokeStyle is not a function
+   × GameOverScene > accessibility > should apply high contrast styles when enabled 6ms
+     → buttonBg.setStrokeStyle is not a function
+   × GameOverScene > cleanup > should clean up on shutdown 10ms
+     → buttonBg.setStrokeStyle is not a function
+   × GameOverScene > score animations > should count up score animation 2ms
+     → buttonBg.setStrokeStyle is not a function
+ ❯ src/scenes/__tests__/SettingsScene.test.ts (25 tests | 24 failed) 1743ms
+   ✓ SettingsScene > initialization > should create with correct key 74ms
+   × SettingsScene > create > should create semi-transparent overlay 164ms
+     → bg.setInteractive is not a function
+   × SettingsScene > create > should create main container 48ms
+     → bg.setInteractive is not a function
+   × SettingsScene > create > should create title text 100ms
+     → bg.setInteractive is not a function
+   × SettingsScene > create > should create close button 296ms
+     → bg.setInteractive is not a function
+   × SettingsScene > create > should set up ESC key handler 178ms
+     → bg.setInteractive is not a function
+   × SettingsScene > create > should set up resize handler 8ms
+     → bg.setInteractive is not a function
+   × SettingsScene > settings options > should create color blind mode option 64ms
+     → bg.setInteractive is not a function
+   × SettingsScene > settings options > should create high contrast option 201ms
+     → bg.setInteractive is not a function
+   × SettingsScene > settings options > should create UI sound volume option 47ms
+     → bg.setInteractive is not a function
+   × SettingsScene > settings options > should create keyboard navigation option 65ms
+     → bg.setInteractive is not a function
+   × SettingsScene > settings options > should create screen reader option 65ms
+     → bg.setInteractive is not a function
+   × SettingsScene > color blind mode selection > should create buttons for each color blind mode 14ms
+     → bg.setInteractive is not a function
+   × SettingsScene > color blind mode selection > should update color blind mode when button clicked 26ms
+     → bg.setInteractive is not a function
+   × SettingsScene > toggle options > should toggle high contrast mode 6ms
+     → bg.setInteractive is not a function
+   × SettingsScene > volume slider > should create volume slider components 3ms
+     → bg.setInteractive is not a function
+   × SettingsScene > volume slider > should update volume when slider dragged 2ms
+     → bg.setInteractive is not a function
+   × SettingsScene > keyboard interactions > should close on ESC key 3ms
+     → bg.setInteractive is not a function
+   × SettingsScene > keyboard interactions > should close when close button clicked 11ms
+     → bg.setInteractive is not a function
+   × SettingsScene > responsive behavior > should update layout on resize 15ms
+     → bg.setInteractive is not a function
+   × SettingsScene > accessibility > should register focusable elements 20ms
+     → bg.setInteractive is not a function
+   × SettingsScene > accessibility > should apply high contrast styles when enabled 25ms
+     → bg.setInteractive is not a function
+   × SettingsScene > cleanup > should clean up on shutdown 130ms
+     → bg.setInteractive is not a function
+   × SettingsScene > settings persistence > should load saved settings on create 139ms
+     → bg.setInteractive is not a function
+   × SettingsScene > settings persistence > should save settings when changed 21ms
+     → bg.setInteractive is not a function
+ ❯ src/ui/__tests__/UIManager.test.ts (31 tests | 31 failed) 1581ms
+   × UIManager > initialization > should create UI manager with required dependencies 526ms
+     → Cannot read properties of undefined (reading 'keyboard')
+   × UIManager > initialization > should set accessibility manager 62ms
+     → Cannot read properties of undefined (reading 'keyboard')
+   × UIManager > initialization > should set UI sound manager 51ms
+     → Cannot read properties of undefined (reading 'keyboard')
+   × UIManager > create > should create score text 27ms
+     → Cannot read properties of undefined (reading 'keyboard')
+   × UIManager > create > should create streak text 93ms
+     → Cannot read properties of undefined (reading 'keyboard')
+   × UIManager > create > should create timer text 63ms
+     → Cannot read properties of undefined (reading 'keyboard')
+   × UIManager > create > should create heart icons for lives 25ms
+     → Cannot read properties of undefined (reading 'keyboard')
+   × UIManager > create > should create pause button 26ms
+     → Cannot read properties of undefined (reading 'keyboard')
+   × UIManager > create > should set up resize handler 52ms
+     → Cannot read properties of undefined (reading 'keyboard')
+   × UIManager > timer functionality > should start timer 258ms
+     → Cannot read properties of undefined (reading 'keyboard')
+   × UIManager > timer functionality > should stop timer 140ms
+     → Cannot read properties of undefined (reading 'keyboard')
+   × UIManager > timer functionality > should resume timer from paused state 36ms
+     → Cannot read properties of undefined (reading 'keyboard')
+   × UIManager > timer functionality > should get elapsed time 41ms
+     → Cannot read properties of undefined (reading 'keyboard')
+   × UIManager > score updates > should update score display when score changes 44ms
+     → Cannot read properties of undefined (reading 'keyboard')
+   × UIManager > score updates > should animate score text on change 64ms
+     → Cannot read properties of undefined (reading 'keyboard')
+   × UIManager > score updates > should not animate if score unchanged 11ms
+     → Cannot read properties of undefined (reading 'keyboard')
+   × UIManager > streak updates > should update streak display when streak changes 3ms
+     → Cannot read properties of undefined (reading 'keyboard')
+   × UIManager > streak updates > should animate streak text when increasing 2ms
+     → Cannot read properties of undefined (reading 'keyboard')
+   × UIManager > streak updates > should flash color on milestone streaks (multiples of 5) 1ms
+     → Cannot read properties of undefined (reading 'keyboard')
+   × UIManager > streak updates > should play powerup sound on milestone streaks 3ms
+     → Cannot read properties of undefined (reading 'keyboard')
+   × UIManager > lives updates > should update heart icons when lives change 1ms
+     → Cannot read properties of undefined (reading 'keyboard')
+   × UIManager > lives updates > should set alpha for empty hearts 1ms
+     → Cannot read properties of undefined (reading 'keyboard')
+   × UIManager > pause button > should make pause button interactive 1ms
+     → Cannot read properties of undefined (reading 'keyboard')
+   × UIManager > pause button > should handle pause button hover 1ms
+     → Cannot read properties of undefined (reading 'keyboard')
+   × UIManager > pause button > should emit pauseGame event on click 1ms
+     → Cannot read properties of undefined (reading 'keyboard')
+   × UIManager > pause button > should play click sound on pause button press 2ms
+     → Cannot read properties of undefined (reading 'keyboard')
+   × UIManager > responsive updates > should update layout on resize 2ms
+     → Cannot read properties of undefined (reading 'keyboard')
+   × UIManager > responsive updates > should update font sizes on resize 25ms
+     → Cannot read properties of undefined (reading 'keyboard')
+   × UIManager > cleanup > should remove event listeners on destroy 4ms
+     → Cannot read properties of undefined (reading 'keyboard')
+   × UIManager > cleanup > should destroy all UI elements 1ms
+     → Cannot read properties of undefined (reading 'keyboard')
+   × UIManager > cleanup > should remove pause button listeners 1ms
+     → Cannot read properties of undefined (reading 'keyboard')
+ ❯ src/scenes/__tests__/MainMenuScene.test.ts (32 tests | 31 failed) 1792ms
+   ✓ MainMenuScene > initialization > should create with correct key  532ms
+   × MainMenuScene > create > should fade in on create 246ms
+     → this.add.rectangle is not a function
+   × MainMenuScene > create > should create background rectangle 189ms
+     → this.add.rectangle is not a function
+   × MainMenuScene > create > should add player sprite decoration 10ms
+     → this.add.rectangle is not a function
+   × MainMenuScene > create > should display title text 12ms
+     → this.add.rectangle is not a function
+   × MainMenuScene > create > should create play button 2ms
+     → this.add.rectangle is not a function
+   × MainMenuScene > create > should create settings button 3ms
+     → this.add.rectangle is not a function
+   × MainMenuScene > create > should create how to play button 5ms
+     → this.add.rectangle is not a function
+   × MainMenuScene > create > should display high score 5ms
+     → this.add.rectangle is not a function
+   × MainMenuScene > create > should display version info 3ms
+     → this.add.rectangle is not a function
+   × MainMenuScene > create > should set up keyboard shortcuts 5ms
+     → this.add.rectangle is not a function
+   × MainMenuScene > create > should set up resize handler 4ms
+     → this.add.rectangle is not a function
+   × MainMenuScene > button interactions > should start game when play button clicked 409ms
+     → this.add.rectangle is not a function
+   × MainMenuScene > button interactions > should launch settings scene when settings button clicked 83ms
+     → this.add.rectangle is not a function
+   × MainMenuScene > button interactions > should show how to play when button clicked 5ms
+     → this.add.rectangle is not a function
+   × MainMenuScene > keyboard shortcuts > should start game on SPACE key 7ms
+     → this.add.rectangle is not a function
+   × MainMenuScene > keyboard shortcuts > should open settings on S key 4ms
+     → this.add.rectangle is not a function
+   × MainMenuScene > keyboard shortcuts > should show how to play on H key 2ms
+     → this.add.rectangle is not a function
+   × MainMenuScene > how to play overlay > should create how to play content 4ms
+     → this.add.rectangle is not a function
+   × MainMenuScene > how to play overlay > should show controls section 3ms
+     → this.add.rectangle is not a function
+   × MainMenuScene > how to play overlay > should show objective section 123ms
+     → this.add.rectangle is not a function
+   × MainMenuScene > how to play overlay > should create close button 14ms
+     → this.add.rectangle is not a function
+   × MainMenuScene > how to play overlay > should close overlay on ESC key 17ms
+     → this.add.rectangle is not a function
+   × MainMenuScene > button hover effects > should change play button style on hover 18ms
+     → this.add.rectangle is not a function
+   × MainMenuScene > button hover effects > should restore button style on hover out 18ms
+     → this.add.rectangle is not a function
+   × MainMenuScene > accessibility > should apply high contrast styles when enabled 24ms
+     → this.add.rectangle is not a function
+   × MainMenuScene > accessibility > should check contrast ratio for title 6ms
+     → this.add.rectangle is not a function
+   × MainMenuScene > accessibility > should register buttons as focusable elements 3ms
+     → this.add.rectangle is not a function
+   × MainMenuScene > responsive behavior > should update layout on resize 2ms
+     → this.add.rectangle is not a function
+   × MainMenuScene > cleanup > should clean up on shutdown 16ms
+     → this.add.rectangle is not a function
+   × MainMenuScene > background music > should play background music on create if not already playing 3ms
+     → this.add.rectangle is not a function
+   × MainMenuScene > background music > should not restart music if already playing 2ms
+     → this.add.rectangle is not a function
+stderr | src/managers/__tests__/UISoundManager.test.ts > UISoundManager > accessible button creation > should create text button with proper setup
+Button must be interactive to add sounds
+
+stderr | src/managers/__tests__/UISoundManager.test.ts > UISoundManager > accessible button creation > should add accessibility label
+Button must be interactive to add sounds
+
+stderr | src/managers/__tests__/UISoundManager.test.ts > UISoundManager > accessible button creation > should use button text as default accessibility label
+Button must be interactive to add sounds
+
+stderr | src/managers/__tests__/UISoundManager.test.ts > UISoundManager > accessible button creation > should add button sounds automatically
+Button must be interactive to add sounds
+
+stderr | src/managers/__tests__/UISoundManager.test.ts > UISoundManager > accessible button creation > should handle click callback
+Button must be interactive to add sounds
+
+stderr | src/managers/__tests__/UISoundManager.test.ts > UISoundManager > accessible button creation > should add visual feedback handlers
+Button must be interactive to add sounds
+
+stderr | src/managers/__tests__/ScoreManager.test.ts > ScoreManager > initialization > should handle missing localStorage gracefully
+Failed to load high score: Error: localStorage not available
+    at Object.<anonymous> [90m(/Users/jeremywatt/Desktop/stairway-sprint/[39msrc/managers/__tests__/ScoreManager.test.ts:34:15[90m)[39m
+    at Object.mockCall [90m(file:///Users/jeremywatt/Desktop/stairway-sprint/[39mnode_modules/[4m@vitest[24m/spy/dist/index.js:96:15[90m)[39m
+    at Object.spy [as getItem] [90m(file:///Users/jeremywatt/Desktop/stairway-sprint/[39mnode_modules/[4mtinyspy[24m/dist/index.js:47:103[90m)[39m
+    at ScoreManager.loadHighScore [90m(/Users/jeremywatt/Desktop/stairway-sprint/[39msrc/managers/ScoreManager.ts:196:39[90m)[39m
+    at new ScoreManager [90m(/Users/jeremywatt/Desktop/stairway-sprint/[39msrc/managers/ScoreManager.ts:16:10[90m)[39m
+    at [90m/Users/jeremywatt/Desktop/stairway-sprint/[39msrc/managers/__tests__/ScoreManager.test.ts:36:31
+    at [90mfile:///Users/jeremywatt/Desktop/stairway-sprint/[39mnode_modules/[4m@vitest[24m/runner/dist/chunk-hooks.js:155:11
+    at [90mfile:///Users/jeremywatt/Desktop/stairway-sprint/[39mnode_modules/[4m@vitest[24m/runner/dist/chunk-hooks.js:752:26
+    at [90mfile:///Users/jeremywatt/Desktop/stairway-sprint/[39mnode_modules/[4m@vitest[24m/runner/dist/chunk-hooks.js:1897:20
+    at new Promise (<anonymous>)
+
+ ❯ src/managers/__tests__/ScoreManager.test.ts (20 tests | 1 failed) 112ms
+   ✓ ScoreManager > initialization > should initialize with score 0 15ms
+   ✓ ScoreManager > initialization > should initialize with streak 0 4ms
+   ✓ ScoreManager > initialization > should load high score from localStorage 1ms
+   ✓ ScoreManager > initialization > should handle missing localStorage gracefully 48ms
+   ✓ ScoreManager > score management > should add positive points correctly 2ms
+   ✓ ScoreManager > score management > should subtract negative points correctly 1ms
+   ✓ ScoreManager > score management > should not allow score to go below 0 1ms
+   ✓ ScoreManager > score management > should emit scoreChanged event when score changes 2ms
+   ✓ ScoreManager > score management > should update high score when current score exceeds it 1ms
+   ✓ ScoreManager > score management > should save high score to localStorage 2ms
+   ✓ ScoreManager > score management > should emit newHighScore event when high score is beaten 1ms
+   ✓ ScoreManager > streak management > should increment streak correctly 4ms
+   ✓ ScoreManager > streak management > should reset streak after 10 1ms
+   ✓ ScoreManager > streak management > should add bonus points for perfect streak 1ms
+   ✓ ScoreManager > streak management > should emit perfectStreak event after 10 streaks 1ms
+   ✓ ScoreManager > streak management > should emit streakChanged event when streak changes 1ms
+   ✓ ScoreManager > streak management > should reset streak to 0 1ms
+   × ScoreManager > display creation > should create score display elements 23ms
+     → expected "spy" to be called 3 times, but got 1 times
+   ✓ ScoreManager > reset functionality > should reset score and streak but not high score 1ms
+   ✓ ScoreManager > cleanup > should clean up resources on destroy 1ms
+ ✓ src/managers/__tests__/UISoundManager.test.ts (26 tests) 43ms
+ ✓ src/managers/__tests__/CollisionManager.test.ts (18 tests) 48ms
+stdout | src/managers/__tests__/DifficultyManager.test.ts > DifficultyManager > time-based difficulty progression > should increase difficulty to MEDIUM after 30 seconds
+Difficulty changed to Moderate Pace (MEDIUM) via time
+
+stdout | src/managers/__tests__/DifficultyManager.test.ts > DifficultyManager > time-based difficulty progression > should increase difficulty to HARD after 60 seconds
+Difficulty changed to Frantic Rush (HARD) via time
+
+stdout | src/managers/__tests__/DifficultyManager.test.ts > DifficultyManager > time-based difficulty progression > should increase difficulty to NIGHTMARE after 120 seconds
+Difficulty changed to Nightmare Descent (NIGHTMARE) via time
+
+stdout | src/managers/__tests__/DifficultyManager.test.ts > DifficultyManager > score-based difficulty progression > should increase difficulty to MEDIUM at 10 points
+Difficulty changed to Moderate Pace (MEDIUM) via score
+
+ ✓ src/managers/__tests__/GameStateManager.test.ts (21 tests) 120ms
+stdout | src/managers/__tests__/DifficultyManager.test.ts > DifficultyManager > score-based difficulty progression > should increase difficulty to HARD at 25 points
+Difficulty changed to Frantic Rush (HARD) via score
+
+stdout | src/managers/__tests__/DifficultyManager.test.ts > DifficultyManager > score-based difficulty progression > should increase difficulty to NIGHTMARE at 50 points
+Difficulty changed to Nightmare Descent (NIGHTMARE) via score
+
+stdout | src/managers/__tests__/DifficultyManager.test.ts > DifficultyManager > score-based difficulty progression > should not decrease difficulty if score-based is higher than time-based
+Difficulty changed to Frantic Rush (HARD) via score
+
+stdout | src/managers/__tests__/DifficultyManager.test.ts > DifficultyManager > difficulty configuration > should return correct configuration for each difficulty level
+Difficulty changed to Nightmare Descent (NIGHTMARE) via adaptive
+
+stdout | src/managers/__tests__/DifficultyManager.test.ts > DifficultyManager > difficulty configuration > should return correct multipliers
+Difficulty changed to Frantic Rush (HARD) via adaptive
+
+stdout | src/managers/__tests__/DifficultyManager.test.ts > DifficultyManager > visual and audio feedback > should trigger visual effects on difficulty change
+Difficulty changed to Moderate Pace (MEDIUM) via adaptive
+
+stdout | src/managers/__tests__/DifficultyManager.test.ts > DifficultyManager > visual and audio feedback > should trigger screen shake for nightmare mode
+Difficulty changed to Nightmare Descent (NIGHTMARE) via adaptive
+
+stdout | src/managers/__tests__/DifficultyManager.test.ts > DifficultyManager > visual and audio feedback > should play audio feedback on difficulty increase
+Difficulty changed to Moderate Pace (MEDIUM) via adaptive
+
+stdout | src/managers/__tests__/DifficultyManager.test.ts > DifficultyManager > adaptive difficulty > should track score gain rate
+Difficulty changed to Moderate Pace (MEDIUM) via score
+
+stdout | src/managers/__tests__/DifficultyManager.test.ts > DifficultyManager > adaptive difficulty > should recommend appropriate difficulty adjustments
+Difficulty changed to Moderate Pace (MEDIUM) via adaptive
+
+stdout | src/managers/__tests__/DifficultyManager.test.ts > DifficultyManager > difficulty stats > should track difficulty statistics
+Difficulty changed to Frantic Rush (HARD) via adaptive
+
+stdout | src/managers/__tests__/DifficultyManager.test.ts > DifficultyManager > difficulty stats > should track highest difficulty reached
+Difficulty changed to Nightmare Descent (NIGHTMARE) via adaptive
+Difficulty changed to Moderate Pace (MEDIUM) via adaptive
+
+stdout | src/managers/__tests__/DifficultyManager.test.ts > DifficultyManager > reset functionality > should reset to initial state
+Difficulty changed to Frantic Rush (HARD) via adaptive
+
+ ✓ src/managers/__tests__/DifficultyManager.test.ts (22 tests) 56ms
+
+⎯⎯⎯⎯⎯⎯ Failed Tests 118 ⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/scenes/__tests__/GameOverScene.test.ts > GameOverScene > create > should create semi-transparent overlay
+ FAIL  src/scenes/__tests__/GameOverScene.test.ts > GameOverScene > create > should create main container
+ FAIL  src/scenes/__tests__/GameOverScene.test.ts > GameOverScene > create > should display game over title
+ FAIL  src/scenes/__tests__/GameOverScene.test.ts > GameOverScene > create > should display score
+ FAIL  src/scenes/__tests__/GameOverScene.test.ts > GameOverScene > create > should display score label
+ FAIL  src/scenes/__tests__/GameOverScene.test.ts > GameOverScene > create > should create play again button
+ FAIL  src/scenes/__tests__/GameOverScene.test.ts > GameOverScene > create > should create main menu button
+ FAIL  src/scenes/__tests__/GameOverScene.test.ts > GameOverScene > create > should create share button if supported
+ FAIL  src/scenes/__tests__/GameOverScene.test.ts > GameOverScene > create > should animate entrance
+TypeError: buttonBg.setStrokeStyle is not a function
+ ❯ GameOverScene.createButton src/scenes/GameOverScene.ts:163:14
+    161|     // Button background with responsive sizing
+    162|     const buttonBg = this.add.rectangle(0, 0, buttonConfig.minWidth, b…
+    163|     buttonBg.setStrokeStyle(2, strokeColor);
+       |              ^
+    164|     container.buttonBg = buttonBg;
+    165|     container.add(buttonBg);
+ ❯ GameOverScene.create src/scenes/GameOverScene.ts:120:33
+ ❯ src/scenes/__tests__/GameOverScene.test.ts:111:21
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/118]⎯
+
+ FAIL  src/scenes/__tests__/GameOverScene.test.ts > GameOverScene > new high score > should display new high score badge
+ FAIL  src/scenes/__tests__/GameOverScene.test.ts > GameOverScene > new high score > should display high score value
+ FAIL  src/scenes/__tests__/GameOverScene.test.ts > GameOverScene > new high score > should play celebration sound
+ FAIL  src/scenes/__tests__/GameOverScene.test.ts > GameOverScene > new high score > should animate high score badge
+TypeError: badgeBg.fillStyle is not a function
+ ❯ GameOverScene.createNewHighScoreBadge src/scenes/GameOverScene.ts:230:13
+    228|     // Badge background
+    229|     const badgeBg = this.add.graphics();
+    230|     badgeBg.fillStyle(0xffd700, 1);
+       |             ^
+    231|     badgeBg.fillRoundedRect(-120 * scale, -25 * scale, 240 * scale, 50…
+    232|     container.add(badgeBg);
+ ❯ GameOverScene.create src/scenes/GameOverScene.ts:102:37
+ ❯ src/scenes/__tests__/GameOverScene.test.ts:203:21
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/118]⎯
+
+ FAIL  src/scenes/__tests__/GameOverScene.test.ts > GameOverScene > button interactions > should restart game when play again clicked
+ FAIL  src/scenes/__tests__/GameOverScene.test.ts > GameOverScene > button interactions > should go to main menu when button clicked
+ FAIL  src/scenes/__tests__/GameOverScene.test.ts > GameOverScene > button interactions > should share score when share button clicked
+TypeError: buttonBg.setStrokeStyle is not a function
+ ❯ GameOverScene.createButton src/scenes/GameOverScene.ts:163:14
+    161|     // Button background with responsive sizing
+    162|     const buttonBg = this.add.rectangle(0, 0, buttonConfig.minWidth, b…
+    163|     buttonBg.setStrokeStyle(2, strokeColor);
+       |              ^
+    164|     container.buttonBg = buttonBg;
+    165|     container.add(buttonBg);
+ ❯ GameOverScene.create src/scenes/GameOverScene.ts:120:33
+ ❯ src/scenes/__tests__/GameOverScene.test.ts:242:21
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/118]⎯
+
+ FAIL  src/scenes/__tests__/GameOverScene.test.ts > GameOverScene > keyboard shortcuts > should restart on SPACE key
+ FAIL  src/scenes/__tests__/GameOverScene.test.ts > GameOverScene > keyboard shortcuts > should go to main menu on ESC key
+TypeError: buttonBg.setStrokeStyle is not a function
+ ❯ GameOverScene.createButton src/scenes/GameOverScene.ts:163:14
+    161|     // Button background with responsive sizing
+    162|     const buttonBg = this.add.rectangle(0, 0, buttonConfig.minWidth, b…
+    163|     buttonBg.setStrokeStyle(2, strokeColor);
+       |              ^
+    164|     container.buttonBg = buttonBg;
+    165|     container.add(buttonBg);
+ ❯ GameOverScene.create src/scenes/GameOverScene.ts:120:33
+ ❯ src/scenes/__tests__/GameOverScene.test.ts:348:21
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/118]⎯
+
+ FAIL  src/scenes/__tests__/GameOverScene.test.ts > GameOverScene > responsive behavior > should update layout on resize
+TypeError: buttonBg.setStrokeStyle is not a function
+ ❯ GameOverScene.createButton src/scenes/GameOverScene.ts:163:14
+    161|     // Button background with responsive sizing
+    162|     const buttonBg = this.add.rectangle(0, 0, buttonConfig.minWidth, b…
+    163|     buttonBg.setStrokeStyle(2, strokeColor);
+       |              ^
+    164|     container.buttonBg = buttonBg;
+    165|     container.add(buttonBg);
+ ❯ GameOverScene.create src/scenes/GameOverScene.ts:120:33
+ ❯ src/scenes/__tests__/GameOverScene.test.ts:375:21
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/118]⎯
+
+ FAIL  src/scenes/__tests__/GameOverScene.test.ts > GameOverScene > accessibility > should apply high contrast styles when enabled
+TypeError: buttonBg.setStrokeStyle is not a function
+ ❯ GameOverScene.createButton src/scenes/GameOverScene.ts:163:14
+    161|     // Button background with responsive sizing
+    162|     const buttonBg = this.add.rectangle(0, 0, buttonConfig.minWidth, b…
+    163|     buttonBg.setStrokeStyle(2, strokeColor);
+       |              ^
+    164|     container.buttonBg = buttonBg;
+    165|     container.add(buttonBg);
+ ❯ GameOverScene.create src/scenes/GameOverScene.ts:120:33
+ ❯ src/scenes/__tests__/GameOverScene.test.ts:413:21
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/118]⎯
+
+ FAIL  src/scenes/__tests__/GameOverScene.test.ts > GameOverScene > cleanup > should clean up on shutdown
+TypeError: buttonBg.setStrokeStyle is not a function
+ ❯ GameOverScene.createButton src/scenes/GameOverScene.ts:163:14
+    161|     // Button background with responsive sizing
+    162|     const buttonBg = this.add.rectangle(0, 0, buttonConfig.minWidth, b…
+    163|     buttonBg.setStrokeStyle(2, strokeColor);
+       |              ^
+    164|     container.buttonBg = buttonBg;
+    165|     container.add(buttonBg);
+ ❯ GameOverScene.create src/scenes/GameOverScene.ts:120:33
+ ❯ src/scenes/__tests__/GameOverScene.test.ts:432:21
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[7/118]⎯
+
+ FAIL  src/scenes/__tests__/GameOverScene.test.ts > GameOverScene > score animations > should count up score animation
+TypeError: buttonBg.setStrokeStyle is not a function
+ ❯ GameOverScene.createButton src/scenes/GameOverScene.ts:163:14
+    161|     // Button background with responsive sizing
+    162|     const buttonBg = this.add.rectangle(0, 0, buttonConfig.minWidth, b…
+    163|     buttonBg.setStrokeStyle(2, strokeColor);
+       |              ^
+    164|     container.buttonBg = buttonBg;
+    165|     container.add(buttonBg);
+ ❯ GameOverScene.create src/scenes/GameOverScene.ts:120:33
+ ❯ src/scenes/__tests__/GameOverScene.test.ts:448:21
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[8/118]⎯
+
+ FAIL  src/scenes/__tests__/MainMenuScene.test.ts > MainMenuScene > create > should fade in on create
+ FAIL  src/scenes/__tests__/MainMenuScene.test.ts > MainMenuScene > create > should create background rectangle
+ FAIL  src/scenes/__tests__/MainMenuScene.test.ts > MainMenuScene > create > should add player sprite decoration
+ FAIL  src/scenes/__tests__/MainMenuScene.test.ts > MainMenuScene > create > should display title text
+ FAIL  src/scenes/__tests__/MainMenuScene.test.ts > MainMenuScene > create > should create play button
+ FAIL  src/scenes/__tests__/MainMenuScene.test.ts > MainMenuScene > create > should create settings button
+ FAIL  src/scenes/__tests__/MainMenuScene.test.ts > MainMenuScene > create > should create how to play button
+ FAIL  src/scenes/__tests__/MainMenuScene.test.ts > MainMenuScene > create > should display high score
+ FAIL  src/scenes/__tests__/MainMenuScene.test.ts > MainMenuScene > create > should display version info
+ FAIL  src/scenes/__tests__/MainMenuScene.test.ts > MainMenuScene > create > should set up keyboard shortcuts
+ FAIL  src/scenes/__tests__/MainMenuScene.test.ts > MainMenuScene > create > should set up resize handler
+TypeError: this.add.rectangle is not a function
+ ❯ MainMenuScene.create src/scenes/MainMenuScene.ts:40:14
+     38|     // Background - use better contrast for accessibility
+     39|     const bgColor = settings.highContrast ? 0x000000 : 0x1a1a1a;
+     40|     this.add.rectangle(width / 2, height / 2, width, height, bgColor);
+       |              ^
+     41| 
+     42|     // Add some decorative elements using loaded assets
+ ❯ src/scenes/__tests__/MainMenuScene.test.ts:75:21
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[9/118]⎯
+
+ FAIL  src/scenes/__tests__/MainMenuScene.test.ts > MainMenuScene > button interactions > should start game when play button clicked
+ FAIL  src/scenes/__tests__/MainMenuScene.test.ts > MainMenuScene > button interactions > should launch settings scene when settings button clicked
+ FAIL  src/scenes/__tests__/MainMenuScene.test.ts > MainMenuScene > button interactions > should show how to play when button clicked
+TypeError: this.add.rectangle is not a function
+ ❯ MainMenuScene.create src/scenes/MainMenuScene.ts:40:14
+     38|     // Background - use better contrast for accessibility
+     39|     const bgColor = settings.highContrast ? 0x000000 : 0x1a1a1a;
+     40|     this.add.rectangle(width / 2, height / 2, width, height, bgColor);
+       |              ^
+     41| 
+     42|     // Add some decorative elements using loaded assets
+ ❯ src/scenes/__tests__/MainMenuScene.test.ts:162:21
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[10/118]⎯
+
+ FAIL  src/scenes/__tests__/MainMenuScene.test.ts > MainMenuScene > keyboard shortcuts > should start game on SPACE key
+ FAIL  src/scenes/__tests__/MainMenuScene.test.ts > MainMenuScene > keyboard shortcuts > should open settings on S key
+ FAIL  src/scenes/__tests__/MainMenuScene.test.ts > MainMenuScene > keyboard shortcuts > should show how to play on H key
+TypeError: this.add.rectangle is not a function
+ ❯ MainMenuScene.create src/scenes/MainMenuScene.ts:40:14
+     38|     // Background - use better contrast for accessibility
+     39|     const bgColor = settings.highContrast ? 0x000000 : 0x1a1a1a;
+     40|     this.add.rectangle(width / 2, height / 2, width, height, bgColor);
+       |              ^
+     41| 
+     42|     // Add some decorative elements using loaded assets
+ ❯ src/scenes/__tests__/MainMenuScene.test.ts:229:21
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[11/118]⎯
+
+ FAIL  src/scenes/__tests__/MainMenuScene.test.ts > MainMenuScene > how to play overlay > should create how to play content
+ FAIL  src/scenes/__tests__/MainMenuScene.test.ts > MainMenuScene > how to play overlay > should show controls section
+ FAIL  src/scenes/__tests__/MainMenuScene.test.ts > MainMenuScene > how to play overlay > should show objective section
+ FAIL  src/scenes/__tests__/MainMenuScene.test.ts > MainMenuScene > how to play overlay > should create close button
+ FAIL  src/scenes/__tests__/MainMenuScene.test.ts > MainMenuScene > how to play overlay > should close overlay on ESC key
+TypeError: this.add.rectangle is not a function
+ ❯ MainMenuScene.create src/scenes/MainMenuScene.ts:40:14
+     38|     // Background - use better contrast for accessibility
+     39|     const bgColor = settings.highContrast ? 0x000000 : 0x1a1a1a;
+     40|     this.add.rectangle(width / 2, height / 2, width, height, bgColor);
+       |              ^
+     41| 
+     42|     // Add some decorative elements using loaded assets
+ ❯ src/scenes/__tests__/MainMenuScene.test.ts:273:21
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[12/118]⎯
+
+ FAIL  src/scenes/__tests__/MainMenuScene.test.ts > MainMenuScene > button hover effects > should change play button style on hover
+ FAIL  src/scenes/__tests__/MainMenuScene.test.ts > MainMenuScene > button hover effects > should restore button style on hover out
+TypeError: this.add.rectangle is not a function
+ ❯ MainMenuScene.create src/scenes/MainMenuScene.ts:40:14
+     38|     // Background - use better contrast for accessibility
+     39|     const bgColor = settings.highContrast ? 0x000000 : 0x1a1a1a;
+     40|     this.add.rectangle(width / 2, height / 2, width, height, bgColor);
+       |              ^
+     41| 
+     42|     // Add some decorative elements using loaded assets
+ ❯ src/scenes/__tests__/MainMenuScene.test.ts:329:21
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[13/118]⎯
+
+ FAIL  src/scenes/__tests__/MainMenuScene.test.ts > MainMenuScene > accessibility > should apply high contrast styles when enabled
+TypeError: this.add.rectangle is not a function
+ ❯ MainMenuScene.create src/scenes/MainMenuScene.ts:40:14
+     38|     // Background - use better contrast for accessibility
+     39|     const bgColor = settings.highContrast ? 0x000000 : 0x1a1a1a;
+     40|     this.add.rectangle(width / 2, height / 2, width, height, bgColor);
+       |              ^
+     41| 
+     42|     // Add some decorative elements using loaded assets
+ ❯ src/scenes/__tests__/MainMenuScene.test.ts:382:21
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[14/118]⎯
+
+ FAIL  src/scenes/__tests__/MainMenuScene.test.ts > MainMenuScene > accessibility > should check contrast ratio for title
+TypeError: this.add.rectangle is not a function
+ ❯ MainMenuScene.create src/scenes/MainMenuScene.ts:40:14
+     38|     // Background - use better contrast for accessibility
+     39|     const bgColor = settings.highContrast ? 0x000000 : 0x1a1a1a;
+     40|     this.add.rectangle(width / 2, height / 2, width, height, bgColor);
+       |              ^
+     41| 
+     42|     // Add some decorative elements using loaded assets
+ ❯ src/scenes/__tests__/MainMenuScene.test.ts:397:21
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[15/118]⎯
+
+ FAIL  src/scenes/__tests__/MainMenuScene.test.ts > MainMenuScene > accessibility > should register buttons as focusable elements
+TypeError: this.add.rectangle is not a function
+ ❯ MainMenuScene.create src/scenes/MainMenuScene.ts:40:14
+     38|     // Background - use better contrast for accessibility
+     39|     const bgColor = settings.highContrast ? 0x000000 : 0x1a1a1a;
+     40|     this.add.rectangle(width / 2, height / 2, width, height, bgColor);
+       |              ^
+     41| 
+     42|     // Add some decorative elements using loaded assets
+ ❯ src/scenes/__tests__/MainMenuScene.test.ts:412:21
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[16/118]⎯
+
+ FAIL  src/scenes/__tests__/MainMenuScene.test.ts > MainMenuScene > responsive behavior > should update layout on resize
+TypeError: this.add.rectangle is not a function
+ ❯ MainMenuScene.create src/scenes/MainMenuScene.ts:40:14
+     38|     // Background - use better contrast for accessibility
+     39|     const bgColor = settings.highContrast ? 0x000000 : 0x1a1a1a;
+     40|     this.add.rectangle(width / 2, height / 2, width, height, bgColor);
+       |              ^
+     41| 
+     42|     // Add some decorative elements using loaded assets
+ ❯ src/scenes/__tests__/MainMenuScene.test.ts:425:21
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[17/118]⎯
+
+ FAIL  src/scenes/__tests__/MainMenuScene.test.ts > MainMenuScene > cleanup > should clean up on shutdown
+TypeError: this.add.rectangle is not a function
+ ❯ MainMenuScene.create src/scenes/MainMenuScene.ts:40:14
+     38|     // Background - use better contrast for accessibility
+     39|     const bgColor = settings.highContrast ? 0x000000 : 0x1a1a1a;
+     40|     this.add.rectangle(width / 2, height / 2, width, height, bgColor);
+       |              ^
+     41| 
+     42|     // Add some decorative elements using loaded assets
+ ❯ src/scenes/__tests__/MainMenuScene.test.ts:448:21
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[18/118]⎯
+
+ FAIL  src/scenes/__tests__/MainMenuScene.test.ts > MainMenuScene > background music > should play background music on create if not already playing
+TypeError: this.add.rectangle is not a function
+ ❯ MainMenuScene.create src/scenes/MainMenuScene.ts:40:14
+     38|     // Background - use better contrast for accessibility
+     39|     const bgColor = settings.highContrast ? 0x000000 : 0x1a1a1a;
+     40|     this.add.rectangle(width / 2, height / 2, width, height, bgColor);
+       |              ^
+     41| 
+     42|     // Add some decorative elements using loaded assets
+ ❯ src/scenes/__tests__/MainMenuScene.test.ts:464:21
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[19/118]⎯
+
+ FAIL  src/scenes/__tests__/MainMenuScene.test.ts > MainMenuScene > background music > should not restart music if already playing
+TypeError: this.add.rectangle is not a function
+ ❯ MainMenuScene.create src/scenes/MainMenuScene.ts:40:14
+     38|     // Background - use better contrast for accessibility
+     39|     const bgColor = settings.highContrast ? 0x000000 : 0x1a1a1a;
+     40|     this.add.rectangle(width / 2, height / 2, width, height, bgColor);
+       |              ^
+     41| 
+     42|     // Add some decorative elements using loaded assets
+ ❯ src/scenes/__tests__/MainMenuScene.test.ts:477:21
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[20/118]⎯
+
+ FAIL  src/scenes/__tests__/SettingsScene.test.ts > SettingsScene > create > should create semi-transparent overlay
+ FAIL  src/scenes/__tests__/SettingsScene.test.ts > SettingsScene > create > should create main container
+ FAIL  src/scenes/__tests__/SettingsScene.test.ts > SettingsScene > create > should create title text
+ FAIL  src/scenes/__tests__/SettingsScene.test.ts > SettingsScene > create > should create close button
+ FAIL  src/scenes/__tests__/SettingsScene.test.ts > SettingsScene > create > should set up ESC key handler
+ FAIL  src/scenes/__tests__/SettingsScene.test.ts > SettingsScene > create > should set up resize handler
+TypeError: bg.setInteractive is not a function
+ ❯ SettingsScene.createToggleButton src/scenes/SettingsScene.ts:252:8
+    250|     button.add(buttonText);
+    251|     
+    252|     bg.setInteractive({ useHandCursor: true });
+       |        ^
+    253|     bg.on('pointerdown', () => {
+    254|       this.uiSoundManager.playToggle();
+ ❯ src/scenes/SettingsScene.ts:109:27
+ ❯ SettingsScene.createColorBlindOption src/scenes/SettingsScene.ts:107:11
+ ❯ SettingsScene.create src/scenes/SettingsScene.ts:45:10
+ ❯ src/scenes/__tests__/SettingsScene.test.ts:83:21
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[21/118]⎯
+
+ FAIL  src/scenes/__tests__/SettingsScene.test.ts > SettingsScene > settings options > should create color blind mode option
+ FAIL  src/scenes/__tests__/SettingsScene.test.ts > SettingsScene > settings options > should create high contrast option
+ FAIL  src/scenes/__tests__/SettingsScene.test.ts > SettingsScene > settings options > should create UI sound volume option
+ FAIL  src/scenes/__tests__/SettingsScene.test.ts > SettingsScene > settings options > should create keyboard navigation option
+ FAIL  src/scenes/__tests__/SettingsScene.test.ts > SettingsScene > settings options > should create screen reader option
+TypeError: bg.setInteractive is not a function
+ ❯ SettingsScene.createToggleButton src/scenes/SettingsScene.ts:252:8
+    250|     button.add(buttonText);
+    251|     
+    252|     bg.setInteractive({ useHandCursor: true });
+       |        ^
+    253|     bg.on('pointerdown', () => {
+    254|       this.uiSoundManager.playToggle();
+ ❯ src/scenes/SettingsScene.ts:109:27
+ ❯ SettingsScene.createColorBlindOption src/scenes/SettingsScene.ts:107:11
+ ❯ SettingsScene.create src/scenes/SettingsScene.ts:45:10
+ ❯ src/scenes/__tests__/SettingsScene.test.ts:137:21
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[22/118]⎯
+
+ FAIL  src/scenes/__tests__/SettingsScene.test.ts > SettingsScene > color blind mode selection > should create buttons for each color blind mode
+ FAIL  src/scenes/__tests__/SettingsScene.test.ts > SettingsScene > color blind mode selection > should update color blind mode when button clicked
+TypeError: bg.setInteractive is not a function
+ ❯ SettingsScene.createToggleButton src/scenes/SettingsScene.ts:252:8
+    250|     button.add(buttonText);
+    251|     
+    252|     bg.setInteractive({ useHandCursor: true });
+       |        ^
+    253|     bg.on('pointerdown', () => {
+    254|       this.uiSoundManager.playToggle();
+ ❯ src/scenes/SettingsScene.ts:109:27
+ ❯ SettingsScene.createColorBlindOption src/scenes/SettingsScene.ts:107:11
+ ❯ SettingsScene.create src/scenes/SettingsScene.ts:45:10
+ ❯ src/scenes/__tests__/SettingsScene.test.ts:178:21
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[23/118]⎯
+
+ FAIL  src/scenes/__tests__/SettingsScene.test.ts > SettingsScene > toggle options > should toggle high contrast mode
+TypeError: bg.setInteractive is not a function
+ ❯ SettingsScene.createToggleButton src/scenes/SettingsScene.ts:252:8
+    250|     button.add(buttonText);
+    251|     
+    252|     bg.setInteractive({ useHandCursor: true });
+       |        ^
+    253|     bg.on('pointerdown', () => {
+    254|       this.uiSoundManager.playToggle();
+ ❯ src/scenes/SettingsScene.ts:109:27
+ ❯ SettingsScene.createColorBlindOption src/scenes/SettingsScene.ts:107:11
+ ❯ SettingsScene.create src/scenes/SettingsScene.ts:45:10
+ ❯ src/scenes/__tests__/SettingsScene.test.ts:213:21
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[24/118]⎯
+
+ FAIL  src/scenes/__tests__/SettingsScene.test.ts > SettingsScene > volume slider > should create volume slider components
+ FAIL  src/scenes/__tests__/SettingsScene.test.ts > SettingsScene > volume slider > should update volume when slider dragged
+TypeError: bg.setInteractive is not a function
+ ❯ SettingsScene.createToggleButton src/scenes/SettingsScene.ts:252:8
+    250|     button.add(buttonText);
+    251|     
+    252|     bg.setInteractive({ useHandCursor: true });
+       |        ^
+    253|     bg.on('pointerdown', () => {
+    254|       this.uiSoundManager.playToggle();
+ ❯ src/scenes/SettingsScene.ts:109:27
+ ❯ SettingsScene.createColorBlindOption src/scenes/SettingsScene.ts:107:11
+ ❯ SettingsScene.create src/scenes/SettingsScene.ts:45:10
+ ❯ src/scenes/__tests__/SettingsScene.test.ts:241:21
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[25/118]⎯
+
+ FAIL  src/scenes/__tests__/SettingsScene.test.ts > SettingsScene > keyboard interactions > should close on ESC key
+ FAIL  src/scenes/__tests__/SettingsScene.test.ts > SettingsScene > keyboard interactions > should close when close button clicked
+TypeError: bg.setInteractive is not a function
+ ❯ SettingsScene.createToggleButton src/scenes/SettingsScene.ts:252:8
+    250|     button.add(buttonText);
+    251|     
+    252|     bg.setInteractive({ useHandCursor: true });
+       |        ^
+    253|     bg.on('pointerdown', () => {
+    254|       this.uiSoundManager.playToggle();
+ ❯ src/scenes/SettingsScene.ts:109:27
+ ❯ SettingsScene.createColorBlindOption src/scenes/SettingsScene.ts:107:11
+ ❯ SettingsScene.create src/scenes/SettingsScene.ts:45:10
+ ❯ src/scenes/__tests__/SettingsScene.test.ts:289:21
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[26/118]⎯
+
+ FAIL  src/scenes/__tests__/SettingsScene.test.ts > SettingsScene > responsive behavior > should update layout on resize
+TypeError: bg.setInteractive is not a function
+ ❯ SettingsScene.createToggleButton src/scenes/SettingsScene.ts:252:8
+    250|     button.add(buttonText);
+    251|     
+    252|     bg.setInteractive({ useHandCursor: true });
+       |        ^
+    253|     bg.on('pointerdown', () => {
+    254|       this.uiSoundManager.playToggle();
+ ❯ src/scenes/SettingsScene.ts:109:27
+ ❯ SettingsScene.createColorBlindOption src/scenes/SettingsScene.ts:107:11
+ ❯ SettingsScene.create src/scenes/SettingsScene.ts:45:10
+ ❯ src/scenes/__tests__/SettingsScene.test.ts:323:21
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[27/118]⎯
+
+ FAIL  src/scenes/__tests__/SettingsScene.test.ts > SettingsScene > accessibility > should register focusable elements
+ FAIL  src/scenes/__tests__/SettingsScene.test.ts > SettingsScene > accessibility > should apply high contrast styles when enabled
+TypeError: bg.setInteractive is not a function
+ ❯ SettingsScene.createToggleButton src/scenes/SettingsScene.ts:252:8
+    250|     button.add(buttonText);
+    251|     
+    252|     bg.setInteractive({ useHandCursor: true });
+       |        ^
+    253|     bg.on('pointerdown', () => {
+    254|       this.uiSoundManager.playToggle();
+ ❯ src/scenes/SettingsScene.ts:109:27
+ ❯ SettingsScene.createColorBlindOption src/scenes/SettingsScene.ts:107:11
+ ❯ SettingsScene.create src/scenes/SettingsScene.ts:45:10
+ ❯ src/scenes/__tests__/SettingsScene.test.ts:346:21
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[28/118]⎯
+
+ FAIL  src/scenes/__tests__/SettingsScene.test.ts > SettingsScene > cleanup > should clean up on shutdown
+TypeError: bg.setInteractive is not a function
+ ❯ SettingsScene.createToggleButton src/scenes/SettingsScene.ts:252:8
+    250|     button.add(buttonText);
+    251|     
+    252|     bg.setInteractive({ useHandCursor: true });
+       |        ^
+    253|     bg.on('pointerdown', () => {
+    254|       this.uiSoundManager.playToggle();
+ ❯ src/scenes/SettingsScene.ts:109:27
+ ❯ SettingsScene.createColorBlindOption src/scenes/SettingsScene.ts:107:11
+ ❯ SettingsScene.create src/scenes/SettingsScene.ts:45:10
+ ❯ src/scenes/__tests__/SettingsScene.test.ts:385:21
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[29/118]⎯
+
+ FAIL  src/scenes/__tests__/SettingsScene.test.ts > SettingsScene > settings persistence > should load saved settings on create
+TypeError: bg.setInteractive is not a function
+ ❯ SettingsScene.createToggleButton src/scenes/SettingsScene.ts:252:8
+    250|     button.add(buttonText);
+    251|     
+    252|     bg.setInteractive({ useHandCursor: true });
+       |        ^
+    253|     bg.on('pointerdown', () => {
+    254|       this.uiSoundManager.playToggle();
+ ❯ src/scenes/SettingsScene.ts:109:27
+ ❯ SettingsScene.createColorBlindOption src/scenes/SettingsScene.ts:107:11
+ ❯ SettingsScene.create src/scenes/SettingsScene.ts:45:10
+ ❯ src/scenes/__tests__/SettingsScene.test.ts:408:21
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[30/118]⎯
+
+ FAIL  src/scenes/__tests__/SettingsScene.test.ts > SettingsScene > settings persistence > should save settings when changed
+TypeError: bg.setInteractive is not a function
+ ❯ SettingsScene.createToggleButton src/scenes/SettingsScene.ts:252:8
+    250|     button.add(buttonText);
+    251|     
+    252|     bg.setInteractive({ useHandCursor: true });
+       |        ^
+    253|     bg.on('pointerdown', () => {
+    254|       this.uiSoundManager.playToggle();
+ ❯ src/scenes/SettingsScene.ts:109:27
+ ❯ SettingsScene.createColorBlindOption src/scenes/SettingsScene.ts:107:11
+ ❯ SettingsScene.create src/scenes/SettingsScene.ts:45:10
+ ❯ src/scenes/__tests__/SettingsScene.test.ts:419:21
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[31/118]⎯
+
+ FAIL  src/ui/__tests__/UIManager.test.ts > UIManager > initialization > should create UI manager with required dependencies
+ FAIL  src/ui/__tests__/UIManager.test.ts > UIManager > initialization > should set accessibility manager
+ FAIL  src/ui/__tests__/UIManager.test.ts > UIManager > initialization > should set UI sound manager
+ FAIL  src/ui/__tests__/UIManager.test.ts > UIManager > create > should create score text
+ FAIL  src/ui/__tests__/UIManager.test.ts > UIManager > create > should create streak text
+ FAIL  src/ui/__tests__/UIManager.test.ts > UIManager > create > should create timer text
+ FAIL  src/ui/__tests__/UIManager.test.ts > UIManager > create > should create heart icons for lives
+ FAIL  src/ui/__tests__/UIManager.test.ts > UIManager > create > should create pause button
+ FAIL  src/ui/__tests__/UIManager.test.ts > UIManager > create > should set up resize handler
+ FAIL  src/ui/__tests__/UIManager.test.ts > UIManager > timer functionality > should start timer
+ FAIL  src/ui/__tests__/UIManager.test.ts > UIManager > timer functionality > should stop timer
+ FAIL  src/ui/__tests__/UIManager.test.ts > UIManager > timer functionality > should resume timer from paused state
+ FAIL  src/ui/__tests__/UIManager.test.ts > UIManager > timer functionality > should get elapsed time
+ FAIL  src/ui/__tests__/UIManager.test.ts > UIManager > score updates > should update score display when score changes
+ FAIL  src/ui/__tests__/UIManager.test.ts > UIManager > score updates > should animate score text on change
+ FAIL  src/ui/__tests__/UIManager.test.ts > UIManager > score updates > should not animate if score unchanged
+ FAIL  src/ui/__tests__/UIManager.test.ts > UIManager > streak updates > should update streak display when streak changes
+ FAIL  src/ui/__tests__/UIManager.test.ts > UIManager > streak updates > should animate streak text when increasing
+ FAIL  src/ui/__tests__/UIManager.test.ts > UIManager > streak updates > should flash color on milestone streaks (multiples of 5)
+ FAIL  src/ui/__tests__/UIManager.test.ts > UIManager > streak updates > should play powerup sound on milestone streaks
+ FAIL  src/ui/__tests__/UIManager.test.ts > UIManager > lives updates > should update heart icons when lives change
+ FAIL  src/ui/__tests__/UIManager.test.ts > UIManager > lives updates > should set alpha for empty hearts
+ FAIL  src/ui/__tests__/UIManager.test.ts > UIManager > pause button > should make pause button interactive
+ FAIL  src/ui/__tests__/UIManager.test.ts > UIManager > pause button > should handle pause button hover
+ FAIL  src/ui/__tests__/UIManager.test.ts > UIManager > pause button > should emit pauseGame event on click
+ FAIL  src/ui/__tests__/UIManager.test.ts > UIManager > pause button > should play click sound on pause button press
+ FAIL  src/ui/__tests__/UIManager.test.ts > UIManager > responsive updates > should update layout on resize
+ FAIL  src/ui/__tests__/UIManager.test.ts > UIManager > responsive updates > should update font sizes on resize
+ FAIL  src/ui/__tests__/UIManager.test.ts > UIManager > cleanup > should remove event listeners on destroy
+ FAIL  src/ui/__tests__/UIManager.test.ts > UIManager > cleanup > should destroy all UI elements
+ FAIL  src/ui/__tests__/UIManager.test.ts > UIManager > cleanup > should remove pause button listeners
+TypeError: Cannot read properties of undefined (reading 'keyboard')
+ ❯ AccessibilityManager.setupKeyboardListeners src/managers/AccessibilityManager.ts:203:27
+    201|    */
+    202|   private setupKeyboardListeners(): void {
+    203|     if (!this.scene.input.keyboard) return;
+       |                           ^
+    204|     
+    205|     // Tab navigation
+ ❯ new AccessibilityManager src/managers/AccessibilityManager.ts:49:10
+ ❯ src/ui/__tests__/UIManager.test.ts:52:28
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[32/118]⎯
+
+ FAIL  src/utils/__tests__/ResponsiveUtils.test.ts > ResponsiveUtils > scaling > should scale differently for different devices
+AssertionError: expected 135 not to be 135 // Object.is equality
+ ❯ src/utils/__tests__/ResponsiveUtils.test.ts:165:33
+    163|       const phoneScaled = responsiveUtils.scale(100);
+    164|       
+    165|       expect(desktopScaled).not.toBe(phoneScaled);
+       |                                 ^
+    166|     });
+    167| 
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[33/118]⎯
+
+ FAIL  src/utils/__tests__/ResponsiveUtils.test.ts > ResponsiveUtils > spacing and padding > should get different padding for phone vs desktop
+AssertionError: expected 27 to be greater than 27
+ ❯ src/utils/__tests__/ResponsiveUtils.test.ts:197:32
+    195|       const phonePadding = responsiveUtils.getPadding();
+    196|       
+    197|       expect(desktopPadding.x).toBeGreaterThan(phonePadding.x);
+       |                                ^
+    198|     });
+    199|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[34/118]⎯
+
+ FAIL  src/managers/__tests__/AccessibilityManager.test.ts > AccessibilityManager > settings management > should apply color blind filter when mode changes
+ReferenceError: Phaser is not defined
+ ❯ src/managers/__tests__/AccessibilityManager.test.ts:123:56
+    121|       expect(mockScene.add.rectangle).toHaveBeenCalled();
+    122|       const filter = mockScene.add.rectangle.mock.results[0].value;
+    123|       expect(filter.setBlendMode).toHaveBeenCalledWith(Phaser.BlendMod…
+       |                                                        ^
+    124|     });
+    125| 
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[35/118]⎯
+
+ FAIL  src/managers/__tests__/AccessibilityManager.test.ts > AccessibilityManager > color blind modes > should apply protanopia filter
+AssertionError: expected "spy" to be called with arguments: [ 16764108, 0.3 ][90m
+
+Number of calls: [1m0[22m
+[39m
+ ❯ src/managers/__tests__/AccessibilityManager.test.ts:460:35
+    458|       
+    459|       const filter = mockScene.add.rectangle.mock.results[0].value;
+    460|       expect(filter.setFillStyle).toHaveBeenCalledWith(0xffcccc, 0.3);
+       |                                   ^
+    461|     });
+    462| 
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[36/118]⎯
+
+ FAIL  src/managers/__tests__/AccessibilityManager.test.ts > AccessibilityManager > color blind modes > should apply deuteranopia filter
+AssertionError: expected "spy" to be called with arguments: [ 13434828, 0.3 ][90m
+
+Number of calls: [1m0[22m
+[39m
+ ❯ src/managers/__tests__/AccessibilityManager.test.ts:467:35
+    465|       
+    466|       const filter = mockScene.add.rectangle.mock.results[0].value;
+    467|       expect(filter.setFillStyle).toHaveBeenCalledWith(0xccffcc, 0.3);
+       |                                   ^
+    468|     });
+    469| 
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[37/118]⎯
+
+ FAIL  src/managers/__tests__/AccessibilityManager.test.ts > AccessibilityManager > color blind modes > should apply tritanopia filter
+AssertionError: expected "spy" to be called with arguments: [ 13421823, 0.3 ][90m
+
+Number of calls: [1m0[22m
+[39m
+ ❯ src/managers/__tests__/AccessibilityManager.test.ts:474:35
+    472|       
+    473|       const filter = mockScene.add.rectangle.mock.results[0].value;
+    474|       expect(filter.setFillStyle).toHaveBeenCalledWith(0xccccff, 0.3);
+       |                                   ^
+    475|     });
+    476|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[38/118]⎯
+
+ FAIL  src/managers/__tests__/LivesManager.test.ts > LivesManager > display creation > should create heart icons for each life
+AssertionError: expected "spy" to be called 3 times, but got 0 times
+ ❯ src/managers/__tests__/LivesManager.test.ts:136:35
+    134|     it('should create heart icons for each life', () => {
+    135|       livesManager.createDisplay(100, 50);
+    136|       expect(mockScene.add.image).toHaveBeenCalledTimes(3);
+       |                                   ^
+    137|       expect(mockScene.add.image).toHaveBeenCalledWith(100, 50, 'heart…
+    138|       expect(mockScene.add.image).toHaveBeenCalledWith(140, 50, 'heart…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[39/118]⎯
+
+ FAIL  src/managers/__tests__/LivesManager.test.ts > LivesManager > display creation > should update heart display when lives change
+TypeError: Cannot read properties of undefined (reading 'setTexture')
+ ❯ src/managers/__tests__/LivesManager.test.ts:149:24
+    147|       
+    148|       // Should update the last heart to empty
+    149|       expect(hearts[2].setTexture).toHaveBeenCalledWith('heart-empty');
+       |                        ^
+    150|       expect(hearts[2].setAlpha).toHaveBeenCalledWith(0.5);
+    151|     });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[40/118]⎯
+
+ FAIL  src/managers/__tests__/LivesManager.test.ts > LivesManager > animations > should play life gain animation with particles
+AssertionError: expected "spy" to be called at least once
+ ❯ src/managers/__tests__/LivesManager.test.ts:185:36
+    183|       
+    184|       expect(mockScene.add.particles).toHaveBeenCalled();
+    185|       expect(mockScene.tweens.add).toHaveBeenCalled();
+       |                                    ^
+    186|     });
+    187|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[41/118]⎯
+
+ FAIL  src/managers/__tests__/ScoreManager.test.ts > ScoreManager > display creation > should create score display elements
+AssertionError: expected "spy" to be called 3 times, but got 1 times
+ ❯ src/managers/__tests__/ScoreManager.test.ts:142:34
+    140|       scoreManager.createDisplay(20, 20);
+    141|       
+    142|       expect(mockScene.add.text).toHaveBeenCalledTimes(3); // score, s…
+       |                                  ^
+    143|       expect(mockScene.add.text).toHaveBeenCalledWith(20, 20, 'Score: …
+    144|       expect(mockScene.add.text).toHaveBeenCalledWith(20, 60, 'Streak:…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[42/118]⎯
+
+
+ Test Files  8 failed | 4 passed (12)
+      Tests  118 failed | 187 passed (305)
+   Start at  10:39:38
+   Duration  30.62s (transform 11.42s, setup 11.90s, collect 38.76s, tests 13.15s, environment 79.98s, prepare 4.59s)
+
