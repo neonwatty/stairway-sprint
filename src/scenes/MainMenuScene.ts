@@ -3,14 +3,18 @@ import { ResponsiveUtils, FontSize, getResponsive } from '../utils/ResponsiveUti
 import { AccessibilityManager } from '../managers/AccessibilityManager';
 import { UISoundManager } from '../managers/UISoundManager';
 import { AudioManager } from '../managers/AudioManager';
+import { UIAnimationManager } from '../managers/UIAnimationManager';
 
 export class MainMenuScene extends Phaser.Scene {
   private responsive!: ResponsiveUtils;
   private accessibilityManager!: AccessibilityManager;
   private uiSoundManager!: UISoundManager;
   private audioManager!: AudioManager;
+  private uiAnimationManager!: UIAnimationManager;
   private playButton?: Phaser.GameObjects.Text;
   private settingsButton?: Phaser.GameObjects.Text;
+  private playButtonFocusRing?: Phaser.GameObjects.Graphics;
+  private settingsButtonFocusRing?: Phaser.GameObjects.Graphics;
   
   constructor() {
     super({ key: 'MainMenuScene' });
@@ -25,6 +29,7 @@ export class MainMenuScene extends Phaser.Scene {
     this.uiSoundManager = new UISoundManager(this);
     this.uiSoundManager.setAccessibilityManager(this.accessibilityManager);
     this.audioManager = new AudioManager(this);
+    this.uiAnimationManager = new UIAnimationManager(this);
     
     // Start menu music (different from game music if we had it)
     this.audioManager.playBackgroundMusic('bgm-main', true);
@@ -100,12 +105,26 @@ export class MainMenuScene extends Phaser.Scene {
       hitAreaCallback: Phaser.Geom.Rectangle.Contains
     });
     
-    // Custom hover effects for play button
+    // Enhanced hover effects for play button
     this.playButton.on('pointerover', () => {
       this.playButton?.setStyle({ backgroundColor: buttonHoverColor });
+      this.uiAnimationManager.animateButtonHover(this.playButton!, 1.05);
+      if (this.accessibilityManager.getSettings().keyboardNavEnabled) {
+        this.playButtonFocusRing = this.uiAnimationManager.createFocusRing(this.playButton!);
+      }
     });
     this.playButton.on('pointerout', () => {
       this.playButton?.setStyle({ backgroundColor: buttonBgColor });
+      this.playButton?.setScale(1);
+      if (this.playButtonFocusRing) {
+        this.playButtonFocusRing.destroy();
+        this.playButtonFocusRing = undefined;
+      }
+    });
+    this.playButton.on('pointerdown', () => {
+      this.uiAnimationManager.animateButtonPress(this.playButton!);
+      const bounds = this.playButton!.getBounds();
+      this.uiAnimationManager.createRippleEffect(bounds.centerX, bounds.centerY, 0xffffff, 80);
     });
     
     // Register for keyboard navigation
@@ -140,12 +159,26 @@ export class MainMenuScene extends Phaser.Scene {
       hitAreaCallback: Phaser.Geom.Rectangle.Contains
     });
     
-    // Custom hover effects for settings button
+    // Enhanced hover effects for settings button
     this.settingsButton.on('pointerover', () => {
       this.settingsButton?.setStyle({ backgroundColor: buttonHoverColor });
+      this.uiAnimationManager.animateButtonHover(this.settingsButton!, 1.05);
+      if (this.accessibilityManager.getSettings().keyboardNavEnabled) {
+        this.settingsButtonFocusRing = this.uiAnimationManager.createFocusRing(this.settingsButton!);
+      }
     });
     this.settingsButton.on('pointerout', () => {
       this.settingsButton?.setStyle({ backgroundColor: buttonBgColor });
+      this.settingsButton?.setScale(1);
+      if (this.settingsButtonFocusRing) {
+        this.settingsButtonFocusRing.destroy();
+        this.settingsButtonFocusRing = undefined;
+      }
+    });
+    this.settingsButton.on('pointerdown', () => {
+      this.uiAnimationManager.animateButtonPress(this.settingsButton!);
+      const bounds = this.settingsButton!.getBounds();
+      this.uiAnimationManager.createRippleEffect(bounds.centerX, bounds.centerY, 0xffffff, 80);
     });
     
     // Register for keyboard navigation
@@ -171,11 +204,15 @@ export class MainMenuScene extends Phaser.Scene {
       yoyo: true
     });
 
+    // Animate buttons entrance
+    const buttons = [this.playButton!, this.settingsButton!];
+    this.uiAnimationManager.animateButtonStagger(buttons, 100);
+    
     // Set up resize handler
     this.scale.on('resize', this.handleResize, this);
     
     // Focus the play button by default
-    this.time.delayedCall(100, () => {
+    this.time.delayedCall(300, () => {
       if (this.playButton && this.accessibilityManager.getSettings().keyboardNavEnabled) {
         this.playButton.emit('pointerover');
       }

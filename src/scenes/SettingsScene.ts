@@ -3,12 +3,14 @@ import { ResponsiveUtils, FontSize, getResponsive } from '../utils/ResponsiveUti
 import { AccessibilityManager, ColorBlindMode } from '../managers/AccessibilityManager';
 import { UISoundManager } from '../managers/UISoundManager';
 import { AudioManager } from '../managers/AudioManager';
+import { UIAnimationManager } from '../managers/UIAnimationManager';
 
 export class SettingsScene extends Phaser.Scene {
   private responsive!: ResponsiveUtils;
   private accessibilityManager!: AccessibilityManager;
   private uiSoundManager!: UISoundManager;
   private audioManager!: AudioManager;
+  private uiAnimationManager!: UIAnimationManager;
   private container?: Phaser.GameObjects.Container;
   private focusableElements: Phaser.GameObjects.GameObject[] = [];
   
@@ -25,14 +27,21 @@ export class SettingsScene extends Phaser.Scene {
     this.uiSoundManager = new UISoundManager(this);
     this.uiSoundManager.setAccessibilityManager(this.accessibilityManager);
     this.audioManager = new AudioManager(this);
+    this.uiAnimationManager = new UIAnimationManager(this);
     
     const settings = this.accessibilityManager.getSettings();
     
-    // Semi-transparent overlay
-    const overlay = this.add.rectangle(width / 2, height / 2, width, height, 0x000000, 0.9);
+    // Semi-transparent overlay with fade in
+    const overlay = this.add.rectangle(width / 2, height / 2, width, height, 0x000000, 0);
+    this.tweens.add({
+      targets: overlay,
+      alpha: 0.9,
+      duration: 300,
+      ease: 'Power2'
+    });
     
-    // Main container
-    this.container = this.add.container(width / 2, height / 2);
+    // Main container - will slide in from right
+    this.container = this.add.container(width + width / 2, height / 2);
     
     // Title
     const titleStyle = this.responsive.getFontStyle(FontSize.TITLE, '#ffffff');
@@ -98,6 +107,13 @@ export class SettingsScene extends Phaser.Scene {
     
     // Set up resize handler
     this.scale.on('resize', this.handleResize, this);
+    
+    // Animate container sliding in
+    this.uiAnimationManager.slideInMenu(this.container, 'right');
+    
+    // Animate all buttons with stagger effect
+    const buttons = this.focusableElements.filter(el => el.type === 'Text');
+    this.uiAnimationManager.animateButtonStagger(buttons, 50);
   }
   
   private createColorBlindOption(y: number): void {
@@ -451,11 +467,29 @@ export class SettingsScene extends Phaser.Scene {
   }
   
   private closeSettings(): void {
-    const previousScene = this.scene.get('MainMenuScene');
-    if (previousScene) {
-      this.scene.resume('MainMenuScene');
+    // Animate container sliding out
+    if (this.container) {
+      const { width } = this.cameras.main;
+      this.tweens.add({
+        targets: this.container,
+        x: width + width / 2,
+        duration: 300,
+        ease: 'Power2',
+        onComplete: () => {
+          const previousScene = this.scene.get('MainMenuScene');
+          if (previousScene) {
+            this.scene.resume('MainMenuScene');
+          }
+          this.scene.stop();
+        }
+      });
+    } else {
+      const previousScene = this.scene.get('MainMenuScene');
+      if (previousScene) {
+        this.scene.resume('MainMenuScene');
+      }
+      this.scene.stop();
     }
-    this.scene.stop();
   }
   
   private handleResize(): void {

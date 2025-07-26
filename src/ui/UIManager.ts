@@ -4,6 +4,7 @@ import { LivesManager } from '../managers/LivesManager';
 import { ResponsiveUtils, FontSize, getResponsive } from '../utils/ResponsiveUtils';
 import { AccessibilityManager } from '../managers/AccessibilityManager';
 import { UISoundManager } from '../managers/UISoundManager';
+import { UIAnimationManager } from '../managers/UIAnimationManager';
 
 export class UIManager {
   private scene: Phaser.Scene;
@@ -12,6 +13,7 @@ export class UIManager {
   private responsive: ResponsiveUtils;
   private accessibilityManager?: AccessibilityManager;
   private uiSoundManager?: UISoundManager;
+  private uiAnimationManager?: UIAnimationManager;
   
   // UI Elements
   private scoreText!: Phaser.GameObjects.Text;
@@ -48,6 +50,13 @@ export class UIManager {
    */
   public setUISoundManager(manager: UISoundManager): void {
     this.uiSoundManager = manager;
+  }
+  
+  /**
+   * Set UI animation manager
+   */
+  public setUIAnimationManager(manager: UIAnimationManager): void {
+    this.uiAnimationManager = manager;
   }
   
   /**
@@ -232,19 +241,55 @@ export class UIManager {
    * Update score display with animation
    */
   private updateScore(score: number): void {
-    this.scoreText.setText(`Score: ${score}`);
-    
     // Only animate if score actually changed
     if (score !== this.lastScore) {
-      // Quick scale tween (1.2x for 200ms)
-      this.scene.tweens.add({
-        targets: this.scoreText,
-        scaleX: 1.2,
-        scaleY: 1.2,
-        duration: 200,
-        yoyo: true,
-        ease: 'Power2'
-      });
+      const scoreDiff = score - this.lastScore;
+      
+      // Use number rolling animation for larger changes
+      if (this.uiAnimationManager && Math.abs(scoreDiff) > 50) {
+        this.uiAnimationManager.animateNumberRoll({
+          target: this.scoreText,
+          from: this.lastScore,
+          to: score,
+          duration: 500,
+          prefix: 'Score: ',
+          onComplete: () => {
+            // Pulse effect after rolling
+            this.scene.tweens.add({
+              targets: this.scoreText,
+              scaleX: 1.2,
+              scaleY: 1.2,
+              duration: 200,
+              yoyo: true,
+              ease: 'Back.easeOut'
+            });
+          }
+        });
+      } else {
+        // For smaller changes, just update and pulse
+        this.scoreText.setText(`Score: ${score}`);
+        
+        // Quick scale tween (1.2x for 200ms)
+        this.scene.tweens.add({
+          targets: this.scoreText,
+          scaleX: 1.2,
+          scaleY: 1.2,
+          duration: 200,
+          yoyo: true,
+          ease: 'Power2'
+        });
+      }
+      
+      // Show damage number popup for score changes
+      if (this.uiAnimationManager && scoreDiff > 0) {
+        const bounds = this.scoreText.getBounds();
+        this.uiAnimationManager.createDamageNumber(
+          bounds.centerX + 50, 
+          bounds.centerY, 
+          -scoreDiff, // negative to show as positive gain
+          0x00ff00 // green for positive
+        );
+      }
       
       this.lastScore = score;
     }
@@ -290,6 +335,35 @@ export class UIManager {
           }
         });
         
+        // Show milestone popup
+        if (this.uiAnimationManager) {
+          const messages = [
+            'Great Streak!',
+            'Awesome!',
+            'Keep Going!',
+            'On Fire!',
+            'Unstoppable!'
+          ];
+          const message = messages[Math.floor(streak / 5 - 1) % messages.length];
+          
+          this.uiAnimationManager.createPopup({
+            text: `${message}\nStreak x${streak}!`,
+            x: this.scene.cameras.main.width / 2,
+            y: this.scene.cameras.main.height / 2 - 100,
+            style: {
+              fontSize: '36px',
+              fontFamily: 'Arial',
+              color: '#ffff00',
+              fontStyle: 'bold',
+              stroke: '#000000',
+              strokeThickness: 6,
+              align: 'center'
+            },
+            duration: 2000,
+            animationType: 'zoom'
+          });
+        }
+        
         // Play powerup sound for milestone
         if (this.uiSoundManager) {
           this.uiSoundManager.playSuccess();
@@ -306,13 +380,64 @@ export class UIManager {
    * Update lives display
    */
   private updateLives(lives: number): void {
+    const previousLives = this.heartIcons.filter(heart => heart.texture.key === 'heart-full').length;
+    
     for (let i = 0; i < this.heartIcons.length; i++) {
       if (i < lives) {
-        this.heartIcons[i].setTexture('heart-full');
-        this.heartIcons[i].setAlpha(1);
+        if (this.heartIcons[i].texture.key !== 'heart-full') {
+          // Life restored - animate it
+          if (this.uiAnimationManager) {
+            this.uiAnimationManager.animateHeartRestore(this.heartIcons[i]);
+          } else {
+            this.heartIcons[i].setTexture('heart-full');
+            this.heartIcons[i].setAlpha(1);
+          }
+        }
       } else {
-        this.heartIcons[i].setTexture('heart-empty');
-        this.heartIcons[i].setAlpha(0.5);
+        if (this.heartIcons[i].texture.key === 'heart-full') {
+          // Life lost - animate damage
+          if (this.uiAnimationManager) {
+            if (i === lives) {
+              // The heart that was just lost
+              this.uiAnimationManager.animateHeartBreak(this.heartIcons[i]);
+            } else {
+              // Already empty
+              this.heartIcons[i].setTexture('heart-empty');
+              this.heartIcons[i].setAlpha(0.5);
+            }
+          } else {
+            this.heartIcons[i].setTexture('heart-empty');
+            this.heartIcons[i].setAlpha(0.5);
+          }
+        }
+      }
+    }
+    
+    // Show damage popup if lives decreased
+    if (lives < previousLives && this.uiAnimationManager) {
+      // Flash remaining hearts to show damage
+      for (let i = 0; i < lives; i++) {
+        this.uiAnimationManager.animateHeartDamage(this.heartIcons[i]);
+      }
+      
+      // Show warning popup for low health
+      if (lives === 1) {
+        this.uiAnimationManager.createPopup({
+          text: 'WARNING!\nLast Life!',
+          x: this.scene.cameras.main.width / 2,
+          y: this.scene.cameras.main.height / 2,
+          style: {
+            fontSize: '48px',
+            fontFamily: 'Arial',
+            color: '#ff0000',
+            fontStyle: 'bold',
+            stroke: '#000000',
+            strokeThickness: 8,
+            align: 'center'
+          },
+          duration: 1500,
+          animationType: 'bounce'
+        });
       }
     }
   }

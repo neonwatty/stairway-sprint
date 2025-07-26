@@ -68,6 +68,26 @@ vi.mock('../../managers/UISoundManager', () => ({
   }))
 }));
 
+// Mock UIAnimationManager
+vi.mock('../../managers/UIAnimationManager', () => ({
+  UIAnimationManager: vi.fn().mockImplementation(() => ({
+    animateButtonHover: vi.fn(),
+    animateButtonPress: vi.fn(),
+    createFocusRing: vi.fn(() => ({
+      destroy: vi.fn()
+    })),
+    createRippleEffect: vi.fn(),
+    animateButtonStagger: vi.fn()
+  }))
+}));
+
+// Mock AudioManager
+vi.mock('../../managers/AudioManager', () => ({
+  AudioManager: vi.fn().mockImplementation(() => ({
+    playBackgroundMusic: vi.fn()
+  }))
+}));
+
 // Mock AccessibilityManager
 vi.mock('../../managers/AccessibilityManager', () => ({
   AccessibilityManager: vi.fn().mockImplementation(() => ({

@@ -80,6 +80,12 @@ export class AudioManager extends Phaser.Events.EventEmitter {
       return; // Already playing this music
     }
     
+    // Check if audio exists in cache
+    if (!this.scene.cache.audio.exists(key)) {
+      console.warn(`Audio key "${key}" not found in cache - skipping background music`);
+      return;
+    }
+    
     // Stop current music if playing
     if (this.backgroundMusic?.isPlaying) {
       this.stopBackgroundMusic(fadeIn);

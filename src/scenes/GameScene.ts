@@ -18,6 +18,7 @@ import { UIManager } from '../ui/UIManager';
 import { AccessibilityManager } from '../managers/AccessibilityManager';
 import { UISoundManager } from '../managers/UISoundManager';
 import { AudioManager } from '../managers/AudioManager';
+import { UIAnimationManager } from '../managers/UIAnimationManager';
 
 export class GameScene extends Phaser.Scene {
   private player!: Player;
@@ -35,6 +36,7 @@ export class GameScene extends Phaser.Scene {
   private accessibilityManager!: AccessibilityManager;
   private uiSoundManager!: UISoundManager;
   private audioManager!: AudioManager;
+  private uiAnimationManager!: UIAnimationManager;
   private cursors!: Phaser.Types.Input.Keyboard.CursorKeys;
   private spaceKey!: Phaser.Input.Keyboard.Key;
   private projectiles!: Phaser.GameObjects.Group;
@@ -163,10 +165,14 @@ export class GameScene extends Phaser.Scene {
   }
 
   private createUI(): void {
+    // Create UI Animation Manager
+    this.uiAnimationManager = new UIAnimationManager(this);
+    
     // Create UI Manager
     this.uiManager = new UIManager(this, this.scoreManager, this.livesManager);
     this.uiManager.setAccessibilityManager(this.accessibilityManager);
     this.uiManager.setUISoundManager(this.uiSoundManager);
+    this.uiManager.setUIAnimationManager(this.uiAnimationManager);
     this.uiManager.create();
     
     // Difficulty display

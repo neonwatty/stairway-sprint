@@ -70,6 +70,33 @@ vi.mock('../../managers/UISoundManager', () => ({
   }))
 }));
 
+// Mock UIAnimationManager
+vi.mock('../../managers/UIAnimationManager', () => ({
+  UIAnimationManager: vi.fn().mockImplementation(() => ({
+    slideInMenu: vi.fn(),
+    animateButtonStagger: vi.fn()
+  }))
+}));
+
+// Mock AudioManager
+vi.mock('../../managers/AudioManager', () => ({
+  AudioManager: vi.fn().mockImplementation(() => ({
+    playBackgroundMusic: vi.fn(),
+    setVolume: vi.fn(),
+    getVolume: vi.fn(() => 1),
+    isMuted: vi.fn(() => false),
+    muteAll: vi.fn(),
+    unmuteAll: vi.fn(),
+    getSettings: vi.fn(() => ({
+      masterVolume: 1,
+      bgmVolume: 1,
+      sfxVolume: 1,
+      uiVolume: 1,
+      muted: false
+    }))
+  }))
+}));
+
 // Mock AccessibilityManager
 vi.mock('../../managers/AccessibilityManager', () => ({
   AccessibilityManager: vi.fn().mockImplementation(() => ({
@@ -216,12 +243,12 @@ describe('SettingsScene', () => {
         640, // width
         960, // height
         0x000000,
-        0.9
+        0 // starts at 0 and animates to 0.9
       );
     });
 
     it('should create main container', () => {
-      expect(mockScene.add.container).toHaveBeenCalledWith(320, 480);
+      expect(mockScene.add.container).toHaveBeenCalledWith(960, 480); // starts off-screen for slide animation
     });
 
     it('should create title text', () => {
