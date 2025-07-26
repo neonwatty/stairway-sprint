@@ -3,6 +3,7 @@ import { vi } from 'vitest';
 const mockPhaser = {
   Scene: class MockScene {
     add = {
+      existing: vi.fn((gameObject) => gameObject),
       text: vi.fn((x, y, text, style) => {
         const mockText = {
           x,
@@ -26,6 +27,8 @@ const mockPhaser = {
           setX: vi.fn().mockReturnThis(),
           setY: vi.fn().mockReturnThis(),
           setPosition: vi.fn().mockReturnThis(),
+          setColor: vi.fn().mockReturnThis(),
+          setVisible: vi.fn().mockReturnThis(),
           on: vi.fn().mockReturnThis(),
           off: vi.fn().mockReturnThis(),
           removeAllListeners: vi.fn().mockReturnThis(),
@@ -47,6 +50,7 @@ const mockPhaser = {
           }),
           setAlpha: vi.fn().mockReturnThis(),
           setInteractive: vi.fn().mockReturnThis(),
+          setTint: vi.fn().mockReturnThis(),
           setX: vi.fn().mockReturnThis(),
           setY: vi.fn().mockReturnThis(),
           setPosition: vi.fn().mockReturnThis(),
@@ -90,6 +94,8 @@ const mockPhaser = {
           }),
           setStrokeStyle: vi.fn().mockReturnThis(),
           fillStyle: vi.fn().mockReturnThis(),
+          setVisible: vi.fn().mockReturnThis(),
+          setScale: vi.fn().mockReturnThis(),
           on: vi.fn().mockReturnThis(),
           off: vi.fn().mockReturnThis(),
           emit: vi.fn().mockReturnThis(),
@@ -112,6 +118,7 @@ const mockPhaser = {
           setScale: vi.fn().mockReturnThis(),
           setTint: vi.fn().mockReturnThis(),
           setAlpha: vi.fn().mockReturnThis(),
+          setVisible: vi.fn().mockReturnThis(),
           destroy: vi.fn(),
         };
         return mockStar;
@@ -128,6 +135,7 @@ const mockPhaser = {
           setOrigin: vi.fn().mockReturnThis(),
           setDepth: vi.fn().mockReturnThis(),
           setAlpha: vi.fn().mockReturnThis(),
+          setVisible: vi.fn().mockReturnThis(),
           destroy: vi.fn(),
         };
         return mockLine;
@@ -155,6 +163,16 @@ const mockPhaser = {
         remove: vi.fn(),
         clear: vi.fn(),
       },
+      group: vi.fn((config) => {
+        return {
+          add: vi.fn(),
+          get: vi.fn(),
+          remove: vi.fn(),
+          destroy: vi.fn(),
+          children: { entries: [] },
+          runChildUpdate: config?.runChildUpdate || false
+        };
+      }),
     };
     
     tweens = {
@@ -169,6 +187,22 @@ const mockPhaser = {
         setTimeout(callback, delay);
         return { destroy: vi.fn() };
       }),
+      addEvent: vi.fn((config) => {
+        const timer = {
+          destroy: vi.fn(),
+          remove: vi.fn(),
+          paused: false,
+          repeatCount: config.repeat || 0
+        };
+        if (config.callback) {
+          if (config.loop) {
+            setInterval(config.callback, config.delay);
+          } else {
+            setTimeout(config.callback, config.delay);
+          }
+        }
+        return timer;
+      }),
       removeAllEvents: vi.fn(),
       now: Date.now(),
     };
@@ -180,7 +214,10 @@ const mockPhaser = {
         shake: vi.fn(),
         flash: vi.fn(),
         fadeIn: vi.fn(),
+        fadeOut: vi.fn(),
         resetFX: vi.fn(),
+        on: vi.fn(),
+        once: vi.fn(),
       },
     };
     
@@ -251,6 +288,31 @@ const mockPhaser = {
         },
       },
     };
+    
+    cache = {
+      audio: {
+        exists: vi.fn(() => false),
+        get: vi.fn(),
+        add: vi.fn()
+      }
+    };
+    
+    sound = {
+      add: vi.fn(() => ({
+        play: vi.fn(),
+        stop: vi.fn(),
+        pause: vi.fn(),
+        resume: vi.fn(),
+        setVolume: vi.fn(),
+        destroy: vi.fn(),
+        isPlaying: false
+      })),
+      get: vi.fn(),
+      play: vi.fn(),
+      stopAll: vi.fn(),
+      pauseAll: vi.fn(),
+      resumeAll: vi.fn()
+    };
   },
   
   Events: {
@@ -300,10 +362,15 @@ const mockPhaser = {
     Sprite: class MockSprite {
       x = 0;
       y = 0;
+      texture = '';
       setDepth = vi.fn().mockReturnThis();
       setScale = vi.fn().mockReturnThis();
       setTexture = vi.fn().mockReturnThis();
       setInteractive = vi.fn().mockReturnThis();
+      setTint = vi.fn().mockReturnThis();
+      setAlpha = vi.fn().mockReturnThis();
+      setVisible = vi.fn().mockReturnThis();
+      setPosition = vi.fn().mockReturnThis();
       on = vi.fn().mockReturnThis();
       off = vi.fn().mockReturnThis();
       emit = vi.fn().mockReturnThis();
@@ -333,9 +400,16 @@ const mockPhaser = {
     },
     
     Image: class MockImage {
+      x = 0;
+      y = 0;
+      texture = '';
       setTexture = vi.fn().mockReturnThis();
       setScale = vi.fn().mockReturnThis();
       setAlpha = vi.fn().mockReturnThis();
+      setTint = vi.fn().mockReturnThis();
+      setVisible = vi.fn().mockReturnThis();
+      setPosition = vi.fn().mockReturnThis();
+      setDepth = vi.fn().mockReturnThis();
       setInteractive = vi.fn().mockReturnThis();
       on = vi.fn().mockReturnThis();
       off = vi.fn().mockReturnThis();
@@ -346,6 +420,8 @@ const mockPhaser = {
     
     Container: class MockContainer {
       list = [];
+      x = 0;
+      y = 0;
       add = vi.fn().mockImplementation((items) => {
         if (Array.isArray(items)) {
           this.list.push(...items);
@@ -355,8 +431,12 @@ const mockPhaser = {
         return this;
       });
       remove = vi.fn().mockReturnThis();
+      removeAll = vi.fn().mockReturnThis();
       setDepth = vi.fn().mockReturnThis();
       setScrollFactor = vi.fn().mockReturnThis();
+      setPosition = vi.fn().mockReturnThis();
+      setVisible = vi.fn().mockReturnThis();
+      setAlpha = vi.fn().mockReturnThis();
       setInteractive = vi.fn().mockReturnThis();
       on = vi.fn().mockReturnThis();
       off = vi.fn().mockReturnThis();
@@ -372,6 +452,7 @@ const mockPhaser = {
         x = 0;
         y = 0;
         alpha = 1;
+        scene = null;
         body = {
           setVelocity: vi.fn(),
           setSize: vi.fn(),
@@ -383,6 +464,12 @@ const mockPhaser = {
           create: vi.fn(),
           play: vi.fn()
         };
+        constructor(scene, x, y, texture) {
+          this.scene = scene;
+          this.x = x;
+          this.y = y;
+          this.texture = texture;
+        }
         setDepth = vi.fn().mockReturnThis();
         setScale = vi.fn().mockReturnThis();
         setTexture = vi.fn().mockReturnThis();
@@ -442,6 +529,7 @@ const mockPhaser = {
         P: 80,
         D: 68,
       },
+      JustDown: vi.fn((key) => false),
     },
   },
   
@@ -469,7 +557,10 @@ const mockPhaser = {
       {
         Contains: vi.fn(() => true)
       }
-    )
+    ),
+    Circle: class MockCircle {
+      constructor(public x: number, public y: number, public radius: number) {}
+    }
   },
   
   Renderer: {

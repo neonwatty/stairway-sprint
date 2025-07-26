@@ -1,9 +1,13 @@
 import Phaser from 'phaser';
 import { BaseEntity } from './BaseEntity';
+import { AnimationManager } from '../managers/AnimationManager';
 
 export class VIP extends BaseEntity {
+  private animationManager?: AnimationManager;
   private glowEffect?: Phaser.GameObjects.Graphics;
   private protected: boolean = false;
+  private breathingAnimationId?: string;
+  private glowAnimationId?: string;
   
   constructor(scene: Phaser.Scene) {
     super(scene, 0, 0, 'vip');
@@ -20,18 +24,52 @@ export class VIP extends BaseEntity {
     this.glowEffect.setVisible(false);
   }
   
+  public setAnimationManager(animationManager: AnimationManager): void {
+    this.animationManager = animationManager;
+  }
+  
   protected onSpawn(): void {
     this.protected = false;
     
-    this.scene.tweens.add({
-      targets: this,
-      scaleX: { from: 0.9, to: 0.95 },
-      scaleY: { from: 0.9, to: 0.95 },
-      duration: 2000,
-      repeat: -1,
-      yoyo: true,
-      ease: 'Sine.easeInOut'
-    });
+    if (this.animationManager) {
+      // Enhanced VIP animations
+      this.animationManager.playAnimation(this, 'vip-idle');
+      
+      // Breathing animation
+      this.breathingAnimationId = this.animationManager.createTweenAnimation(
+        this,
+        { 
+          scaleX: { from: 0.9, to: 0.95 },
+          scaleY: { from: 0.9, to: 0.95 }
+        },
+        2000,
+        'Sine.easeInOut'
+      );
+      
+      // Add dignified floating animation
+      this.animationManager.createFloatAnimation(this, 5, 4000);
+      
+      // Add occasional subtle glow pulse
+      if (Math.random() < 0.5) {
+        this.glowAnimationId = this.animationManager.createTweenAnimation(
+          this,
+          { alpha: { from: 1, to: 0.8 } },
+          1500,
+          'Sine.easeInOut'
+        );
+      }
+    } else {
+      // Fallback animation
+      this.scene.tweens.add({
+        targets: this,
+        scaleX: { from: 0.9, to: 0.95 },
+        scaleY: { from: 0.9, to: 0.95 },
+        duration: 2000,
+        repeat: -1,
+        yoyo: true,
+        ease: 'Sine.easeInOut'
+      });
+    }
     
     this.createGlowEffect();
   }
@@ -65,11 +103,18 @@ export class VIP extends BaseEntity {
   }
   
   protected onDeactivate(): void {
+    if (this.animationManager) {
+      this.animationManager.stopAllAnimationsForTarget(this);
+      this.breathingAnimationId = undefined;
+      this.glowAnimationId = undefined;
+    }
+    
     if (this.glowEffect) {
       this.glowEffect.clear();
       this.glowEffect.setVisible(false);
     }
     this.setScale(0.9);
+    this.setAlpha(1);
     this.protected = false;
   }
   
@@ -83,11 +128,38 @@ export class VIP extends BaseEntity {
   
   public protect(): void {
     this.protected = true;
-    this.setTint(0x00ff00);
     
-    this.scene.time.delayedCall(1000, () => {
-      this.clearTint();
-    });
+    if (this.animationManager) {
+      // Enhanced protection animation
+      this.setTint(0x00ff00);
+      
+      // Add celebratory bounce
+      this.animationManager.createBounceAnimation(this, 0.3, 400);
+      
+      // Add protective shimmer effect
+      this.animationManager.createTweenAnimation(
+        this,
+        { alpha: { from: 1, to: 0.7 } },
+        200,
+        'Sine.easeInOut'
+      );
+      
+      // Add scale pulse for protection
+      this.animationManager.createPulseAnimation(this, 1.1, 600, 2);
+      
+      this.scene.time.delayedCall(1000, () => {
+        this.clearTint();
+        if (this.animationManager) {
+          this.animationManager.createFadeAnimation(this, 1, 300);
+        }
+      });
+    } else {
+      // Fallback animation
+      this.setTint(0x00ff00);
+      this.scene.time.delayedCall(1000, () => {
+        this.clearTint();
+      });
+    }
   }
   
   public isProtected(): boolean {

@@ -2,11 +2,13 @@ import Phaser from 'phaser';
 import { ResponsiveUtils, FontSize, getResponsive } from '../utils/ResponsiveUtils';
 import { AccessibilityManager } from '../managers/AccessibilityManager';
 import { UISoundManager } from '../managers/UISoundManager';
+import { AudioManager } from '../managers/AudioManager';
 
 export class MainMenuScene extends Phaser.Scene {
   private responsive!: ResponsiveUtils;
   private accessibilityManager!: AccessibilityManager;
   private uiSoundManager!: UISoundManager;
+  private audioManager!: AudioManager;
   private playButton?: Phaser.GameObjects.Text;
   private settingsButton?: Phaser.GameObjects.Text;
   
@@ -22,6 +24,10 @@ export class MainMenuScene extends Phaser.Scene {
     this.accessibilityManager = new AccessibilityManager(this);
     this.uiSoundManager = new UISoundManager(this);
     this.uiSoundManager.setAccessibilityManager(this.accessibilityManager);
+    this.audioManager = new AudioManager(this);
+    
+    // Start menu music (different from game music if we had it)
+    this.audioManager.playBackgroundMusic('bgm-main', true);
 
     // Apply accessibility settings
     const settings = this.accessibilityManager.getSettings();

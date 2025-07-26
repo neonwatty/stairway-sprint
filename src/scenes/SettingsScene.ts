@@ -2,11 +2,13 @@ import Phaser from 'phaser';
 import { ResponsiveUtils, FontSize, getResponsive } from '../utils/ResponsiveUtils';
 import { AccessibilityManager, ColorBlindMode } from '../managers/AccessibilityManager';
 import { UISoundManager } from '../managers/UISoundManager';
+import { AudioManager } from '../managers/AudioManager';
 
 export class SettingsScene extends Phaser.Scene {
   private responsive!: ResponsiveUtils;
   private accessibilityManager!: AccessibilityManager;
   private uiSoundManager!: UISoundManager;
+  private audioManager!: AudioManager;
   private container?: Phaser.GameObjects.Container;
   private focusableElements: Phaser.GameObjects.GameObject[] = [];
   
@@ -22,6 +24,7 @@ export class SettingsScene extends Phaser.Scene {
     this.accessibilityManager = new AccessibilityManager(this);
     this.uiSoundManager = new UISoundManager(this);
     this.uiSoundManager.setAccessibilityManager(this.accessibilityManager);
+    this.audioManager = new AudioManager(this);
     
     const settings = this.accessibilityManager.getSettings();
     
@@ -49,8 +52,16 @@ export class SettingsScene extends Phaser.Scene {
     this.createHighContrastOption(yPos);
     yPos += spacing;
     
-    // UI Sound Volume
-    this.createSoundVolumeOption(yPos);
+    // Audio Controls - Master Volume
+    this.createMasterVolumeOption(yPos);
+    yPos += spacing;
+    
+    // Music Volume
+    this.createMusicVolumeOption(yPos);
+    yPos += spacing;
+    
+    // Sound Effects Volume
+    this.createSFXVolumeOption(yPos);
     yPos += spacing;
     
     // Keyboard Navigation
@@ -143,17 +154,17 @@ export class SettingsScene extends Phaser.Scene {
     this.container!.add(toggle);
   }
   
-  private createSoundVolumeOption(y: number): void {
+  private createMasterVolumeOption(y: number): void {
     const labelStyle = this.responsive.getFontStyle(FontSize.NORMAL, '#ffffff');
-    const label = this.add.text(-this.responsive.scale(200), y, 'UI Sound Volume:', labelStyle)
+    const label = this.add.text(-this.responsive.scale(200), y, 'Master Volume:', labelStyle)
       .setOrigin(0, 0.5);
     this.container!.add(label);
     
-    const settings = this.accessibilityManager.getSettings();
+    const settings = this.audioManager.getSettings();
     const volumeText = this.add.text(
       this.responsive.scale(50),
       y,
-      `${Math.round(settings.uiSoundVolume * 100)}%`,
+      `${Math.round(settings.masterVolume * 100)}%`,
       labelStyle
     ).setOrigin(0, 0.5);
     this.container!.add(volumeText);
@@ -164,8 +175,9 @@ export class SettingsScene extends Phaser.Scene {
       y,
       '-',
       () => {
-        const newVolume = Math.max(0, settings.uiSoundVolume - 0.1);
-        this.accessibilityManager.updateSetting('uiSoundVolume', newVolume);
+        const currentVolume = this.audioManager.getSettings().masterVolume;
+        const newVolume = Math.max(0, currentVolume - 0.1);
+        this.audioManager.setMasterVolume(newVolume);
         volumeText.setText(`${Math.round(newVolume * 100)}%`);
         this.uiSoundManager.playClick();
       }
@@ -177,13 +189,134 @@ export class SettingsScene extends Phaser.Scene {
       y,
       '+',
       () => {
-        const newVolume = Math.min(1, settings.uiSoundVolume + 0.1);
-        this.accessibilityManager.updateSetting('uiSoundVolume', newVolume);
+        const currentVolume = this.audioManager.getSettings().masterVolume;
+        const newVolume = Math.min(1, currentVolume + 0.1);
+        this.audioManager.setMasterVolume(newVolume);
         volumeText.setText(`${Math.round(newVolume * 100)}%`);
         this.uiSoundManager.playClick();
       }
     );
     this.container!.add(increaseButton);
+  }
+  
+  private createMusicVolumeOption(y: number): void {
+    const labelStyle = this.responsive.getFontStyle(FontSize.NORMAL, '#ffffff');
+    const label = this.add.text(-this.responsive.scale(200), y, 'Music Volume:', labelStyle)
+      .setOrigin(0, 0.5);
+    this.container!.add(label);
+    
+    const settings = this.audioManager.getSettings();
+    const volumeText = this.add.text(
+      this.responsive.scale(50),
+      y,
+      `${Math.round(settings.musicVolume * 100)}%`,
+      labelStyle
+    ).setOrigin(0, 0.5);
+    this.container!.add(volumeText);
+    
+    // Volume buttons
+    const decreaseButton = this.createSmallButton(
+      this.responsive.scale(150),
+      y,
+      '-',
+      () => {
+        const currentVolume = this.audioManager.getSettings().musicVolume;
+        const newVolume = Math.max(0, currentVolume - 0.1);
+        this.audioManager.setMusicVolume(newVolume);
+        volumeText.setText(`${Math.round(newVolume * 100)}%`);
+        this.uiSoundManager.playClick();
+      }
+    );
+    this.container!.add(decreaseButton);
+    
+    const increaseButton = this.createSmallButton(
+      this.responsive.scale(200),
+      y,
+      '+',
+      () => {
+        const currentVolume = this.audioManager.getSettings().musicVolume;
+        const newVolume = Math.min(1, currentVolume + 0.1);
+        this.audioManager.setMusicVolume(newVolume);
+        volumeText.setText(`${Math.round(newVolume * 100)}%`);
+        this.uiSoundManager.playClick();
+      }
+    );
+    this.container!.add(increaseButton);
+    
+    // Mute toggle
+    const muteButton = this.createToggleButton(
+      this.responsive.scale(280),
+      y,
+      settings.musicMuted ? 'MUTED' : 'ON',
+      !settings.musicMuted,
+      () => {
+        this.audioManager.toggleMusicMute();
+        const isMuted = this.audioManager.getSettings().musicMuted;
+        muteButton.buttonText.setText(isMuted ? 'MUTED' : 'ON');
+        this.updateToggleButtonStyle(muteButton, !isMuted);
+      }
+    );
+    this.container!.add(muteButton);
+  }
+  
+  private createSFXVolumeOption(y: number): void {
+    const labelStyle = this.responsive.getFontStyle(FontSize.NORMAL, '#ffffff');
+    const label = this.add.text(-this.responsive.scale(200), y, 'Sound Effects:', labelStyle)
+      .setOrigin(0, 0.5);
+    this.container!.add(label);
+    
+    const settings = this.audioManager.getSettings();
+    const volumeText = this.add.text(
+      this.responsive.scale(50),
+      y,
+      `${Math.round(settings.sfxVolume * 100)}%`,
+      labelStyle
+    ).setOrigin(0, 0.5);
+    this.container!.add(volumeText);
+    
+    // Volume buttons
+    const decreaseButton = this.createSmallButton(
+      this.responsive.scale(150),
+      y,
+      '-',
+      () => {
+        const currentVolume = this.audioManager.getSettings().sfxVolume;
+        const newVolume = Math.max(0, currentVolume - 0.1);
+        this.audioManager.setSFXVolume(newVolume);
+        volumeText.setText(`${Math.round(newVolume * 100)}%`);
+        this.uiSoundManager.playClick();
+      }
+    );
+    this.container!.add(decreaseButton);
+    
+    const increaseButton = this.createSmallButton(
+      this.responsive.scale(200),
+      y,
+      '+',
+      () => {
+        const currentVolume = this.audioManager.getSettings().sfxVolume;
+        const newVolume = Math.min(1, currentVolume + 0.1);
+        this.audioManager.setSFXVolume(newVolume);
+        volumeText.setText(`${Math.round(newVolume * 100)}%`);
+        this.uiSoundManager.playClick();
+      }
+    );
+    this.container!.add(increaseButton);
+    
+    // Mute toggle
+    const muteButton = this.createToggleButton(
+      this.responsive.scale(280),
+      y,
+      settings.sfxMuted ? 'MUTED' : 'ON',
+      !settings.sfxMuted,
+      () => {
+        this.audioManager.toggleSFXMute();
+        const isMuted = this.audioManager.getSettings().sfxMuted;
+        muteButton.buttonText.setText(isMuted ? 'MUTED' : 'ON');
+        this.updateToggleButtonStyle(muteButton, !isMuted);
+      }
+    );
+    this.container!.add(muteButton);
   }
   
   private createKeyboardNavOption(y: number): void {

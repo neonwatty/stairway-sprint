@@ -1,5 +1,6 @@
 import Phaser from 'phaser';
 import { BaseEntity } from './BaseEntity';
+import { AnimationManager } from '../managers/AnimationManager';
 
 export enum HazardType {
   CONE = 'cone',
@@ -9,7 +10,9 @@ export enum HazardType {
 
 export class Hazard extends BaseEntity {
   private hazardType: HazardType;
+  private animationManager?: AnimationManager;
   private wobbleAnimation?: Phaser.Tweens.Tween;
+  private currentAnimationId?: string;
   
   constructor(scene: Phaser.Scene) {
     super(scene, 0, 0, 'cone');

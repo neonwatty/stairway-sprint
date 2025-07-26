@@ -1,5 +1,6 @@
 import Phaser from 'phaser';
 import { LaneManager } from '../utils/LaneManager';
+import { AnimationManager } from '../managers/AnimationManager';
 
 export enum PlayerState {
   IDLE = 'idle',
@@ -11,6 +12,7 @@ export enum PlayerState {
 export class Player extends Phaser.Physics.Arcade.Sprite {
   private currentLane: number = 1;
   private laneManager?: LaneManager;
+  private animationManager?: AnimationManager;
   private isMoving: boolean = false;
   private canShoot: boolean = true;
   private shootCooldown: number = 500;
@@ -18,6 +20,7 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
   private invincibilityDuration: number = 1000;
   private currentState: PlayerState = PlayerState.IDLE;
   private lives: number = 3;
+  private currentAnimationId?: string;
   
   constructor(scene: Phaser.Scene, x: number, y: number) {
     super(scene, x, y, 'player-down');
@@ -32,7 +35,6 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
     body.setSize(40, 60);
     body.setOffset(10, 10);
     
-    this.setupAnimations();
     this.setPlayerState(PlayerState.IDLE);
   }
   
@@ -42,34 +44,25 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
     this.currentLane = laneManager.getLaneForPosition(this.x);
   }
   
-  private setupAnimations(): void {
-    this.anims.create({
-      key: 'player-idle',
-      frames: [{ key: 'player-down' }],
-      frameRate: 1,
-      repeat: -1
-    });
-    
-    this.anims.create({
-      key: 'player-moving-left',
-      frames: [{ key: 'player-left' }],
-      frameRate: 1,
-      repeat: 0
-    });
-    
-    this.anims.create({
-      key: 'player-moving-right',
-      frames: [{ key: 'player-right' }],
-      frameRate: 1,
-      repeat: 0
-    });
-    
-    this.anims.create({
-      key: 'player-shooting',
-      frames: [{ key: 'player-up' }],
-      frameRate: 1,
-      repeat: 0
-    });
+  public setAnimationManager(animationManager: AnimationManager): void {
+    this.animationManager = animationManager;
+    this.startIdleAnimation();
+  }
+  
+  private startIdleAnimation(): void {
+    if (this.animationManager) {
+      this.stopCurrentAnimation();
+      this.animationManager.playAnimation(this, 'player-idle');
+      // Add subtle floating animation for idle state
+      this.currentAnimationId = this.animationManager.createFloatAnimation(this, 3, 3000);
+    }
+  }
+  
+  private stopCurrentAnimation(): void {
+    if (this.currentAnimationId && this.animationManager) {
+      this.animationManager.stopAnimation(this.currentAnimationId);
+      this.currentAnimationId = undefined;
+    }
   }
   
   public moveLeft(): void {
@@ -79,7 +72,14 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
     this.currentLane--;
     this.setPlayerState(PlayerState.MOVING);
     
-    this.play('player-moving-left');
+    // Enhanced animation with visual feedback
+    if (this.animationManager) {
+      this.stopCurrentAnimation();
+      this.animationManager.playAnimation(this, 'player-moving-left');
+      
+      // Add bounce effect for movement
+      this.animationManager.createBounceAnimation(this, 0.1, 150);
+    }
     
     const targetX = this.laneManager.getLanePosition(this.currentLane);
     this.laneManager.highlightLane(this.currentLane);
@@ -88,11 +88,11 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
       targets: this,
       x: targetX,
       duration: 200,
-      ease: 'Power2',
+      ease: 'Back.easeOut',
       onComplete: () => {
         this.isMoving = false;
         this.setPlayerState(PlayerState.IDLE);
-        this.play('player-idle');
+        this.startIdleAnimation();
       }
     });
   }
@@ -107,7 +107,14 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
     this.currentLane++;
     this.setPlayerState(PlayerState.MOVING);
     
-    this.play('player-moving-right');
+    // Enhanced animation with visual feedback
+    if (this.animationManager) {
+      this.stopCurrentAnimation();
+      this.animationManager.playAnimation(this, 'player-moving-right');
+      
+      // Add bounce effect for movement
+      this.animationManager.createBounceAnimation(this, 0.1, 150);
+    }
     
     const targetX = this.laneManager.getLanePosition(this.currentLane);
     this.laneManager.highlightLane(this.currentLane);
@@ -116,11 +123,11 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
       targets: this,
       x: targetX,
       duration: 200,
-      ease: 'Power2',
+      ease: 'Back.easeOut',
       onComplete: () => {
         this.isMoving = false;
         this.setPlayerState(PlayerState.IDLE);
-        this.play('player-idle');
+        this.startIdleAnimation();
       }
     });
   }
@@ -130,7 +137,18 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
     
     this.canShoot = false;
     this.setPlayerState(PlayerState.SHOOTING);
-    this.play('player-shooting');
+    
+    // Enhanced shooting animation
+    if (this.animationManager) {
+      this.stopCurrentAnimation();
+      this.animationManager.playAnimation(this, 'player-shooting');
+      
+      // Add recoil effect
+      this.animationManager.createShakeAnimation(this, 2, 100);
+      
+      // Add brief scale effect
+      this.animationManager.createBounceAnimation(this, 0.15, 120);
+    }
     
     const projectile = this.scene.add.image(this.x, this.y - 40, 'projectile');
     this.scene.physics.add.existing(projectile);
@@ -138,10 +156,10 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
     const body = projectile.body as Phaser.Physics.Arcade.Body;
     body.setVelocityY(-600);
     
-    this.scene.time.delayedCall(100, () => {
+    this.scene.time.delayedCall(150, () => {
       if (this.currentState === PlayerState.SHOOTING) {
         this.setPlayerState(PlayerState.IDLE);
-        this.play('player-idle');
+        this.startIdleAnimation();
       }
     });
     
@@ -158,8 +176,32 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
     this.setPlayerState(PlayerState.HIT);
     this.lives--;
     
-    this.scene.time.delayedCall(500, () => {
+    // Enhanced hit animation
+    if (this.animationManager) {
+      this.stopCurrentAnimation();
+      this.animationManager.playAnimation(this, 'player-hit');
+      
+      // Add dramatic hit effects
+      this.animationManager.createShakeAnimation(this, 8, 400);
+      
+      // Flash effect
+      this.animationManager.createTweenAnimation(
+        this,
+        { alpha: { from: 1, to: 0.3 } },
+        200,
+        'Power2',
+        0,
+        () => {
+          if (this.animationManager) {
+            this.animationManager.createTweenAnimation(this, { alpha: 1 }, 200);
+          }
+        }
+      );
+    }
+    
+    this.scene.time.delayedCall(600, () => {
       this.setPlayerState(PlayerState.IDLE);
+      this.startIdleAnimation();
     });
   }
   
@@ -203,16 +245,40 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
     this.invincible = invincible;
     
     if (invincible) {
-      this.scene.tweens.add({
-        targets: this,
-        alpha: { from: 1, to: 0.5 },
-        duration: 200,
-        repeat: -1,
-        yoyo: true
-      });
+      // Enhanced invincibility animation
+      if (this.animationManager) {
+        this.stopCurrentAnimation();
+        
+        // Pulsing alpha effect for invincibility
+        this.currentAnimationId = this.animationManager.createTweenAnimation(
+          this,
+          { alpha: { from: 1, to: 0.4 } },
+          250,
+          'Sine.easeInOut'
+        );
+        
+        // Add subtle scale pulsing
+        this.animationManager.createPulseAnimation(this, 1.05, 400);
+      } else {
+        // Fallback for old system
+        this.scene.tweens.add({
+          targets: this,
+          alpha: { from: 1, to: 0.5 },
+          duration: 200,
+          repeat: -1,
+          yoyo: true
+        });
+      }
     } else {
-      this.scene.tweens.killTweensOf(this);
-      this.setAlpha(1);
+      if (this.animationManager) {
+        this.animationManager.stopAllAnimationsForTarget(this);
+        this.setAlpha(1);
+        this.setScale(1);
+        this.startIdleAnimation();
+      } else {
+        this.scene.tweens.killTweensOf(this);
+        this.setAlpha(1);
+      }
     }
   }
   

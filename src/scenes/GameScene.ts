@@ -17,6 +17,7 @@ import { DifficultyDisplay } from '../ui/DifficultyDisplay';
 import { UIManager } from '../ui/UIManager';
 import { AccessibilityManager } from '../managers/AccessibilityManager';
 import { UISoundManager } from '../managers/UISoundManager';
+import { AudioManager } from '../managers/AudioManager';
 
 export class GameScene extends Phaser.Scene {
   private player!: Player;
@@ -33,6 +34,7 @@ export class GameScene extends Phaser.Scene {
   private uiManager!: UIManager;
   private accessibilityManager!: AccessibilityManager;
   private uiSoundManager!: UISoundManager;
+  private audioManager!: AudioManager;
   private cursors!: Phaser.Types.Input.Keyboard.CursorKeys;
   private spaceKey!: Phaser.Input.Keyboard.Key;
   private projectiles!: Phaser.GameObjects.Group;
@@ -67,6 +69,9 @@ export class GameScene extends Phaser.Scene {
     this.accessibilityManager = new AccessibilityManager(this);
     this.uiSoundManager = new UISoundManager(this);
     this.uiSoundManager.setAccessibilityManager(this.accessibilityManager);
+    
+    // Initialize audio manager
+    this.audioManager = new AudioManager(this);
 
     // Create player using Player class
     const startLane = Math.floor(this.laneManager.getLaneCount() / 2);
@@ -77,6 +82,7 @@ export class GameScene extends Phaser.Scene {
     // Initialize collision manager after player is created
     this.collisionManager = new CollisionManager(this, this.player, this.scoreManager, this.livesManager);
     this.collisionManager.setEffectsManager(this.effectsManager);
+    this.collisionManager.setAudioManager(this.audioManager);
     
     // Create projectiles group
     this.projectiles = this.add.group({
@@ -104,6 +110,9 @@ export class GameScene extends Phaser.Scene {
     
     // Set up event listeners
     this.setupEventListeners();
+    
+    // Start background music
+    this.audioManager.playBackgroundMusic('bgm-main', true);
 
     // Set up keyboard controls
     this.cursors = this.input.keyboard!.createCursorKeys();
@@ -192,6 +201,7 @@ export class GameScene extends Phaser.Scene {
       const projectile = this.player.shoot();
       if (projectile) {
         this.projectiles.add(projectile);
+        this.audioManager.playSound('sfx-shoot');
       }
     }
     
@@ -236,6 +246,10 @@ export class GameScene extends Phaser.Scene {
     // Lives manager events
     this.livesManager.getEvents().on('gameOver', () => {
       this.gameStateManager.changeState(GameState.GAME_OVER);
+      
+      // Stop background music and play game over sound
+      this.audioManager.stopBackgroundMusic(true);
+      this.audioManager.playSound('sfx-gameover');
       
       // Stop all tweens and timers to prevent errors
       this.tweens.killAll();
@@ -292,6 +306,9 @@ export class GameScene extends Phaser.Scene {
     this.difficultyManager.on('difficultyChanged', (data: any) => {
       this.difficultyDisplay.updateDifficulty(data.level, data.config);
       
+      // Adaptive audio based on difficulty
+      this.audioManager.playAdaptiveMusic(data.level);
+      
       // Show transition message
       const messages: { [key: number]: string } = {
         1: 'Speed Increasing!',
@@ -330,6 +347,7 @@ export class GameScene extends Phaser.Scene {
         const projectile = this.player.shoot();
         if (projectile) {
           this.projectiles.add(projectile);
+          this.audioManager.playSound('sfx-shoot');
         }
       }
     });
@@ -349,6 +367,8 @@ export class GameScene extends Phaser.Scene {
       if (this.uiManager) {
         this.uiManager.stopTimer();
       }
+      // Pause audio
+      this.audioManager.pauseMusic();
       this.scene.pause();
       this.scene.launch('PauseScene');
     }
@@ -396,6 +416,9 @@ export class GameScene extends Phaser.Scene {
     if (this.accessibilityManager) {
       this.accessibilityManager.destroy();
     }
+    if (this.audioManager) {
+      this.audioManager.destroy();
+    }
     
     // Remove event listeners
     this.events.off('pauseGame');
@@ -410,6 +433,8 @@ export class GameScene extends Phaser.Scene {
       if (this.uiManager) {
         this.uiManager.resumeTimer();
       }
+      // Resume audio
+      this.audioManager.resumeMusic();
     }
   }
 }

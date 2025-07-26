@@ -157,10 +157,18 @@ describe('ResponsiveUtils', () => {
       // Desktop
       const desktopScaled = responsiveUtils.scale(100);
       
-      // Phone
+      // Phone - create a new scene to force new instance
       mockWindow(375, 667);
-      responsiveUtils = ResponsiveUtils.getInstance(mockScene);
-      const phoneScaled = responsiveUtils.scale(100);
+      const newMockScene = {
+        cameras: {
+          main: {
+            width: 640,
+            height: 960
+          }
+        }
+      } as unknown as Phaser.Scene;
+      const phoneResponsiveUtils = ResponsiveUtils.getInstance(newMockScene);
+      const phoneScaled = phoneResponsiveUtils.scale(100);
       
       expect(desktopScaled).not.toBe(phoneScaled);
     });
@@ -186,13 +194,29 @@ describe('ResponsiveUtils', () => {
     it('should get different padding for phone vs desktop', () => {
       // Desktop
       mockWindow(1920, 1080);
-      responsiveUtils = ResponsiveUtils.getInstance(mockScene);
-      const desktopPadding = responsiveUtils.getPadding();
+      const desktopScene = {
+        cameras: {
+          main: {
+            width: 640,
+            height: 960
+          }
+        }
+      } as unknown as Phaser.Scene;
+      const desktopResponsiveUtils = ResponsiveUtils.getInstance(desktopScene);
+      const desktopPadding = desktopResponsiveUtils.getPadding();
       
       // Phone
       mockWindow(375, 667);
-      responsiveUtils = ResponsiveUtils.getInstance(mockScene);
-      const phonePadding = responsiveUtils.getPadding();
+      const phoneScene = {
+        cameras: {
+          main: {
+            width: 640,
+            height: 960
+          }
+        }
+      } as unknown as Phaser.Scene;
+      const phoneResponsiveUtils = ResponsiveUtils.getInstance(phoneScene);
+      const phonePadding = phoneResponsiveUtils.getPadding();
       
       expect(desktopPadding.x).toBeGreaterThan(phonePadding.x);
     });

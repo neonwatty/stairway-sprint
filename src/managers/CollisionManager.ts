@@ -8,6 +8,7 @@ import { Assassin } from '../sprites/Assassin';
 import { ScoreManager } from './ScoreManager';
 import { LivesManager } from './LivesManager';
 import { EffectsManager } from './EffectsManager';
+import { AudioManager } from './AudioManager';
 
 export class CollisionManager extends Phaser.Events.EventEmitter {
   private scene: GameScene;
@@ -15,6 +16,7 @@ export class CollisionManager extends Phaser.Events.EventEmitter {
   private scoreManager: ScoreManager;
   private livesManager: LivesManager;
   private effectsManager!: EffectsManager;
+  private audioManager?: AudioManager;
   private colliders: Phaser.Physics.Arcade.Collider[] = [];
   private enabled: boolean = true;
   
@@ -48,6 +50,10 @@ export class CollisionManager extends Phaser.Events.EventEmitter {
   
   public setEffectsManager(effectsManager: EffectsManager): void {
     this.effectsManager = effectsManager;
+  }
+  
+  public setAudioManager(audioManager: AudioManager): void {
+    this.audioManager = audioManager;
   }
   
   private initializeSpatialPartitioning(): void {
@@ -166,6 +172,11 @@ export class CollisionManager extends Phaser.Events.EventEmitter {
     this.scoreManager.addStreak();
     strollerSprite.deactivate();
     
+    // Play sound effect
+    if (this.audioManager) {
+      this.audioManager.playSound('sfx-collect');
+    }
+    
     // Use effects manager for visual feedback
     if (this.effectsManager) {
       this.effectsManager.playRescueEffect(strollerSprite.x, strollerSprite.y);
@@ -183,6 +194,11 @@ export class CollisionManager extends Phaser.Events.EventEmitter {
     this.scoreManager.resetStreak();
     this.livesManager.loseLife();
     hazardSprite.deactivate();
+    
+    // Play sound effect
+    if (this.audioManager) {
+      this.audioManager.playSound('sfx-hit');
+    }
     
     // Screen shake is handled by LivesManager
     
@@ -203,6 +219,11 @@ export class CollisionManager extends Phaser.Events.EventEmitter {
     this.scoreManager.addPoints(5);
     this.scoreManager.addStreak();
     
+    // Play sound effect (power-up sound as a fanfare)
+    if (this.audioManager) {
+      this.audioManager.playSound('sfx-powerup');
+    }
+    
     // Use effects manager for visual celebration
     if (this.effectsManager) {
       this.effectsManager.playProtectionEffect(vipSprite.x, vipSprite.y);
@@ -220,6 +241,11 @@ export class CollisionManager extends Phaser.Events.EventEmitter {
     this.livesManager.loseLife();
     assassinSprite.eliminate();
     
+    // Play sound effect
+    if (this.audioManager) {
+      this.audioManager.playSound('sfx-hit');
+    }
+    
     // Emit event
     this.emit('assassinHit', assassinSprite);
   }
@@ -233,6 +259,11 @@ export class CollisionManager extends Phaser.Events.EventEmitter {
     assassinSprite.eliminate();
     projectileObj.destroy();
     this.scoreManager.addPoints(2);
+    
+    // Play sound effect
+    if (this.audioManager) {
+      this.audioManager.playSound('sfx-shoot');
+    }
     
     // Use effects manager for elimination effect
     if (this.effectsManager) {
@@ -257,6 +288,11 @@ export class CollisionManager extends Phaser.Events.EventEmitter {
     
     this.livesManager.loseLife();
     this.livesManager.loseLife();
+    
+    // Play sound effect (dramatic sound for VIP loss)
+    if (this.audioManager) {
+      this.audioManager.playSound('sfx-gameover', 0.6);
+    }
     
     vipSprite.deactivate();
     assassinSprite.deactivate();

@@ -71,6 +71,7 @@ describe('Player', () => {
     
     // Create player
     player = new Player(mockScene, 320, 800);
+    player.setLaneManager(mockLaneManager);
   });
 
   describe('initialization', () => {
@@ -101,11 +102,8 @@ describe('Player', () => {
   });
 
   describe('lane management', () => {
-    beforeEach(() => {
-      player.setLaneManager(mockLaneManager);
-    });
-
     it('should set lane manager and update current lane', () => {
+      // Already called in beforeEach
       expect(mockLaneManager.getLaneForPosition).toHaveBeenCalledWith(320);
       expect(player.getCurrentLane()).toBe(1);
     });
@@ -118,10 +116,6 @@ describe('Player', () => {
   });
 
   describe('movement', () => {
-    beforeEach(() => {
-      player.setLaneManager(mockLaneManager);
-    });
-
     describe('moveLeft', () => {
       it('should move left when possible', () => {
         player.moveLeft();
@@ -373,10 +367,6 @@ describe('Player', () => {
   });
 
   describe('reset functionality', () => {
-    beforeEach(() => {
-      player.setLaneManager(mockLaneManager);
-    });
-
     it('should reset player to center lane', () => {
       // Move player to side lane
       player.moveLeft();
