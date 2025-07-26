@@ -19,6 +19,7 @@ import { AccessibilityManager } from '../managers/AccessibilityManager';
 import { UISoundManager } from '../managers/UISoundManager';
 import { AudioManager } from '../managers/AudioManager';
 import { UIAnimationManager } from '../managers/UIAnimationManager';
+import { BackgroundManager } from '../managers/BackgroundManager';
 
 export class GameScene extends Phaser.Scene {
   private player!: Player;
@@ -37,6 +38,7 @@ export class GameScene extends Phaser.Scene {
   private uiSoundManager!: UISoundManager;
   private audioManager!: AudioManager;
   private uiAnimationManager!: UIAnimationManager;
+  private backgroundManager!: BackgroundManager;
   private cursors!: Phaser.Types.Input.Keyboard.CursorKeys;
   private spaceKey!: Phaser.Input.Keyboard.Key;
   private projectiles!: Phaser.GameObjects.Group;
@@ -56,8 +58,9 @@ export class GameScene extends Phaser.Scene {
     // Fade in
     this.cameras.main.fadeIn(300, 0, 0, 0);
 
-    // Background with tiled stairs
-    this.add.rectangle(width / 2, height / 2, width, height, 0x2a2a2a);
+    // Create background manager for parallax scrolling
+    this.backgroundManager = new BackgroundManager(this);
+    this.backgroundManager.create();
 
     // Create managers
     this.scoreManager = new ScoreManager(this);
@@ -186,7 +189,12 @@ export class GameScene extends Phaser.Scene {
     });
   }
 
-  update(): void {
+  update(time: number, delta: number): void {
+    // Update background scrolling
+    if (this.backgroundManager) {
+      this.backgroundManager.update(delta);
+    }
+    
     // Update UI Manager (timer)
     if (this.uiManager) {
       this.uiManager.updateTimer();
@@ -370,6 +378,9 @@ export class GameScene extends Phaser.Scene {
     if (this.gameStateManager.canPause()) {
       this.gameStateManager.changeState(GameState.PAUSED);
       this.entitySpawner.pause();
+      if (this.backgroundManager) {
+        this.backgroundManager.pause();
+      }
       if (this.uiManager) {
         this.uiManager.stopTimer();
       }
@@ -435,6 +446,9 @@ export class GameScene extends Phaser.Scene {
       this.gameStateManager.changeState(GameState.PLAYING);
       if (this.entitySpawner) {
         this.entitySpawner.resume();
+      }
+      if (this.backgroundManager) {
+        this.backgroundManager.resume();
       }
       if (this.uiManager) {
         this.uiManager.resumeTimer();

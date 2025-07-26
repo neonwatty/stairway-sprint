@@ -3,9 +3,9 @@ import { BaseEntity } from './BaseEntity';
 import { AnimationManager } from '../managers/AnimationManager';
 
 export enum HazardType {
-  CONE = 'cone',
-  BANANA = 'banana-peel',
-  PUDDLE = 'puddle'
+  LAWNMOWER = 'hazard-lawnmower',
+  CRATE = 'hazard-crate',
+  TRASHCAN = 'hazard-trashcan'
 }
 
 export class Hazard extends BaseEntity {
@@ -15,9 +15,9 @@ export class Hazard extends BaseEntity {
   private currentAnimationId?: string;
   
   constructor(scene: Phaser.Scene) {
-    super(scene, 0, 0, 'cone');
+    super(scene, 0, 0, 'hazard-lawnmower');
     
-    this.hazardType = HazardType.CONE;
+    this.hazardType = HazardType.LAWNMOWER;
     this.setDepth(5);
     
     const body = this.body as Phaser.Physics.Arcade.Body;
@@ -35,36 +35,37 @@ export class Hazard extends BaseEntity {
   
   protected onSpawn(): void {
     switch (this.hazardType) {
-      case HazardType.CONE:
+      case HazardType.LAWNMOWER:
         this.setScale(0.8);
+        // Rotating blade animation
         this.wobbleAnimation = this.scene.tweens.add({
           targets: this,
-          angle: { from: -5, to: 5 },
-          duration: 1000,
+          angle: 360,
+          duration: 2000,
           repeat: -1,
-          yoyo: true,
-          ease: 'Sine.easeInOut'
+          ease: 'Linear'
         });
         break;
         
-      case HazardType.BANANA:
-        this.setScale(0.7);
-        this.wobbleAnimation = this.scene.tweens.add({
-          targets: this,
-          scaleX: { from: 0.7, to: 0.75 },
-          scaleY: { from: 0.7, to: 0.65 },
-          duration: 800,
-          repeat: -1,
-          yoyo: true,
-          ease: 'Sine.easeInOut'
-        });
-        break;
-        
-      case HazardType.PUDDLE:
+      case HazardType.CRATE:
         this.setScale(0.9);
+        // Slight wobble like it's unstable
         this.wobbleAnimation = this.scene.tweens.add({
           targets: this,
-          alpha: { from: 0.7, to: 1 },
+          angle: { from: -3, to: 3 },
+          duration: 1500,
+          repeat: -1,
+          yoyo: true,
+          ease: 'Sine.easeInOut'
+        });
+        break;
+        
+      case HazardType.TRASHCAN:
+        this.setScale(0.85);
+        // Subtle bounce animation
+        this.wobbleAnimation = this.scene.tweens.add({
+          targets: this,
+          scaleY: { from: 0.85, to: 0.9 },
           duration: 1200,
           repeat: -1,
           yoyo: true,
