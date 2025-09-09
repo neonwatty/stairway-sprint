@@ -41,7 +41,7 @@
     "canvas": "^3.1.2",
     "happy-dom": "^18.0.1",
     "jsdom": "^26.1.0",
-    "typescript": "^5.1.6",
+    "typescript": "^5.9.2",
     "vite": "^4.4.9",
     "vitest": "^3.2.4"
   }
